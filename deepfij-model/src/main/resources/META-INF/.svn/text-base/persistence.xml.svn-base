@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0">
+    <persistence-unit name="deepfij" transaction-type="RESOURCE_LOCAL">
+        <class>com.fijimf.deepfij.modelx.Quote</class>
+        <class>com.fijimf.deepfij.modelx.Conference</class>
+        <class>com.fijimf.deepfij.modelx.Schedule</class>
+        <class>com.fijimf.deepfij.modelx.Team</class>
+        <class>com.fijimf.deepfij.modelx.Alias</class>
+        <class>com.fijimf.deepfij.modelx.Game</class>
+        <class>com.fijimf.deepfij.modelx.Result</class>
+        <class>com.fijimf.deepfij.modelx.MetaStat</class>
+        <class>com.fijimf.deepfij.modelx.TeamStat</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.jdbc.batch_size" value="1000"/>
+            <property name="hibernate.cache.use_second_level_cache" value="false"/>
+            <property name="hibernate.bytecode.use_reflection_optimizer" value="false"/>
+            <property name="hibernate.order_inserts" value="true"/>
+
+
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/deepfijdb"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="mutombo"/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+
+            <property name="hibernate.connection.provider_class"
+                      value="org.hibernate.connection.C3P0ConnectionProvider"/>
+
+            <property name="hibernate.c3p0.max_size" value="100"/>
+            <property name="hibernate.c3p0.min_size" value="0"/>
+            <property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <property name="hibernate.c3p0.idle_test_period" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="0"/>
+            <property name="hibernate.c3p0.timeout" value="100"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="deepfij-test" transaction-type="RESOURCE_LOCAL">
+        <class>com.fijimf.deepfij.modelx.Quote</class>
+        <class>com.fijimf.deepfij.modelx.Conference</class>
+        <class>com.fijimf.deepfij.modelx.Schedule</class>
+        <class>com.fijimf.deepfij.modelx.Team</class>
+        <class>com.fijimf.deepfij.modelx.Alias</class>
+        <class>com.fijimf.deepfij.modelx.Game</class>
+        <class>com.fijimf.deepfij.modelx.Result</class>
+        <class>com.fijimf.deepfij.modelx.MetaStat</class>
+        <class>com.fijimf.deepfij.modelx.TeamStat</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.jdbc.batch_size" value="1000"/>
+            <property name="hibernate.cache.use_second_level_cache" value="false"/>
+            <property name="hibernate.bytecode.use_reflection_optimizer" value="false"/>
+            <property name="hibernate.order_inserts" value="true"/>
+
+
+            <property name="hibernate.generateDdl" value="true"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/deepfijdbtest"/>
+            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.password" value="mutombo"/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+
+            <property name="hibernate.connection.provider_class"
+                      value="org.hibernate.connection.C3P0ConnectionProvider"/>
+
+            <property name="hibernate.c3p0.max_size" value="100"/>
+            <property name="hibernate.c3p0.min_size" value="0"/>
+            <property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <property name="hibernate.c3p0.idle_test_period" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="0"/>
+            <property name="hibernate.c3p0.timeout" value="100"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+        </properties>
+    </persistence-unit>
+</persistence>

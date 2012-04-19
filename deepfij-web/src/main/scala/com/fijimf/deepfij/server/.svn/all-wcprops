@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server
+END
+UserAuthenticator.scala
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/scalastuff/!svn/ver/433/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/UserAuthenticator.scala
+END
+DeepFijService.scala
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/scalastuff/!svn/ver/440/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/DeepFijService.scala
+END
+TeamPageRoute.scala
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/scalastuff/!svn/ver/437/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/TeamPageRoute.scala
+END
+ConferencePageRoute.scala
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/scalastuff/!svn/ver/437/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/ConferencePageRoute.scala
+END
+Boot.scala
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/scalastuff/!svn/ver/436/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/Boot.scala
+END
+Util.scala
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/scalastuff/!svn/ver/436/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/Util.scala
+END
+StaticAssetRoute.scala
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/server/StaticAssetRoute.scala
+END

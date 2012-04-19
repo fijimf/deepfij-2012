@@ -1,0 +1,11 @@
+K 10
+svn:ignore
+V 45
+.gitignore
+.idea
+deepfijdb.iml
+target
+
+*.iml
+
+END

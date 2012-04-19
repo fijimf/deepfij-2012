@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view
+END
+ConferencePanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/ConferencePanel.scala
+END
+LoginPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/scalastuff/!svn/ver/433/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/LoginPanel.scala
+END
+SchedulePanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/SchedulePanel.scala
+END
+SearchResultPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/SearchResultPanel.scala
+END
+BasePage.scala
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/scalastuff/!svn/ver/436/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/BasePage.scala
+END
+RegisterPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/RegisterPanel.scala
+END
+LostPasswordPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/LostPasswordPanel.scala
+END
+AdminPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/scalastuff/!svn/ver/436/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/AdminPanel.scala
+END
+TeamPanel.scala
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/scalastuff/!svn/ver/435/deepfij-2012/deepfij-web/src/main/scala/com/fijimf/deepfij/view/TeamPanel.scala
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/scalastuff/!svn/ver/432/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx
+END
+TeamTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/scalastuff/!svn/ver/437/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/TeamTestSuite.scala
+END
+ResultTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/ResultTestSuite.scala
+END
+ConferenceTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/ConferenceTestSuite.scala
+END
+QuoteTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/scalastuff/!svn/ver/432/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/QuoteTestSuite.scala
+END
+MetaStatTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/MetaStatTestSuite.scala
+END
+ScheduleTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/ScheduleTestSuite.scala
+END
+GameTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/GameTestSuite.scala
+END
+SchemaTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/SchemaTestSuite.scala
+END
+TeamStatTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/TeamStatTestSuite.scala
+END
+AliasTestSuite.scala
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/scalastuff/!svn/ver/428/deepfij-2012/deepfij-model/src/test/scala/com/fijimf/deepfij/modelx/AliasTestSuite.scala
+END
