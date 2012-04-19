@@ -1,7 +1,8 @@
 DEEPFIJ 2012
 ====================
 
-***A never ending project
+A never ending project
+--------------------
 
 
 Deepfij is a hobby project ostyensibly supporting a website for the analysis of college basketball, but more 
