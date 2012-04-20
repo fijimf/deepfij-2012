@@ -19,7 +19,7 @@ trait DeepFijService extends Service with Directives {
   val cd = new ConferenceDao()
   val qd = new QuoteDao()
 
-  val activeScheduleKey: String
+  def activeScheduleKey(): String
 
   lazy val service:Route = logPath {
     path("admin") {
