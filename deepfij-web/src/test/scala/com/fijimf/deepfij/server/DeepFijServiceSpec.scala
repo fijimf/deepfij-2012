@@ -4,7 +4,10 @@ import cc.spray.test.SprayTest
 import org.specs2.mutable.Specification
 
 class DeepFijServiceSpec extends Specification with SprayTest with DeepFijService {
+  def activeScheduleKey() = "Key"
 
+  def start() {}
 
+  def shutdown() {}
 }
 
