@@ -13,9 +13,10 @@ class TeamTestSuite extends FunSuite with BeforeAndAfterEach {
 
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Find") {
     val s = sdao.save(new Schedule(0L, "test", "Test"))

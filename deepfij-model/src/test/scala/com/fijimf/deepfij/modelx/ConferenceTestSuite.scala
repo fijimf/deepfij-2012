@@ -15,7 +15,7 @@ with BeforeAndAfterEach {
   val gameDao = new GameDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
 

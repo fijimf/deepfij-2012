@@ -14,6 +14,10 @@ object PersistenceSource {
   val cfg = new Ejb3Configuration().configure(persistenceUnitName, null).getHibernateConfiguration;
   val schemaExport = new SchemaExport(cfg)
 
+  def buildDatabase() {
+    schemaExport.execute(false, true, false, false)
+  }
+
   def main(args: Array[String]) {
     val tempFile = File.createTempFile("schema", ".sql")
     schemaExport.setOutputFile(tempFile.getAbsolutePath)

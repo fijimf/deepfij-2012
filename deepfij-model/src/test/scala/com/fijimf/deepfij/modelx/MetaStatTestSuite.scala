@@ -9,9 +9,10 @@ class MetaStatTestSuite extends FunSuite with BeforeAndAfterEach {
   val dao: MetaStatDao = new MetaStatDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Create") {
     val mst = dao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))

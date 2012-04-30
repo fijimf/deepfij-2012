@@ -15,9 +15,10 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
   val aliasDao = new AliasDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Create an alias") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))

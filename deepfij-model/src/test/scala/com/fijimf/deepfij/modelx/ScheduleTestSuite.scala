@@ -10,7 +10,7 @@ class ScheduleTestSuite extends FunSuite with BeforeAndAfterEach {
   val dao: ScheduleDao = new ScheduleDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
 

@@ -5,6 +5,8 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import java.util.Date
 import java.text.SimpleDateFormat
+import com.fijimf.deepfij.modelx.Team._
+import com.fijimf.deepfij.modelx.Result._
 
 @RunWith(classOf[JUnitRunner])
 class TeamStatTestSuite extends FunSuite with BeforeAndAfterEach {
@@ -14,10 +16,12 @@ class TeamStatTestSuite extends FunSuite with BeforeAndAfterEach {
   val metaStatDao = new MetaStatDao
   val teamStatDao = new TeamStatDao
 
+
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Create") {
 
