@@ -135,4 +135,9 @@ class SchemaTestSuite extends FunSuite with BeforeAndAfterEach {
 
 
   }
+
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

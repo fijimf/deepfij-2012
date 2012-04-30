@@ -19,7 +19,6 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
     PersistenceSource.entityManager.clear()
   }
 
-
   test("Create an alias") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
     val c = conferenceDao.save(new Conference(schedule = s, key = "big-12", name = "Big XII"))
@@ -32,5 +31,7 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(schedule.aliasList.size == 1)
   }
 
-
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

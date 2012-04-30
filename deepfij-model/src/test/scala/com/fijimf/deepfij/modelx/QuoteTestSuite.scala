@@ -30,4 +30,8 @@ class QuoteTestSuite extends FunSuite with BeforeAndAfterEach {
     print(q)
     assert(r.quote == q.get.quote)
   }
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

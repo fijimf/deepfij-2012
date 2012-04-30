@@ -88,4 +88,8 @@ with BeforeAndAfterEach {
     assert(c1.teamList.contains(t1))
   }
 
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

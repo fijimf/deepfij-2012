@@ -74,4 +74,9 @@ class TeamStatTestSuite extends FunSuite with BeforeAndAfterEach {
     val pop: List[TeamStat] = teamStatDao.population("wins", jan01)
     assert(pop.size == 3)
   }
+
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

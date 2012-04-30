@@ -3,6 +3,7 @@ package com.fijimf.deepfij.modelx
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import com.fijimf.deepfij.modelx.Team._
 
 @RunWith(classOf[JUnitRunner])
 class MetaStatTestSuite extends FunSuite with BeforeAndAfterEach {
@@ -21,5 +22,10 @@ class MetaStatTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(d.isDefined)
     assert(d.get.name == "Wins")
     assert(d.get.values.isEmpty)
+  }
+
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
   }
 }
