@@ -14,12 +14,14 @@ class Boot {
 
     val activeScheduleKey="2012"
 
+    if (!PersistenceSource.testDatabase()){
+      log.info("Test database failed.  Building new DB")
+      PersistenceSource.buildDatabase()
+      log.info("Done building DB")
+    }
+
     def start() {
-      if (!PersistenceSource.testDatabase()){
-        log.info("Test database failed.  Building new DB")
-        PersistenceSource.buildDatabase()
-        log.info("Done building DB")
-      }
+
     }
 
     def shutdown() {
