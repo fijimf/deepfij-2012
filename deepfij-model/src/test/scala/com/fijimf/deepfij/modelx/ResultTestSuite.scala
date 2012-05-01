@@ -4,6 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import java.util.Date
+import com.fijimf.deepfij.modelx.Conference._
 
 
 @RunWith(classOf[JUnitRunner])
@@ -16,9 +17,10 @@ class ResultTestSuite extends FunSuite with BeforeAndAfterEach {
   val resultDao = new ResultDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Create a result") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
@@ -49,4 +51,7 @@ class ResultTestSuite extends FunSuite with BeforeAndAfterEach {
   }
 
 
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

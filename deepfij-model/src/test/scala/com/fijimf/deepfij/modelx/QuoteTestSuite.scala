@@ -2,11 +2,16 @@ package com.fijimf.deepfij.modelx
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.{BeforeAndAfterEach, BeforeAndAfter, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
-class QuoteTestSuite extends FunSuite with BeforeAndAfter {
+class QuoteTestSuite extends FunSuite with BeforeAndAfterEach {
   val dao: QuoteDao = new QuoteDao
+
+  override def beforeEach() {
+    PersistenceSource.buildDatabase()
+    PersistenceSource.entityManager.clear()
+  }
 
   test("Find") {
     dao.findAll()
@@ -24,5 +29,9 @@ class QuoteTestSuite extends FunSuite with BeforeAndAfter {
     val q: Option[Quote] = dao.random()
     print(q)
     assert(r.quote == q.get.quote)
+  }
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
   }
 }

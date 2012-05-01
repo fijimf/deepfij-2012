@@ -14,9 +14,10 @@ class GameTestSuite extends FunSuite with BeforeAndAfterEach {
 
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Save a game") {
     val s = sdao.save(new Schedule(0L, "test", "Test"))
@@ -47,4 +48,7 @@ class GameTestSuite extends FunSuite with BeforeAndAfterEach {
   }
 
 
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

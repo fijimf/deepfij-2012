@@ -3,15 +3,17 @@ package com.fijimf.deepfij.modelx
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import com.fijimf.deepfij.modelx.Team._
 
 @RunWith(classOf[JUnitRunner])
 class MetaStatTestSuite extends FunSuite with BeforeAndAfterEach {
   val dao: MetaStatDao = new MetaStatDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Create") {
     val mst = dao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))
@@ -20,5 +22,10 @@ class MetaStatTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(d.isDefined)
     assert(d.get.name == "Wins")
     assert(d.get.values.isEmpty)
+  }
+
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
   }
 }

@@ -15,7 +15,7 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
   val aliasDao = new AliasDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
 
@@ -31,5 +31,7 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(schedule.aliasList.size == 1)
   }
 
-
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

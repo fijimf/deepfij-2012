@@ -13,8 +13,10 @@ class SchemaTestSuite extends FunSuite with BeforeAndAfterEach {
   val teamDao = new TeamDao
   val gameDao = new GameDao
 
+
+
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
     scheduleDao.save(new Schedule(key = "ncaam09", name = "NCAA Men's Basketball 2008-2009"))
     scheduleDao.save(new Schedule(key = "ncaam10", name = "NCAA Men's Basketball 2009-2010"))
@@ -132,5 +134,10 @@ class SchemaTestSuite extends FunSuite with BeforeAndAfterEach {
     //    }
 
 
+  }
+
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
   }
 }

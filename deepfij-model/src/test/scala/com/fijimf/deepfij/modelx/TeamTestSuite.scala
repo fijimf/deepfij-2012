@@ -3,7 +3,7 @@ package com.fijimf.deepfij.modelx
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import java.util.Date
-import org.scalatest.{BeforeAndAfterEach, BeforeAndAfter, FunSuite}
+import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
 class TeamTestSuite extends FunSuite with BeforeAndAfterEach {
@@ -13,9 +13,10 @@ class TeamTestSuite extends FunSuite with BeforeAndAfterEach {
 
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
+
 
   test("Find") {
     val s = sdao.save(new Schedule(0L, "test", "Test"))
@@ -123,4 +124,8 @@ class TeamTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(ex.isInstanceOf[RuntimeException])
   }
 
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }

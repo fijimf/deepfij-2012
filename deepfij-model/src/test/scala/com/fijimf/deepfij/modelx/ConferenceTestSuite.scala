@@ -15,7 +15,7 @@ with BeforeAndAfterEach {
   val gameDao = new GameDao
 
   override def beforeEach() {
-    PersistenceSource.schemaExport.execute(false, true, false, false)
+    PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
   }
 
@@ -88,4 +88,8 @@ with BeforeAndAfterEach {
     assert(c1.teamList.contains(t1))
   }
 
+
+  override protected def afterEach() {
+    PersistenceSource.dropDatabase()
+  }
 }
