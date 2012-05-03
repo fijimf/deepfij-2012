@@ -10,7 +10,7 @@ object TeamPanel {
 
   def logoImage(team: Team) = {
     <a href={team.officialUrlOpt.getOrElse("#")} target="_blank">
-        <img src={team.logoOpt.get}/>
+        <img src={team.logoOpt.getOrElse("")}/>
     </a>
   }
 

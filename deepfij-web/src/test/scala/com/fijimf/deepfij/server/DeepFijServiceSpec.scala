@@ -5,6 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import cc.spray.http._
 import com.fijimf.deepfij.modelx.Team._
 import java.util.Date
+import com.fijimf.deepfij.modelx.Game._
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.modelx.Game._
 
@@ -33,27 +34,85 @@ class DeepFijServiceSpec extends FunSuite with BeforeAndAfterEach with SprayTest
 
   def shutdown() {}
 
-  test("return team missing") {
+  test("Return team missing for a missing key") {
     val response = testService(HttpRequest(HttpMethods.GET, "/team/xxx")) {
       service
     }.response
     assert(response.status === StatusCodes.OK)
     val s: String = response.content.get.toString
-    println(s)
     assert(s.contains("""<div class="alert alert-error">
           The team keyed by the value 'xxx' could not be found.
         </div>"""))
   }
-  test("return  a team ") {
+
+  test("Return a team page for a valid key") {
     val response = testService(HttpRequest(HttpMethods.GET, "/team/georgetown")) {
+      service
+    }.response
+    val s: String = response.content.get.toString
+    assert(response.status === StatusCodes.OK)
+    assert(s.contains("""      <div class="span11">
+        <h1>
+          Georgetown  (0-0, 0-0)
+        </h1>
+        <h3>
+          <a href="/conference/big-east">Big East</a>
+        </h3>
+      </div>"""))
+  }
+
+  test("Return a confernece for a valid key") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/conference/big-east")) {
       service
     }.response
     assert(response.status === StatusCodes.OK)
     val s: String = response.content.get.toString
-    println(s)
+    assert(s.contains("""<div class="span12">
+        <h1>
+          Big East
+        </h1>
+      </div>"""))
+
+  }
+  test("Return conference missing for a missing conference key") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/conference/zzz")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
+    val s: String = response.content.get.toString
     assert(s.contains("""<div class="alert alert-error">
-          The team keyed by the value 'xxx' could not be found.
+          The conference keyed by the value 'zzz' could not be found.
         </div>"""))
+  }
+  test("Return a quote") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/quote")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
+  }
+  test("Return the login screen") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/login")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
+  }
+  test("Search") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/search?q=geo")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
+  }
+  test("Return a date panel") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/date/20120401")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
+  }
+  test("Return admin screen") {
+    val response = testService(HttpRequest(HttpMethods.GET, "/admin")) {
+      service
+    }.response
+    assert(response.status === StatusCodes.OK)
   }
 }
 
