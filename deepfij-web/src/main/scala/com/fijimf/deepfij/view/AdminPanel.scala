@@ -48,12 +48,27 @@ object AdminPanel {
                   {dateFmt.format(s.gameList.maxBy(_.date).date)}
                 </td>
                 <td>
-                  <a href={"/admin?action=rebuild&key="+s.key+"&name="+s.name}>Rebuild</a>
+                  <a href={"/admin/rebuild&key="+s.key+"&name="+s.name}>Rebuild</a>
                 </td>
               </tr>
             })}
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span6">
+          <form class="well" method="GET" action="/admin/new">
+            <label>Name</label>
+              <input id=" name" type="text" class="span3" placeholder="Schedule name..."/>
+            <label>Key</label>
+              <input id="key" type="text" class="span3" placeholder="schedule-key"/>
+            <label class="checkbox">
+                <input type="checkbox"/>
+              Auto-populate?
+            </label>
+            <button type="submit" class="btn btn-primary">New Schedule</button>
+          </form>
         </div>
       </div>
   }

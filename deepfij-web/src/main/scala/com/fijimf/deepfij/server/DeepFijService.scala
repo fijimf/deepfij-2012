@@ -22,7 +22,22 @@ trait DeepFijService extends Service with Directives {
   def activeScheduleKey(): String
 
   lazy val service:Route = logPath {
-    path("admin") {
+    pathPrefix("admin") {
+      path("new") {
+        get {
+          respondWithMediaType(`text/html`) {
+            _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+            )
+          }
+      }
+      }~ path("rebuild"){
+        get {
+          respondWithMediaType(`text/html`) {
+            _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+            )
+          }
+        }
+      } ~
       get {
         respondWithMediaType(`text/html`) {
           _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
