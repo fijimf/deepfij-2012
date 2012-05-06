@@ -6,8 +6,12 @@ import cc.spray.Route
 import com.fijimf.deepfij.modelx.TeamDao
 import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{AdminPanel, MissingResourcePanel, BasePage, TeamPanel}
+import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
+import com.fijimf.deepfij.data.kenpom.KenPomScraper
+import com.fijimf.deepfij.workflow.Scraper
 
 object AdminRoute extends Directives {
+  val value=  Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
   def apply(): Route = {
     pathPrefix("admin") {
       path("new") {
