@@ -11,6 +11,7 @@
   <packaging>pom</packaging>
 
   <modules>
+  
     <module>deepfij-model</module>
     <module>deepfij-scrape</module>
 	<module>deepfij-web</module>
