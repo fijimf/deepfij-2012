@@ -20,18 +20,17 @@ object AdminRoute extends Directives {
     pathPrefix("admin") {
       path("new") {
         post {
-          detach {
-            parameters('key, 'name, 'from, 'to) {
-              (key: String, name: String, from: String, to: String) => {
-                log.info("Key=" + key)
-                log.info("Name=" + name)
-                log.info("From=" + from)
-                log.info("To=" + to)
-                create(key, name, from, to)
-                respondWithMediaType(`text/html`) {
-                  _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
-                  )
-                }
+
+          parameters('key, 'name, 'from, 'to) {
+            (key: String, name: String, from: String, to: String) => {
+              log.info("Key=" + key)
+              log.info("Name=" + name)
+              log.info("From=" + from)
+              log.info("To=" + to)
+              create(key, name, from, to)
+              respondWithMediaType(`text/html`) {
+                _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+                )
               }
             }
           }

@@ -28,8 +28,14 @@ object AdminPanel {
             </thead>
             <tbody>
               {sd.findAll().map(s => {
-              val lastDate: Date = s.gameList.maxBy(_.date).date
-              val firstDate: Date = s.gameList.minBy(_.date).date
+              val lastDate:Option[Date] = s.gameList match {
+                case Nil=> None
+                case gameList=> Some(gameList.maxBy(_.date).date)
+              }
+              val firstDate: Option[Date]  = s.gameList match {
+                case Nil=> None
+                case gameList=> Some(gameList.minBy(_.date).date)
+              }
               <tr>
                 <td>
                   {s.key}
@@ -44,10 +50,10 @@ object AdminPanel {
                   {s.gameList.size}
                 </td>
                 <td>
-                  {dateFmt.format(firstDate)}
+                  {firstDate.map(dateFmt.format(_)).getOrElse("N/A")}
                 </td>
                 <td>
-                  {dateFmt.format(lastDate)}
+                  {lastDate.map(dateFmt.format(_)).getOrElse("N/A")}
                 </td>
                 <td>
                   <form method="POST" action="/admin/update">
@@ -81,7 +87,7 @@ object AdminPanel {
       </div>
       <div class="row">
         <div class="span6">
-          <form class="well" method="GET" action="/admin/new">
+          <form class="well" method="POST" action="/admin/new">
             <label>Name</label>
               <input id="name" name="name" type="text" class="span3" placeholder="Schedule name..."/>
             <label>Key</label>
