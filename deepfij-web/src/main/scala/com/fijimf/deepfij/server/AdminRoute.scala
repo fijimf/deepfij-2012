@@ -19,7 +19,7 @@ object AdminRoute extends Directives {
   def apply(): Route = {
     pathPrefix("admin") {
       path("new") {
-        get {
+        post {
           detach {
             parameters('key, 'name, 'from, 'to) {
               (key: String, name: String, from: String, to: String) => {
@@ -37,7 +37,7 @@ object AdminRoute extends Directives {
           }
         }
       } ~ path("rebuild") {
-        get {
+        post{
           parameters('key, 'name, 'from, 'to) {
             (key: String, name: String, from: String, to: String) => {
               log.info("Key=" + key)
