@@ -94,7 +94,7 @@ object AdminPanel {
               <input id="key" name="key" type="text" class="span3" placeholder="schedule-key"/>
             <label>From</label>
               <input id="from" name="from" type="text" class="span3" placeholder="yyyymmdd"/>
-            <label>Key</label>
+            <label>To</label>
               <input id="to" name="to" type="text" class="span3" placeholder="yyyymmdd"/>
             <button type="submit" class="btn btn-primary">New Schedule</button>
           </form>
