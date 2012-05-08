@@ -25,7 +25,7 @@ object AdminRoute extends Directives {
     pathPrefix("admin") {
       path("new") {
         post {
-          parameters('key, 'name, 'from, 'to) {
+          formFields('key, 'name, 'from, 'to) {
             (key: String, name: String, from: String, to: String) => {
               log.info("Key=" + key)
               log.info("Name=" + name)
