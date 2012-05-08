@@ -44,6 +44,7 @@ object AdminRoute extends Directives {
           formFields('key) {
             (key: String) => {
               log.info("Key=" + key)
+              rebuild(key)
               respondWithMediaType(`text/html`) {
                 _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
                 )
@@ -56,6 +57,7 @@ object AdminRoute extends Directives {
           formFields('key) {
             (key: String) => {
               log.info("Key=" + key)
+              update(key)
               respondWithMediaType(`text/html`) {
                 _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
                 )
@@ -68,6 +70,7 @@ object AdminRoute extends Directives {
           formFields('key) {
             (key: String) => {
               log.info("Key=" + key)
+              delete(key)
               respondWithMediaType(`text/html`) {
                 _.complete(html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
                 )
