@@ -57,19 +57,13 @@ object AdminPanel {
                 </td>
                 <td>
                   <form method="POST" action="/admin/update">
-                    <input id="name" name="name" type="hidden" value={s.name}/>
                     <input id="key" name="key" type="hidden" value={s.key}/>
-                    <input id="from" name="from" type="hidden" value={yyyymmdd.format(firstDate)}/>
-                    <input id="to" name="to" type="hidden" value={yyyymmdd.format(new Date)}/>
                     <button type="submit" class="btn btn-success">Update</button>
                   </form>
                 </td>
                 <td>
                   <form method="POST" action="/admin/rebuild">
-                    <input id="name" name="name" type="hidden" value={s.name}/>
                     <input id="key" name="key" type="hidden" value={s.key}/>
-                    <input id="from" name="from" type="hidden" value={yyyymmdd.format(firstDate)}/>
-                    <input id="to" name="to" type="hidden" value={yyyymmdd.format(new Date)}/>
                     <button type="submit" class="btn btn-primary">Rebuild</button>
                   </form>
                 </td>
