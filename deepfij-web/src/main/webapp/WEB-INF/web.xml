@@ -4,16 +4,30 @@
         "http://java.sun.com/dtd/web-app_2_4.dtd">
 
 <web-app>
-
     <listener>
         <listener-class>cc.spray.connectors.Initializer</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>ShiroFilter</filter-name>
+        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ShiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>SprayConnectorServlet</servlet-name>
         <servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>
-        <!-- <servlet-class>cc.spray.connectors.Jetty7ConnectorServlet</servlet-class> -->
-        <!-- <servlet-class>cc.spray.connectors.Tomcat6ConnectorServlet</servlet-class> -->
         <async-supported>true</async-supported>
     </servlet>
 
