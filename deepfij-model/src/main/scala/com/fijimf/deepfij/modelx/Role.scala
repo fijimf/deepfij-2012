@@ -13,14 +13,12 @@ class Role(
             @(Column@field)(name = "id", nullable = false)
             val id: Long = 0L,
 
-            @(Column@field)(name = "role", nullable = false)
-            val role: String = "User",
+            @(Column@field)(name = "name", nullable = false)
+            val name: String = "User",
 
-            @(ManyToMany@field)
-            //@(JoinTable@field) (
-            //name = "user_role",
-            //joinColumns = Array (@JoinColumn (name = "roleId") ),
-            //inverseJoinColumns = Array (@JoinColumn (name = "userId") ) )
+            //@(ManyToMany@field(mappedBy="users"))
+
+            @(JoinTable@field) ( name = "user_role", joinColumns = Array (@JoinColumn (name = "roleId") ), inverseJoinColumns = Array (@JoinColumn (name = "userId") ) )
             val users: java.util.Set[User] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]],
 
             @(Column@field)(name = "updatedAt", nullable = false)

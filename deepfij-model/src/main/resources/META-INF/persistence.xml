@@ -13,6 +13,9 @@
         <class>com.fijimf.deepfij.modelx.Result</class>
         <class>com.fijimf.deepfij.modelx.MetaStat</class>
         <class>com.fijimf.deepfij.modelx.TeamStat</class>
+        <class>com.fijimf.deepfij.modelx.User</class>
+        <class>com.fijimf.deepfij.modelx.Role</class>
+        <class>com.fijimf.deepfij.modelx.Permission</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.jdbc.batch_size" value="1000"/>
@@ -53,6 +56,9 @@
         <class>com.fijimf.deepfij.modelx.Result</class>
         <class>com.fijimf.deepfij.modelx.MetaStat</class>
         <class>com.fijimf.deepfij.modelx.TeamStat</class>
+        <class>com.fijimf.deepfij.modelx.User</class>
+        <class>com.fijimf.deepfij.modelx.Role</class>
+        <class>com.fijimf.deepfij.modelx.Permission</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>

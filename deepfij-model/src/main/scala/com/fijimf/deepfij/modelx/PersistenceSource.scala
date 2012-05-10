@@ -4,6 +4,7 @@ import org.hibernate.tool.hbm2ddl.SchemaExport
 import org.hibernate.ejb.Ejb3Configuration
 import javax.persistence._
 import org.hibernate.exception.SQLGrammarException
+import java.io.File
 
 
 object PersistenceSource {
@@ -39,12 +40,21 @@ object PersistenceSource {
     }
   }
 
-  def main(args: Array[String]) {
-    dropDatabase()
-    println(testDatabase())
+//  def main(args: Array[String]) {
+//    dropDatabase()
+//    println(testDatabase())
+//
+//    buildDatabase()
+//    println(testDatabase())
+//
+//  }
 
-    buildDatabase()
-    println(testDatabase())
+  def main(args: Array[String]) {
+
+      val tempFile = File.createTempFile("schema", ".sql")
+      schemaExport.setOutputFile(tempFile.getAbsolutePath)
+      schemaExport.execute(true, false, false, false)
+      println(tempFile.getAbsolutePath)
 
   }
 }
