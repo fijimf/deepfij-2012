@@ -5,7 +5,6 @@
 
 <web-app>
     <listener>
-        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
         <listener-class>cc.spray.connectors.Initializer</listener-class>
     </listener>
     <listener>
@@ -26,18 +25,6 @@
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
-    <filter>
-        <filter-name>ShiroFilter</filter-name>
-        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
     <servlet>
         <servlet-name>SprayConnectorServlet</servlet-name>
         <servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>

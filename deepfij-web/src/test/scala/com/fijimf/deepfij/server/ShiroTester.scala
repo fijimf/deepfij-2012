@@ -28,6 +28,7 @@ object ShiroTester {
       currentUser.login(token);
 
       currentUser.checkRole("ADMIN")
+      println(currentUser.isAuthenticated)
     }
   }
 }
