@@ -16,16 +16,19 @@ class Role(
             @(Column@field)(name = "name", nullable = false)
             val name: String = "User",
 
-            //@(ManyToMany@field(mappedBy="users"))
-
-            @(JoinTable@field) ( name = "user_role", joinColumns = Array (@JoinColumn (name = "roleId") ), inverseJoinColumns = Array (@JoinColumn (name = "userId") ) )
+            @(ManyToMany@field)
+            @(JoinTable@field)(
+              name = "user_role",
+              joinColumns = Array(new JoinColumn(name = "user_id", referencedColumnName = "id")),
+              inverseJoinColumns = Array(new JoinColumn(name = "role_id", referencedColumnName = "id"))
+            )
             val users: java.util.Set[User] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]],
 
             @(Column@field)(name = "updatedAt", nullable = false)
             val updatedAt: Date = new Date
             ) {
   def this() = {
-    this(0L, "",java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]], new Date())
+    this(0L, "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]], new Date())
   }
 }
 

@@ -19,6 +19,11 @@ class User(
             val password: String = "",
 
             @(ManyToMany@field)
+            @(JoinTable@field)(
+              name = "user_role",
+              joinColumns = Array(new JoinColumn(name = "role_id", referencedColumnName = "id")),
+              inverseJoinColumns = Array(new JoinColumn(name = "user_id", referencedColumnName = "id"))
+            )
             val roles: java.util.Set[Role] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Role]],
 
             @(Column@field)(name = "updatedAt", nullable = false)
