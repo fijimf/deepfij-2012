@@ -5,17 +5,14 @@ alter table game drop foreign key FK304BF23DFBFE40;
 alter table game drop foreign key FK304BF2A1AFF1E9;
 alter table game drop foreign key FK304BF26A200B1A;
 alter table result drop foreign key FKC84DC81DF18A9F60;
+alter table role_permission drop foreign key FKBD40D538FFBA31C0;
 alter table role_permission drop foreign key FKBD40D5384F4A20E0;
-alter table role_permission drop foreign key FKBD40D538A7E19C3C;
-alter table role_permission drop foreign key FKBD40D538A72421B9;
-alter table role_permission drop foreign key FKBD40D538A7E030E7;
 alter table team drop foreign key FK36425D3DFBFE40;
 alter table team drop foreign key FK36425DE2F8D2A0;
 alter table teamStat drop foreign key FK9C8B4651A76F8380;
 alter table teamStat drop foreign key FK9C8B465122D71320;
-alter table user_role drop foreign key FK143BF46A4F4B8C35;
-alter table user_role drop foreign key FK143BF46AA72421B9;
-alter table user_role drop foreign key FK143BF46AF473796B;
+alter table user_role drop foreign key FK143BF46A4F4A20E0;
+alter table user_role drop foreign key FK143BF46AF474E4C0;
 drop table if exists alias;
 drop table if exists conference;
 drop table if exists game;
@@ -38,12 +35,12 @@ create table permission (id bigint not null auto_increment, permission varchar(2
 create table quote (id bigint not null auto_increment, quote varchar(255) not null, source varchar(255), updatedAt datetime not null, url varchar(255), primary key (id));
 create table result (id bigint not null auto_increment, awayScore integer, homeScore integer, updatedAt datetime, game_id bigint, primary key (id));
 create table role (id bigint not null auto_increment, name varchar(255) not null unique, updatedAt datetime not null, primary key (id));
-create table role_permission (role_id bigint not null, permission_id bigint not null, primary key (role_id, permission_id));
+create table role_permission (permission_id bigint not null, role_id bigint not null, primary key (role_id, permission_id));
 create table schedule (id bigint not null auto_increment, keyName varchar(255) unique, name varchar(255) unique, updatedAt datetime, primary key (id));
 create table team (id bigint not null auto_increment, keyName varchar(255) not null, logo varchar(255), longName varchar(255) not null, name varchar(255) not null, nickname varchar(255), officialUrl varchar(255), primaryColor varchar(255), secondaryColor varchar(255), updatedAt datetime, conference_id bigint, schedule_id bigint, primary key (id), unique (schedule_id, keyName), unique (schedule_id, longName), unique (schedule_id, name));
 create table teamStat (id bigint not null auto_increment, date datetime, value double precision, metaStat_id bigint not null, team_id bigint not null, primary key (id), unique (metaStat_id, team_id, date));
 create table user (id bigint not null auto_increment, email varchar(255) not null, password varchar(255) not null, updatedAt datetime not null, primary key (id));
-create table user_role (user_id bigint not null, role_id bigint not null, primary key (role_id, user_id));
+create table user_role (role_id bigint not null, user_id bigint not null, primary key (user_id, role_id));
 alter table alias add index FK5899650C8E8797B (teamId), add constraint FK5899650C8E8797B foreign key (teamId) references team (id);
 alter table alias add index FK5899650A8A106F (scheduleId), add constraint FK5899650A8A106F foreign key (scheduleId) references schedule (id);
 alter table conference add index FK2B5F451C3DFBFE40 (schedule_id), add constraint FK2B5F451C3DFBFE40 foreign key (schedule_id) references schedule (id);
@@ -51,20 +48,18 @@ alter table game add index FK304BF23DFBFE40 (schedule_id), add constraint FK304B
 alter table game add index FK304BF2A1AFF1E9 (awayTeamId), add constraint FK304BF2A1AFF1E9 foreign key (awayTeamId) references team (id);
 alter table game add index FK304BF26A200B1A (homeTeamId), add constraint FK304BF26A200B1A foreign key (homeTeamId) references team (id);
 alter table result add index FKC84DC81DF18A9F60 (game_id), add constraint FKC84DC81DF18A9F60 foreign key (game_id) references game (id);
+alter table role_permission add index FKBD40D538FFBA31C0 (permission_id), add constraint FKBD40D538FFBA31C0 foreign key (permission_id) references permission (id);
 alter table role_permission add index FKBD40D5384F4A20E0 (role_id), add constraint FKBD40D5384F4A20E0 foreign key (role_id) references role (id);
-alter table role_permission add index FKBD40D538A7E19C3C (permission_id), add constraint FKBD40D538A7E19C3C foreign key (permission_id) references user (id);
-alter table role_permission add index FKBD40D538A72421B9 (role_id), add constraint FKBD40D538A72421B9 foreign key (role_id) references permission (id);
-alter table role_permission add index FKBD40D538A7E030E7 (permission_id), add constraint FKBD40D538A7E030E7 foreign key (permission_id) references role (id);
 alter table team add index FK36425D3DFBFE40 (schedule_id), add constraint FK36425D3DFBFE40 foreign key (schedule_id) references schedule (id);
 alter table team add index FK36425DE2F8D2A0 (conference_id), add constraint FK36425DE2F8D2A0 foreign key (conference_id) references conference (id);
 alter table teamStat add index FK9C8B4651A76F8380 (team_id), add constraint FK9C8B4651A76F8380 foreign key (team_id) references team (id);
 alter table teamStat add index FK9C8B465122D71320 (metaStat_id), add constraint FK9C8B465122D71320 foreign key (metaStat_id) references metaStat (id);
-alter table user_role add index FK143BF46A4F4B8C35 (role_id), add constraint FK143BF46A4F4B8C35 foreign key (role_id) references user (id);
-alter table user_role add index FK143BF46AA72421B9 (role_id), add constraint FK143BF46AA72421B9 foreign key (role_id) references permission (id);
-alter table user_role add index FK143BF46AF473796B (user_id), add constraint FK143BF46AF473796B foreign key (user_id) references role (id);
--------BELOW THIS LINE WILL NOT BE AUTO GENERATED-------
+alter table user_role add index FK143BF46A4F4A20E0 (role_id), add constraint FK143BF46A4F4A20E0 foreign key (role_id) references role (id);
+alter table user_role add index FK143BF46AF474E4C0 (user_id), add constraint FK143BF46AF474E4C0 foreign key (user_id) references user (id);
 
-insert into user(email, password, updatedAt) values ('fijimf@gmail.com', '7556a0d1970e9e8b7f5fa40110a6f4f998a66806d079095acc10108b6d610724', '1900-01-01');
+-------BELOW THIS LINE WILL NOT BE AUTO GENERATED-------;
+
+insert into user(email, password, updatedAt) values ('fijimf@gmail.com', '7556a0d1970e9e8b7f5fa40110a6f4f998a66806d079095acc10108b6d610724', '1900-01-01');;
 
 insert into role(name, updatedAt) values ('ADMIN','1900-01-01' );
 insert into role(name, updatedAt) values ('TRUSTED_USER','1900-01-01' );

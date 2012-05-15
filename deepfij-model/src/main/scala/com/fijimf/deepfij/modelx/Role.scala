@@ -15,13 +15,13 @@ class Role(
             val id: Long = 0L,
 
             @(Column@field)(name = "name", nullable = false, unique = true)
-            val name: String = "User",
+            val name: String = "",
 
             @(ManyToMany@field)
             @(JoinTable@field)(
               name = "user_role",
-              joinColumns = Array(new JoinColumn(name = "user_id", referencedColumnName = "id")),
-              inverseJoinColumns = Array(new JoinColumn(name = "role_id", referencedColumnName = "id"))
+              joinColumns = Array(new JoinColumn(name = "role_id", referencedColumnName = "id")),
+              inverseJoinColumns = Array(new JoinColumn(name = "user_id", referencedColumnName = "id"))
             )
             val users: java.util.Set[User] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]],
 
