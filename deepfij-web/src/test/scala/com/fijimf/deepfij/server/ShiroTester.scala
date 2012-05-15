@@ -26,6 +26,8 @@ object ShiroTester {
       val token:UsernamePasswordToken = new UsernamePasswordToken("fijimf@gmail.com", "mutombo");
       token.setRememberMe(true);
       currentUser.login(token);
+
+      currentUser.checkRole("ADMIN")
     }
   }
 }

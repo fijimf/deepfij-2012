@@ -15,7 +15,7 @@ class Permission(
             val id: Long = 0L,
 
             @(Column@field)(name = "permission", nullable = false, unique=true)
-            val name: String = "",
+            val permission: String = "",
 
             @(ManyToMany@field)
             @(JoinTable@field)(
