@@ -22,7 +22,6 @@ trait DeepFijService extends Service with Directives {
   def activeScheduleKey(): String
 
   lazy val service:Route = logPath {
-    AdminRoute() ~
       path("date" / "[0-9]{8}".r) {
         d => cache {
           get {
@@ -36,16 +35,7 @@ trait DeepFijService extends Service with Directives {
           _.complete(html5Wrapper(BasePage(title = "Search '" + q + "'", content = Some(SearchResultPanel(q, teams)))))
         }
       }
-    } ~ path("quote") {
-      get {
-        respondWithMediaType(`text/html`) {
-          _.complete {
-            <p class="epigram">
-              {qd.random().map(_.quote).getOrElse("")}
-            </p>
-          }
-        }
-      }
+
     } ~ path("login") {
       get {
         respondWithMediaType(`text/html`) {
