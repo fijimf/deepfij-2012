@@ -17,6 +17,7 @@ import com.fijimf.deepfij.workflow.{Scraper, UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.text.SimpleDateFormat
+import org.apache.shiro.authc.UsernamePasswordToken
 
 class Controller extends ScalatraFilter {
   val td = new TeamDao()
@@ -105,8 +106,9 @@ class Controller extends ScalatraFilter {
     html5Wrapper(BasePage(title = "Login", content = Some(LoginPanel())))
   }
 
-  put("/login") {
+  post("/login") {
     contentType = "text/html"
+    SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password")))
     html5Wrapper(BasePage(title = "Login", content = Some(LoginPanel())))
   }
 

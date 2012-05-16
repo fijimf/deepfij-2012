@@ -5,9 +5,6 @@
 
 <web-app>
     <listener>
-        <listener-class>cc.spray.connectors.Initializer</listener-class>
-    </listener>
-    <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
 
