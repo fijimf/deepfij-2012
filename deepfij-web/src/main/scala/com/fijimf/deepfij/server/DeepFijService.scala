@@ -23,8 +23,6 @@ trait DeepFijService extends Service with Directives {
 
   lazy val service:Route = logPath {
     AdminRoute() ~
-    TeamPageRoute(activeScheduleKey) ~
-    ConferencePageRoute(activeScheduleKey) ~
       path("date" / "[0-9]{8}".r) {
         d => cache {
           get {
@@ -36,17 +34,6 @@ trait DeepFijService extends Service with Directives {
         val teams = td.search(q)
         respondWithMediaType(`text/html`) {
           _.complete(html5Wrapper(BasePage(title = "Search '" + q + "'", content = Some(SearchResultPanel(q, teams)))))
-        }
-      }
-    } ~ StaticAssetRoute("static", "/public/") ~ path("restricted") {
-      get {
-        authenticate(httpBasic()) {
-          user =>
-            respondWithMediaType(`text/html`) {
-              _.complete {
-                <h1>Fridge Rules</h1>
-              }
-            }
         }
       }
     } ~ path("quote") {

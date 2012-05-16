@@ -7,13 +7,21 @@
 package com.fijimf.deepfij.server.filter
 
 import org.scalatra.ScalatraFilter
-import com.fijimf.deepfij.modelx.TeamDao
-import com.fijimf.deepfij.view.{MissingResourcePanel, TeamPanel, BasePage}
 import com.fijimf.deepfij.server.Util._
+import org.apache.shiro.SecurityUtils
+import cc.spray._
+import http.MediaTypes._
+import com.fijimf.deepfij.view.{ConferencePanel, MissingResourcePanel, TeamPanel, BasePage}
+import com.fijimf.deepfij.modelx.{ConferenceDao, TeamDao}
 
 class Controller extends ScalatraFilter {
   val td = new TeamDao()
+  val cd = new ConferenceDao()
   val scheduleKey = "2012"
+
+  before() {
+    println(SecurityUtils.getSubject.toString)
+  }
 
   get("/") {
     <html>
@@ -35,4 +43,16 @@ class Controller extends ScalatraFilter {
       case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", key)))
     })
   }
+
+  get("/conference/:key") {
+    contentType = "text/html"
+    val key: String = params("key")
+    println("Building Conference Page " + scheduleKey + "," + key)
+    html5Wrapper(cd.findByKey(scheduleKey, key) match {
+      case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c)))
+      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", key)))
+    }
+    )
+  }
+
 }
