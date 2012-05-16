@@ -13,7 +13,7 @@ object LoginPanel {
     </div>
       <div class="row">
         <div class="span12">
-          <form class="well">
+          <form class="well" method="post" >
             <label>Email</label>
               <input id="email" type="text" class="span3" placeholder="user@email.com"/>
             <label class="password">
