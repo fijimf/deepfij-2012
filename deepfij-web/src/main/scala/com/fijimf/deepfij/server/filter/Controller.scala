@@ -100,6 +100,16 @@ class Controller extends ScalatraFilter {
     html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
   }
 
+  get("/login") {
+    contentType = "text/html"
+    html5Wrapper(BasePage(title = "Login", content = Some(LoginPanel())))
+  }
+
+  put("/login") {
+    contentType = "text/html"
+    html5Wrapper(BasePage(title = "Login", content = Some(LoginPanel())))
+  }
+
 
   def create(key: String, name: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
