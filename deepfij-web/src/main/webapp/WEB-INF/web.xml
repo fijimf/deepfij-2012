@@ -5,19 +5,16 @@
 
 <web-app>
     <listener>
-        <listener-class>cc.spray.connectors.Initializer</listener-class>
-    </listener>
-    <listener>
         <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
     </listener>
 
     <filter>
-        <filter-name>ShiroFilter</filter-name>
+        <filter-name>shiro-filter</filter-name>
         <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>ShiroFilter</filter-name>
+        <filter-name>shiro-filter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
@@ -25,16 +22,27 @@
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
-    <servlet>
-        <servlet-name>SprayConnectorServlet</servlet-name>
-        <servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>
-        <async-supported>true</async-supported>
-    </servlet>
+    <filter>
+        <filter-name>scalatra-filter</filter-name>
+        <filter-class>com.fijimf.deepfij.server.filter.Controller</filter-class>
+    </filter>
 
-    <servlet-mapping>
-        <servlet-name>SprayConnectorServlet</servlet-name>
+    <filter-mapping>
+        <filter-name>scalatra-filter</filter-name>
         <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    </filter-mapping>
+
+
+    <!--<servlet>-->
+        <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
+        <!--<servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>-->
+        <!--<async-supported>true</async-supported>-->
+    <!--</servlet>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 </web-app>
 
