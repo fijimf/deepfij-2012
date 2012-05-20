@@ -2,9 +2,11 @@ package com.fijimf.deepfij.view
 
 import xml.NodeSeq
 import collection.immutable.Map
-import com.fijimf.deepfij.modelx.{ConferenceDao, TeamDao}
+import org.apache.shiro.SecurityUtils
+import org.apache.shiro.subject.Subject
 
 object BasePage {
+  val subject: Subject = SecurityUtils.getSubject
 
   def apply(title: String = "", content: Option[NodeSeq], flash: Map[String, String] = Map.empty): NodeSeq = {
     <html lang="en">
@@ -39,9 +41,23 @@ object BasePage {
                 </li>
               </ul>
               <form action="/search" method="get" class="navbar-search pull-left">
-                  <input name="q" type="text" class="search-query" placeholder="Team, Conference, Statistic..." />
+                  <input name="q" type="text" class="search-query" placeholder="Team, Conference, Statistic..."/>
               </form>
-              <ul class="nav pull-right"><li><a href="/login">Login</a></li></ul>
+              <ul class="nav pull-right">
+                {if (subject.isAuthenticated) {
+                <li>
+                  {subject.getPrincipal.toString}
+                </li>
+                  <li>
+                    <a href="/logout">Logout</a>
+                  </li>
+              }
+              else {
+                <li>
+                  <a href="/login">Login</a>
+                </li>
+              }}
+              </ul>
             </div>
           </div>
         </div>
