@@ -15,9 +15,9 @@ object LoginPanel {
         <div class="span12">
           <form class="well" method="post" >
             <label>Email</label>
-              <input id="email" type="text" class="span3" placeholder="user@email.com"/>
+              <input id="email" name="email" type="text" class="span3" placeholder="user@email.com"/>
             <label class="password">
-              <input id="password" type="password" class="span3"/>
+              <input id="password" name="password" type="password" class="span3"/>
             </label>
             <button type="submit" class="btn">Login</button>
           </form>
