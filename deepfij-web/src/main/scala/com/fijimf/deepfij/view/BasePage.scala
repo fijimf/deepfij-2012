@@ -6,7 +6,7 @@ import org.apache.shiro.SecurityUtils
 import org.apache.shiro.subject.Subject
 
 object BasePage {
-  val subject: Subject = SecurityUtils.getSubject
+  def subject: Subject = SecurityUtils.getSubject
 
   def apply(title: String = "", content: Option[NodeSeq], flash: Map[String, String] = Map.empty): NodeSeq = {
     <html lang="en">
@@ -44,9 +44,9 @@ object BasePage {
                   <input name="q" type="text" class="search-query" placeholder="Team, Conference, Statistic..."/>
               </form>
               <ul class="nav pull-right">
-                {if (subject.isAuthenticated) {
+                {if (subject.isRemembered || subject.isAuthenticated) {
                 <li>
-                  {subject.getPrincipal.toString}
+                  <a href="/user">{subject.getPrincipal.toString}</a>
                 </li>
                   <li>
                     <a href="/logout">Logout</a>
