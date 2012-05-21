@@ -21,6 +21,9 @@ class Schedule(
                 @(Column@field)(name = "name", unique = true)
                 val name: String = "",
 
+                @(Column@field)(name = "isPrimary")
+                val isPrimary: Boolean = false,
+
                 @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Conference])
                 val conferences: java.util.Set[Conference] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]],
 
@@ -46,7 +49,7 @@ class Schedule(
   @transient lazy val aliasList: List[Alias] = aliases.toList
 
   def this() = {
-    this(0L, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Alias]], new Date())
+    this(0L, "", "", false, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Alias]], new Date())
   }
 }
 
@@ -57,6 +60,13 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
   }
 
   def findAll(): List[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s").getResultList.toList.asInstanceOf[List[Schedule]]
+
+  def setPrimary(key: String) = {
+    transactional {
+      entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = false WHERE s.key != :key").setParameter("key", key).executeUpdate()
+      entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = true WHERE s.key = :key").setParameter("key", key).executeUpdate()
+    }
+  }
 
 }
 

@@ -91,6 +91,33 @@ class ScheduleTestSuite extends FunSuite with BeforeAndAfterEach {
 
   }
 
+  test("Set primary") {
+    dao.save(new Schedule(key = "nnn", name = "NNN"))
+    dao.save(new Schedule(key = "ooo", name = "OOO"))
+    dao.save(new Schedule(key = "ppp", name = "PPP"))
+
+    assert(dao.findByKey("nnn").get.isPrimary==false)
+    assert(dao.findByKey("ooo").get.isPrimary==false)
+    assert(dao.findByKey("ppp").get.isPrimary==false)
+
+    dao.setPrimary("ooo")
+    PersistenceSource.entityManager.clear() //Flush 1st level cache
+
+    assert(dao.findByKey("nnn").get.isPrimary==false)
+    assert(dao.findByKey("ooo").get.isPrimary)
+    assert(dao.findByKey("ppp").get.isPrimary==false)
+
+    dao.setPrimary("ppp")
+    PersistenceSource.entityManager.clear() //Flush 1st level cache
+
+
+    assert(dao.findByKey("nnn").get.isPrimary==false)
+    assert(dao.findByKey("ooo").get.isPrimary==false)
+    assert(dao.findByKey("ppp").get.isPrimary)
+
+
+  }
+
 
   override protected def afterEach() {
     PersistenceSource.dropDatabase()
