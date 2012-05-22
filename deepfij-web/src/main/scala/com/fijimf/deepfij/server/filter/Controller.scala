@@ -35,20 +35,19 @@ class Controller extends ScalatraFilter {
   }
 
   get("/") {
-    <html>
-      <body>
-        <h1>Hello, world!</h1>
-        Say
-        <a href="hello-scalate">hello to Scalate</a>
-        .
-      </body>
-    </html>
+    html5Wrapper(BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)))
+  }
+
+  get("/admin") {
+
+  }
+  get("/date/:yyyymmdd") {
+
   }
 
   get("/team/:key") {
     contentType = "text/html"
     val key: String = params("key")
-    println("Building Team Page " + scheduleKey + "," + key)
     html5Wrapper(td.findByKey(key) match {
       case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t)))
       case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", key)))
@@ -58,7 +57,6 @@ class Controller extends ScalatraFilter {
   get("/conference/:key") {
     contentType = "text/html"
     val key: String = params("key")
-    println("Building Conference Page " + scheduleKey + "," + key)
     html5Wrapper(cd.findByKey(key) match {
       case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c)))
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", key)))
@@ -74,30 +72,30 @@ class Controller extends ScalatraFilter {
 
   get("/admin") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
   }
 
   post("/admin/new") {
     create(params("key"), params("name"), params("from"), params("to"))
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
   }
   post("/admin/rebuild") {
     rebuild(params("key"))
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
   }
 
   post("/admin/update") {
     update(params("key"))
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
 
   }
   post("/admin/delete") {
     delete(params("key"))
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
   }
 
   get("/login") {
@@ -107,16 +105,20 @@ class Controller extends ScalatraFilter {
 
   post("/login") {
     contentType = "text/html"
-    SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password"),true))
+    SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password"), true))
     WebUtils.redirectToSavedRequest(request, response, "/login")
   }
 
   get("/logout") {
+    logout
+  }
+
+
+  def logout: Any = {
     contentType = "text/html"
     SecurityUtils.getSubject.logout
     redirect("/")
   }
-
 
   def create(key: String, name: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
