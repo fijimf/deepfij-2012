@@ -35,6 +35,7 @@ case class Scraper(t: TeamReader, c: ConferenceReader, g: GameReader) {
             case (h: String, hs: Option[Int], a: String, as: Option[Int]) => (date, h, hs.get, a, as.get)
           })
         })
+        repo.setPrimary(r.schedKey)
       }
       case u: UpdateGamesAndResults => {
         val s = repo.scheduleDao.findByKey(u.schedKey).get

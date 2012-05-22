@@ -120,4 +120,7 @@ class ScheduleRepository extends Transactional {
       scheduleDao.findByKey(schedKey).map(f(_))
     }
   }
+
+  def setPrimary(key:String) = scheduleDao.setPrimary(key)
+
 }
