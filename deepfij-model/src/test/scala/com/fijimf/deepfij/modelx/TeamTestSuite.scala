@@ -38,11 +38,14 @@ class TeamTestSuite extends FunSuite with BeforeAndAfterEach {
   }
 
   test("Find by key") {
-    val s = sdao.save(new Schedule(0L, "test", "Test"))
+    val s = sdao.save(new Schedule(0L, "test", "Test", true))
+    val s1 = sdao.save(new Schedule(0L, "not-primary", "Not Primary", false))
     val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
+    val c1 = cdao.save(new Conference(0L, s1, "big-east", "Big East"))
     assert(dao.findAll().isEmpty)
     assert(dao.findBy(999) == None)
     val r = dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
+    val r1 = dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s1, conference = c1, longName = "Georgetown", updatedAt = new Date))
 
     assert(dao.findByKey("georgetown").size == 1)
     assert(dao.findByKey("test","georgetown").size == 1)

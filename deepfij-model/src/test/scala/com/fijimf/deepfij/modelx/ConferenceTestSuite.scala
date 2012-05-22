@@ -26,12 +26,14 @@ with BeforeAndAfterEach {
   }
 
   test("Find a conference") {
-    val s = scheduleDao.save(new Schedule(0L, "test", "Test"))
+    val s = scheduleDao.save(new Schedule(0L, "test", "Test", true))
+    val s1 = scheduleDao.save(new Schedule(0L, "not-primary", "Not Primary"))
     assert(conferenceDao.findAll().isEmpty)
     assert(None == conferenceDao.findBy(999))
     val r = conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s))
+    val rx = conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s1))
     val cs: List[Conference] = conferenceDao.findAll()
-    assert(cs.size == 1)
+    assert(cs.size == 2)
     assert(cs.head.key == "big-east")
     val r1 = conferenceDao.findBy(r.id).get
     //assert(r1.isDefined)
@@ -41,6 +43,10 @@ with BeforeAndAfterEach {
     assert(r1.schedule.key == s.key)
     assert(r1.schedule.name == s.name)
     assert(r1.teamList.isEmpty)
+
+    assert(r1 == conferenceDao.findByKey("big-east").get)
+    assert(r1 == conferenceDao.findByKey("test","big-east").get)
+    assert(r1 != conferenceDao.findByKey("not-primary","big-east").get)
   }
 
   test("Schedule knows conferences") {
