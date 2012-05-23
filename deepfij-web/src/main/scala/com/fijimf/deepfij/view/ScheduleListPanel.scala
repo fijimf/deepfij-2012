@@ -11,7 +11,7 @@ object ScheduleListPanel {
 
   def apply() = {
       <div class="row">
-        <div class="span12">
+        <div class="span10">
           <h3>Schedules</h3>
           <table class="table table-bordered table-condensed">
             <thead>

@@ -35,6 +35,7 @@ class Controller extends ScalatraFilter {
   }
 
   get("/") {
+    contentType = "text/html"
     html5Wrapper(BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)))
   }
 
@@ -72,7 +73,7 @@ class Controller extends ScalatraFilter {
 
   get("/admin") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
   }
 
   post("/admin/new") {
