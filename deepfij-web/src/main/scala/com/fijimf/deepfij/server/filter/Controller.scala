@@ -48,7 +48,6 @@ class Controller extends ScalatraFilter {
   get("/team/:key") {
     contentType = "text/html"
     val key: String = params("key")
-    println("Building Team Page " + scheduleKey + "," + key)
     html5Wrapper(td.findByKey(key) match {
       case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t)))
       case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", key)))
@@ -58,7 +57,6 @@ class Controller extends ScalatraFilter {
   get("/conference/:key") {
     contentType = "text/html"
     val key: String = params("key")
-    println("Building Conference Page " + scheduleKey + "," + key)
     html5Wrapper(cd.findByKey(key) match {
       case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c)))
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", key)))
