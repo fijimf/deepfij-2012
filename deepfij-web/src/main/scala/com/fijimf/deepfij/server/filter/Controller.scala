@@ -31,7 +31,6 @@ class Controller extends ScalatraFilter {
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
   before() {
-    println(SecurityUtils.getSubject.getPrincipal())
   }
 
   get("/") {
@@ -76,11 +75,21 @@ class Controller extends ScalatraFilter {
     html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
   }
 
-  post("/admin/new") {
-    create(params("key"), params("name"), params("from"), params("to"))
+  get("/schedule/new") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
+    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleCreatePanel())))
   }
+
+  post("/schedule/new") {
+    create(params("key"), params("name"), params("from"), params("to"))
+    redirect("/schedule/edit/" + params ("key"))
+  }
+
+  get("/schedule/makeprimary/:key") {
+    sd.setPrimary(params("key"))
+    redirect("/admin")
+  }
+
   post("/admin/rebuild") {
     rebuild(params("key"))
     contentType = "text/html"
@@ -93,6 +102,7 @@ class Controller extends ScalatraFilter {
     html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleListPanel())))
 
   }
+
   post("/admin/delete") {
     delete(params("key"))
     contentType = "text/html"
