@@ -66,7 +66,7 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
       entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = false WHERE s.key != :key").setParameter("key", key).executeUpdate()
       entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = true WHERE s.key = :key").setParameter("key", key).executeUpdate()
     }
-    entityManager.flush()
+    entityManager.clear()
   }
 
 }
