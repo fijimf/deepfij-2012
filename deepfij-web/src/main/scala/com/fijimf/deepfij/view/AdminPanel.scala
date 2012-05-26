@@ -18,5 +18,6 @@ object AdminPanel {
           true)}
         </div>
       </div>
+      <script src="/scripts/popaccordion.js"></script>
   }
 }

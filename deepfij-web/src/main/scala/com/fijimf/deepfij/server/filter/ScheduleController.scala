@@ -19,8 +19,10 @@ trait ScheduleController {
   }
 
   get("/schedule/makeprimary/:key") {
-    sd.setPrimary(params("key"))
-    redirect("/admin")
+    val key: String = params("key")
+    sd.setPrimary(key)
+    log.info("Setting "+key+" as primary")
+    redirect("/admin#collapseSchedules")
   }
 
   post("/schedule/rebuild") {

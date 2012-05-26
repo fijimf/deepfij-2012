@@ -3,8 +3,10 @@ package com.fijimf.deepfij.view
 import com.fijimf.deepfij.modelx.ScheduleDao
 import java.text.SimpleDateFormat
 import java.util.Date
+import org.apache.log4j.Logger
 
 object ScheduleListPanel {
+  val log = Logger.getLogger(this.getClass)
   val sd = new ScheduleDao()
   val dateFmt = new SimpleDateFormat("MMM-dd-yyyy")
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
@@ -21,6 +23,7 @@ object ScheduleListPanel {
           </thead>
           <tbody>
             {sd.findAll().map(s => {
+            log.info(s.key+" "+s.isPrimary)
             val lastDate: Option[Date] = s.gameList match {
               case Nil => None
               case gameList => Some(gameList.maxBy(_.date).date)
@@ -31,9 +34,13 @@ object ScheduleListPanel {
             }
             <tr>
               <td>
-                <a href={"/schedule/makeprimary/"+s.key}>
-                  {if (s.isPrimary) <i class="icon-star"></i> else <i class="icon-star-empty"></i>}
+                {if (s.isPrimary) {
+                <i class="icon-star"></i>
+              } else {
+                <a href={"/schedule/makeprimary/" + s.key}>
+                  <i class="icon-star-empty"></i>
                 </a>
+              }}
               </td>
               <td>
                 <a href={"/schedule/edit/"+s.key}>{s.key}</a>

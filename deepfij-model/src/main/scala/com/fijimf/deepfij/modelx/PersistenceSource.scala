@@ -8,7 +8,7 @@ import java.io.File
 
 
 object PersistenceSource {
-  val persistenceUnitName = System.getProperty("deepfij.persistenceUnitName", "deepfij-test")
+  val persistenceUnitName = "deepfij"
   val entityManagerFactory: EntityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName)
   val entityManager: EntityManager = entityManagerFactory.createEntityManager()
   entityManager.setFlushMode(FlushModeType.AUTO)

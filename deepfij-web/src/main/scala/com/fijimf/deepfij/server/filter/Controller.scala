@@ -19,8 +19,10 @@ import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.text.SimpleDateFormat
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
+import org.apache.log4j.Logger
 
 class Controller extends ScalatraFilter with ScheduleController{
+  val log=Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
   val qd = new QuoteDao()
