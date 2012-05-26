@@ -7,17 +7,12 @@ import java.util.Date
 
 
 @RunWith(classOf[JUnitRunner])
-class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
+class AliasTestSuite extends DaoTestSuite {
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
   val teamDao = new TeamDao
   val aliasDao = new AliasDao
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
 
   test("Create an alias") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
@@ -26,12 +21,7 @@ class AliasTestSuite extends FunSuite with BeforeAndAfterEach {
     val a = aliasDao.save(new Alias(schedule = s, team = r, alias = "Gtown"))
     assert(a.id > 0)
 
-
     val schedule: Schedule = scheduleDao.findByKey("test").get
     assert(schedule.aliasList.size == 1)
-  }
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
   }
 }

@@ -9,19 +9,12 @@ import com.fijimf.deepfij.modelx.Team._
 import com.fijimf.deepfij.modelx.Result._
 
 @RunWith(classOf[JUnitRunner])
-class TeamStatTestSuite extends FunSuite with BeforeAndAfterEach {
+class TeamStatTestSuite extends DaoTestSuite {
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
   val teamDao = new TeamDao
   val metaStatDao = new MetaStatDao
   val teamStatDao = new TeamStatDao
-
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
-
 
   test("Create") {
 
@@ -73,10 +66,5 @@ class TeamStatTestSuite extends FunSuite with BeforeAndAfterEach {
 
     val pop: List[TeamStat] = teamStatDao.population("wins", jan01)
     assert(pop.size == 3)
-  }
-
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
   }
 }

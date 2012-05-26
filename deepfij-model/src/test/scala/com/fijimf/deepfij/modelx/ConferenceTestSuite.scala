@@ -6,18 +6,12 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import javax.persistence.PersistenceException
 
 @RunWith(classOf[JUnitRunner])
-class ConferenceTestSuite extends FunSuite
-with BeforeAndAfterEach {
+class ConferenceTestSuite extends DaoTestSuite{
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
   val teamDao = new TeamDao
   val gameDao = new GameDao
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
 
   test("Create a conference") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
@@ -92,10 +86,5 @@ with BeforeAndAfterEach {
     assert(t1.conference == c1)
     assert(!c1.teamList.isEmpty)
     assert(c1.teamList.contains(t1))
-  }
-
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
   }
 }

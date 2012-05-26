@@ -6,18 +6,15 @@ import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
-class SchemaTestSuite extends FunSuite with BeforeAndAfterEach {
+class SchemaTestSuite extends DaoTestSuite{
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
   val teamDao = new TeamDao
   val gameDao = new GameDao
 
-
-
   override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
+    super.beforeEach()
     scheduleDao.save(new Schedule(key = "ncaam09", name = "NCAA Men's Basketball 2008-2009"))
     scheduleDao.save(new Schedule(key = "ncaam10", name = "NCAA Men's Basketball 2009-2010"))
     scheduleDao.save(new Schedule(key = "ncaam11", name = "NCAA Men's Basketball 20011"))
@@ -107,37 +104,6 @@ class SchemaTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(u1.games.size == 1)
     assert(u1.homeGames.size == 1)
     assert(u1.awayGames.size == 0)
-
-
-
-    //
-    //        assert(s.isPersisted)
-    //        assert(t.isPersisted)
-    //        assert(u.isPersisted)
-    //        assert(g.isPersisted)
-    //        assert(g.id > 0)
-    //        assert(g.result.isEmpty)
-    //        assert(s.teams.size === 2)
-    //        assert(s.games.size === 1)
-    //
-    //        val s1 = schedules.where(_.name === "Test").head
-    //        assert(s1.games.size === 1)
-    //        assert(s1.games.head.homeTeam.head.name === "Georgetown")
-    //        assert(s1.games.head.awayTeam.head.name === "Villanova")
-    //
-    //        val ts = teams.where(t => (t.scheduleId === s1.id and t.keyName === "georgetown"))
-    //        assert(ts.size === 1)
-    //        assert(ts.head.name === "Georgetown")
-    //        assert(ts.head.homeGames.size === 1)
-    //        assert(ts.head.awayGames.size === 0)
-    //
-    //    }
-
-
   }
 
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
-  }
 }

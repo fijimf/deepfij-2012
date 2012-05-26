@@ -6,18 +6,11 @@ import java.util.Date
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
-class GameTestSuite extends FunSuite with BeforeAndAfterEach {
+class GameTestSuite extends DaoTestSuite {
   val sdao: ScheduleDao = new ScheduleDao
   val cdao: ConferenceDao = new ConferenceDao
   val tdao: TeamDao = new TeamDao
   val dao: GameDao = new GameDao
-
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
-
 
   test("Save a game") {
     val s = sdao.save(new Schedule(0L, "test", "Test"))
@@ -45,10 +38,5 @@ class GameTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(g1.schedule.teamList.size == 2)
     assert(g1.schedule.gameList.size == 1)
     assert(g1.resultOpt == None)
-  }
-
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
   }
 }

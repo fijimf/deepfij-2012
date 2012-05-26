@@ -6,13 +6,8 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import javax.persistence.PersistenceException
 
 @RunWith(classOf[JUnitRunner])
-class ScheduleTestSuite extends FunSuite with BeforeAndAfterEach {
+class ScheduleTestSuite extends DaoTestSuite {
   val dao: ScheduleDao = new ScheduleDao
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
 
   test("Find empty") {
     assert(dao.findAll().isEmpty)
@@ -116,10 +111,5 @@ class ScheduleTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(dao.findByKey("ppp").get.isPrimary)
 
 
-  }
-
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
   }
 }
