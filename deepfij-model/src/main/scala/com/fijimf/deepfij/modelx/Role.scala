@@ -34,7 +34,7 @@ class Role(
             val permissions: java.util.Set[Permission] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Permission]],
 
             @(Column@field)(name = "updatedAt", nullable = false)
-            val updatedAt: Date = new Date
+            var updatedAt: Date = new Date
             ) {
   def this() = {
     this(0L, "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[User]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Permission]], new Date())

@@ -14,16 +14,16 @@ class Quote(
                   val id: Long = 0L,
 
                   @(Column@field)(name = "quote", nullable = false)
-                  val quote: String = "x",
+                  var quote: String = "x",
 
                   @(Column@field)(name = "source", nullable = true)
-                  val source: String = "",
+                  var source: String = "",
 
                   @(Column@field)(name = "url", nullable = true)
-                  val url: String = "",
+                  var url: String = "",
 
                   @(Column@field)(name = "updatedAt", nullable = false)
-                  val updatedAt: Date = new Date
+                  var updatedAt: Date = new Date
                   ) {
   def this() = {
     this(0L, "", "", "", new Date())

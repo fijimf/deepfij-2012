@@ -29,9 +29,9 @@ class Game(
             val date: Date = new Date,
 
             @(Column@field)(name = "isNeutralSite", nullable = false)
-            val isNeutralSite: Boolean = false,
+            var isNeutralSite: Boolean = false,
             @(Column@field)(name = "isConferenceTournament", nullable = false)
-            val isConferenceTournament: Boolean = false,
+            var isConferenceTournament: Boolean = false,
             @(Column@field)(name = "isNcaaTournament", nullable = false)
             val isNcaaTournament: Boolean = false,
 
@@ -39,7 +39,7 @@ class Game(
             val result: Result = null,
 
             @(Column@field)(name = "updatedAt")
-            val updatedAt: Date = new Date
+            var updatedAt: Date = new Date
             ) {
   require((homeTeam == null && awayTeam == null) || (homeTeam != null))
 

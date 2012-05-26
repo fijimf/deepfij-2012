@@ -28,10 +28,10 @@ import org.apache.commons.lang.StringUtils
                val team: Team = null,
 
                @(Column@field)(name = "alias", nullable = false)
-               val alias: String = "",
+               var alias: String = "",
 
                @(Column@field)(name = "updatedAt")
-               val updatedAt: Date = new Date
+               var updatedAt: Date = new Date
                ) {
 
   require(StringUtils.isBlank(alias) || alias.matches("[a-zA-Z\\-\\.\\'\\&\\,\\(\\) ]+"), "Only a-z A-Z - . ' & , ( ) allowed in team alias.")

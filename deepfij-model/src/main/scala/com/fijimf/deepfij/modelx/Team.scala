@@ -33,28 +33,28 @@ import org.apache.commons.lang.StringUtils
               val key: String = "",
 
               @(Column@field)(name = "name", nullable = false)
-              val name: String = "",
+              var name: String = "",
 
               @(Column@field)(name = "longName", nullable = false)
-              val longName: String = "",
+              var longName: String = "",
 
               @(Column@field)(name = "nickname", nullable = true)
-              val nickname: String = null,
+              var nickname: String = null,
 
               @(Column@field)(name = "primaryColor", nullable = true)
-              val primaryColor: String = null,
+              var primaryColor: String = null,
 
               @(Column@field)(name = "secondaryColor", nullable = true)
-              val secondaryColor: String = null,
+              var secondaryColor: String = null,
 
               @(Column@field)(name = "logo", nullable = true)
-              val logo: String = null,
+              var logo: String = null,
 
               @(Column@field)(name = "officialUrl", nullable = true)
-              val officialUrl: String = null,
+              var officialUrl: String = null,
 
               @(Column@field)(name = "updatedAt")
-              val updatedAt: Date = new Date,
+              var updatedAt: Date = new Date,
 
               @(OneToMany@field)(mappedBy = "homeTeam", fetch = FetchType.LAZY)
               val homeGames: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]],

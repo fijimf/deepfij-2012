@@ -16,7 +16,7 @@ class User(
             val email: String = "",
 
             @(Column@field)(name = "password", nullable = false)
-            val password: String = "",
+            var password: String = "",
 
             @(ManyToMany@field)
             @(JoinTable@field)(
@@ -27,7 +27,7 @@ class User(
             val roles: java.util.Set[Role] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Role]],
 
             @(Column@field)(name = "updatedAt", nullable = false)
-            val updatedAt: Date = new Date
+            var updatedAt: Date = new Date
             ) {
   def this() = {
     this(0L, "", "",java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Role]], new Date())

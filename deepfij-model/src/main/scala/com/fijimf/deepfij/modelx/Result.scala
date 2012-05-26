@@ -19,11 +19,11 @@ class Result(
 
               @(Column@field)(name = "homeScore")
 
-              val homeScore: Int = 0,
+              var homeScore: Int = 0,
               @(Column@field)(name = "awayScore")
-              val awayScore: Int = 0,
+              var awayScore: Int = 0,
               @(Column@field)(name = "updatedAt")
-              val updatedAt: Date = new Date
+              var updatedAt: Date = new Date
               ) {
   def this() = this(0L)
 

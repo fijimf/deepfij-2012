@@ -25,14 +25,14 @@ class Conference(
                   val key: String = "",
 
                   @(Column@field)(name = "name")
-                  val name: String = "",
+                  var name: String = "",
 
                   @(OneToMany@field)(mappedBy = "conference", cascade = Array(CascadeType.ALL), fetch = FetchType.LAZY, targetEntity = classOf[Team])
                   val teams: java.util.Set[Team] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]],
 
 
                   @(Column@field)(name = "updatedAt")
-                  val updatedAt: Date = new Date
+                  var updatedAt: Date = new Date
                   ) {
   def this() = {
     this(0L, null, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], new Date())

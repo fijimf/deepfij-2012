@@ -22,7 +22,7 @@ class Schedule(
                 val name: String = "",
 
                 @(Column@field)(name = "isPrimary")
-                val isPrimary: Boolean = false,
+                var isPrimary: Boolean = false,
 
                 @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Conference])
                 val conferences: java.util.Set[Conference] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]],
@@ -62,11 +62,10 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
   def findAll(): List[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s").getResultList.toList.asInstanceOf[List[Schedule]]
 
   def setPrimary(key: String) = {
-    transactional {
-      entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = false WHERE s.key != :key").setParameter("key", key).executeUpdate()
-      entityManager.createQuery("UPDATE Schedule s SET s.isPrimary = true WHERE s.key = :key").setParameter("key", key).executeUpdate()
-    }
-    entityManager.clear()
+    findAll().map(s => {
+      s.isPrimary = (s.key == key)
+      save(s)
+    })
   }
 
 }
