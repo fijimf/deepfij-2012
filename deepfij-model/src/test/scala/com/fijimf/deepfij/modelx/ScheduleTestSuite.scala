@@ -101,14 +101,14 @@ class ScheduleTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(dao.findByKey("ppp").get.isPrimary==false)
 
     dao.setPrimary("ooo")
-    PersistenceSource.entityManager.clear() //Flush 1st level cache
+ //   PersistenceSource.entityManager.clear() //Flush 1st level cache
 
     assert(dao.findByKey("nnn").get.isPrimary==false)
     assert(dao.findByKey("ooo").get.isPrimary)
     assert(dao.findByKey("ppp").get.isPrimary==false)
 
     dao.setPrimary("ppp")
-    PersistenceSource.entityManager.clear() //Flush 1st level cache
+//    PersistenceSource.entityManager.clear() //Flush 1st level cache
 
 
     assert(dao.findByKey("nnn").get.isPrimary==false)
