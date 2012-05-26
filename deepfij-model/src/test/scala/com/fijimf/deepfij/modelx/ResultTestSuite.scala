@@ -8,19 +8,13 @@ import com.fijimf.deepfij.modelx.Conference._
 
 
 @RunWith(classOf[JUnitRunner])
-class ResultTestSuite extends FunSuite with BeforeAndAfterEach {
+class ResultTestSuite extends DaoTestSuite {
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
   val teamDao = new TeamDao
   val gameDao = new GameDao
   val resultDao = new ResultDao
-
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-  }
-
 
   test("Create a result") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
@@ -50,8 +44,4 @@ class ResultTestSuite extends FunSuite with BeforeAndAfterEach {
     assert(gameList.head.resultOpt.isDefined)
   }
 
-
-  override protected def afterEach() {
-    PersistenceSource.dropDatabase()
-  }
 }
