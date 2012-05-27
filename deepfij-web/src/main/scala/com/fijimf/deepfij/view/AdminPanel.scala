@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.view
 
 import com.fijimf.deepfij.server.Util._
+import schedule.ScheduleListPanel
 
 
 object AdminPanel {

@@ -35,30 +35,19 @@ object BasePage {
               <a class="brand" href="#">DeepFij</a>
               <ul class="nav">
                 <li class="active">
-                  <a href="#home">Home</a>
-                </li>
+                  <a href="/">Home</a>
+                </li>{if (userIsKnown) {
                 <li>
-                  <a href="#about">About</a>
+                  <a href="/admin">Admin</a>
                 </li>
+              }}<li>
+                <a href="/about">About</a>
+              </li>
               </ul>
               <form action="/search" method="get" class="navbar-search pull-left">
                   <input name="q" type="text" class="search-query" placeholder="Team, Conference, Statistic..."/>
               </form>
-              <ul class="nav pull-right">
-                {if (subject.isRemembered || subject.isAuthenticated) {
-                <li>
-                  <a href="/user">{subject.getPrincipal.toString}</a>
-                </li>
-                  <li>
-                    <a href="/logout">Logout</a>
-                  </li>
-              }
-              else {
-                <li>
-                  <a href="/login">Login</a>
-                </li>
-              }}
-              </ul>
+              {userPullRight}
             </div>
           </div>
         </div>
@@ -78,5 +67,40 @@ object BasePage {
         </div>
       </body>
     </html>
+  }
+
+  def userPullRight = {
+    <ul class="nav pull-right">
+      {if (userIsKnown) {
+      userItems
+    } else {
+      noUserItems
+    }}
+    </ul>
+  }
+
+
+  def userIsKnown: Boolean = {
+    subject.isRemembered || subject.isAuthenticated
+  }
+
+  def userItems: NodeSeq = {
+    <li>
+      <a href="/user">
+        {subject.getPrincipal.toString}
+      </a>
+    </li>
+      <li>
+        <a href="/logout">Logout</a>
+      </li>
+  }
+
+  def noUserItems: NodeSeq = {
+    <li>
+      <a href="/login">Login</a>
+    </li>
+      <li>
+        <a href="/register">Register</a>
+      </li>
   }
 }

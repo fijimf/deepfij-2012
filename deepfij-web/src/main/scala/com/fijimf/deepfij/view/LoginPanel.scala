@@ -20,6 +20,7 @@ object LoginPanel {
               <input id="password" name="password" type="password" class="span3"/>
             </label>
             <button type="submit" class="btn">Login</button>
+
           </form>
         </div>
       </div>

@@ -4,7 +4,8 @@ import java.util.Date
 import org.apache.commons.lang.time.DateUtils
 import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.server.Util._
-import com.fijimf.deepfij.view.{ScheduleListPanel, ScheduleCreatePanel, BasePage}
+import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
+import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleListPanel, ScheduleCreatePanel}
 
 trait ScheduleController {
   this: Controller =>
@@ -15,14 +16,30 @@ trait ScheduleController {
 
   post("/schedule/new") {
     create(params("key"), params("name"), params("from"), params("to"))
-    redirect("/schedule/edit/" + params ("key"))
+    redirect("/schedule/show/" + params("key"))
   }
 
-  get("/schedule/makeprimary/:key") {
+  post("/schedule/makeprimary/:key") {
     val key: String = params("key")
     sd.setPrimary(key)
-    log.info("Setting "+key+" as primary")
+    log.info("Setting " + key + " as primary")
     redirect("/admin#collapseSchedules")
+  }
+
+  get("/schedule/show/:key") {
+    contentType = "text/html"
+    sd.findByKey(params("key")) match {
+      case Some(schedule) => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleShowPanel(schedule))))
+      case None => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", params("key")))))
+    }
+  }
+
+  get("/schedule/edit/:key") {
+    contentType = "text/html"
+    sd.findByKey(params("key")) match {
+      case Some(schedule) => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleEditPanel(schedule))))
+      case None => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", params("key")))))
+    }
   }
 
   post("/schedule/rebuild") {
