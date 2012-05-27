@@ -19,7 +19,7 @@ class Schedule(
                 val key: String = "",
 
                 @(Column@field)(name = "name", unique = true)
-                val name: String = "",
+                var name: String = "",
 
                 @(Column@field)(name = "isPrimary")
                 var isPrimary: Boolean = false,
