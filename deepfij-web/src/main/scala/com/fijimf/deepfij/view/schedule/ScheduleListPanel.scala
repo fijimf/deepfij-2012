@@ -17,7 +17,7 @@ object ScheduleListPanel {
         <table class="table table-bordered table-condensed">
           <thead>
             <tr>
-              <th></th> <th>Key</th> <th>Name</th> <th>Teams</th> <th>Games</th> <th>First</th> <th>Last</th>
+              <th></th><th>Key</th> <th>Name</th> <th>Teams</th> <th>Games</th> <th>First</th> <th>Last</th>
             </tr>
           </thead>
           <tbody>
@@ -35,10 +35,6 @@ object ScheduleListPanel {
               <td>
                 {if (s.isPrimary) {
                 <i class="icon-star"></i>
-              } else {
-                <a href={"/schedule/makeprimary/" + s.key}>
-                  <i class="icon-star-empty"></i>
-                </a>
               }}
               </td>
               <td>
