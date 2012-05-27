@@ -74,11 +74,11 @@ import org.apache.commons.lang.StringUtils
     "Team(" + id + ", " + key + ", " + name + ", " + conference.name + ", " + schedule.name + ")"
   }
 
-  @transient lazy val nicknameOpt = Option(nickname)
-  @transient lazy val primaryColorOpt = Option(primaryColor)
-  @transient lazy val secondaryColorOpt = Option(secondaryColor)
-  @transient lazy val logoOpt = Option(logo)
-  @transient lazy val officialUrlOpt = Option(officialUrl)
+  def nicknameOpt = Option(nickname)
+  def primaryColorOpt = Option(primaryColor)
+  def secondaryColorOpt = Option(secondaryColor)
+  def logoOpt = Option(logo)
+  def officialUrlOpt = Option(officialUrl)
   @transient lazy val homeGameList = homeGames.toList
   @transient lazy val awayGameList = awayGames.toList
 
