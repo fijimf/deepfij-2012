@@ -43,7 +43,7 @@ trait QuoteController {
   }
   post("/quote/edit") {
     contentType = "text/html"
-    val key: String = params("id")
+    val id: String = params("id")
    redirect("/quote/show/"+id)
   }
 
