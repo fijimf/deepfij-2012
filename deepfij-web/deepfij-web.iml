@@ -9,10 +9,6 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/scala" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
     <facet type="scala" name="Scala">
@@ -41,11 +37,6 @@
     <orderEntry type="library" name="Maven: org.parboiled:parboiled-scala:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.parboiled:parboiled-core:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet:mimepull:1.6" level="project" />
-    <orderEntry type="library" name="Maven: cc.spray:spray-base:0.9.0" level="project" />
-    <orderEntry type="library" name="Maven: cc.spray:spray-server:0.9.0" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.2" level="project" />
-    <orderEntry type="library" name="Maven: cc.spray:spray-can:0.9.3" level="project" />
-    <orderEntry type="library" name="Maven: cc.spray:spray-json_2.9.1:1.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.specs2:specs2_2.9.1:1.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.specs2:specs2-scalaz-core_2.9.1:6.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.pegdown:pegdown:1.1.0" level="project" />
@@ -54,6 +45,7 @@
     <orderEntry type="library" name="Maven: asm:asm-util:3.3.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm-tree:3.3.1" level="project" />
     <orderEntry type="library" name="Maven: asm:asm-analysis:3.3.1" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.glassfish:javax.servlet:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-continuation:8.1.0.v20120127" level="project" />
     <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-tomcat:0.7.1" level="project" />

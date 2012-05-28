@@ -14,8 +14,6 @@
         <scala.version>2.9.1</scala.version>
         <akka.version>1.3.1</akka.version>
         <jetty.version>8.1.0.v20120127</jetty.version>
-        <sprayCan.version>0.9.3</sprayCan.version>
-        <sprayJson.version>1.1.0</sprayJson.version>
         <slf4j.version>1.6.4</slf4j.version>
         <logback.version>1.0.0</logback.version>
         <liftJson.version>2.4</liftJson.version>
@@ -76,27 +74,6 @@
             <version>1.6</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-base</artifactId>
-            <version>0.9.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-server</artifactId>
-            <version>0.9.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-can</artifactId>
-            <version>${sprayCan.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-json_${scala.version}</artifactId>
-            <version>${sprayJson.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
             <artifactId>specs2_2.9.1</artifactId>
@@ -155,7 +132,7 @@
         <dependency>
             <groupId>com.fijimf.deepfij</groupId>
             <artifactId>deepfij-model</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.fijimf.deepfij</groupId>
@@ -267,7 +244,7 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
+                <version>7.4.2.v20110526</version>
             </plugin>
             <!--<plugin>-->
             <!--<groupId>org.fusesource.scalate</groupId>-->

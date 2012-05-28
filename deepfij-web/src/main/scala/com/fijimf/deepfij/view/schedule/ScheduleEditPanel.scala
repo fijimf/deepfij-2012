@@ -65,12 +65,12 @@ object ScheduleEditPanel {
 
     <div class="row">
       <div class="span8">
-        <form class="well form-inline" method="POST" action="/schedule/rebuild">
+        <form class="well form-inline" method="POST" action="/schedule/results">
           <label>From</label>
             <input id="from" name="from" type="text" class="span2" value={from}/>
           <label>To</label>
             <input id="to" name="to" type="text" class="span2" value={to}/>
-          <button type="submit" class="btn btn-primary">UpdateGames</button>
+          <button type="submit" class="btn btn-primary">Update Results</button>
         </form>
       </div>
     </div>
