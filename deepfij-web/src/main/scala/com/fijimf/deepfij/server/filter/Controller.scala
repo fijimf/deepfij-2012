@@ -40,9 +40,6 @@ class Controller extends ScalatraFilter with ScheduleController{
     html5Wrapper(BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)))
   }
 
-  get("/admin") {
-
-  }
   get("/date/:yyyymmdd") {
 
   }
@@ -63,12 +60,6 @@ class Controller extends ScalatraFilter with ScheduleController{
       case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c)))
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", key)))
     })
-  }
-
-  get("/quote") {
-    <p class="epigram">
-      {qd.random().map(_.quote).getOrElse("")}
-    </p>
   }
 
 
