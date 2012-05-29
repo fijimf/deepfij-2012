@@ -1,48 +1,74 @@
 package com.fijimf.deepfij.statx
 
 import scala.math._
-import org.apache.commons.math3.stat.descriptive.{DescriptiveStatistics, SummaryStatistics}
 import org.apache.commons.math3.stat.StatUtils
 import com.fijimf.deepfij.modelx.{Schedule, Team}
 import java.util.Date
 
 trait MetaStatInfo {
-  val name:String
-  val higherIsBetter:Boolean
+  def name: String
+
+  def higherIsBetter: Boolean
 }
 
 trait Statistic[K] extends MetaStatInfo {
 
-  def keys(s:Schedule):List[K]
-  def startDate(s:Schedule):Date
-  def endDate(s:Schedule):Date
+  def keys(s: Schedule): List[K]
 
-  def population(d:Date): Population[K]
+  def startDate(s: Schedule): Date
 
-  def series(k:K):Series[K]
+  def endDate(s: Schedule): Date
 
-  def function(s:Schedule, k:K, d:Date):Option[Double]
+  def population(s: Schedule, d: Date): Population[K] = {
+    new Population[K] {
+      def function = function(s, d, _)
+
+      def date = d
+
+      def keys = keys
+    }
+  }
+
+  def series(s: Schedule, k: K): Series[K] = {
+    new Series[K] {
+      def function = function(s, _, k)
+
+      def key = k
+
+      def endDate = endDate
+
+      def startDate = startDate
+    }
+  }
+
+  def function(s: Schedule, k: K, d: Date): Option[Double]
 }
 
 trait TeamStatistic extends Statistic[Team] {
-  override def keys(s:Schedule)=s.teamList
+  override def keys(s: Schedule) = s.teamList
 }
 
 
 trait Series[K] {
-  def value:K
-  def startDate:Date
-  def endDate:Date
+  def key: K
+
+  def startDate: Date
+
+  def endDate: Date
+
+  def function: Function[Date, Option[Double]]
 }
 
 trait Population[K] {
+  def keys: List[K]
 
-  val keys:List[K]
-  def function:PartialFunction[K,Double]
+  def date: Date
 
-  lazy val ranked: List[K] = teams.filter(function.isDefinedAt(_)).map(.sortBy(function(_))
+  def function: Function[K, Option[Double]]
 
-  def rank(t: K): Option[Int] = ranked.indexOf(t) match {
+  lazy val ranked: List[(K,Double)] = keys.map(k=>(k->function(k))).filter(_._2.isDefined).map(p=>(p._1, p._2.get).sortBy((_._2)))
+
+  def rank(t: K): Option[Int] = ranked.map(_._1).indexOf(t) match {
     case -1 => None
     case i => Some(i)
   }
