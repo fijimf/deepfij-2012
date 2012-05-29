@@ -6,26 +6,23 @@ import org.apache.commons.math3.stat.descriptive.{DescriptiveStatistics, Summary
 import org.apache.commons.math3.stat.StatUtils
 
 
-trait Pop {
-  def teams: List[Team]
+trait Pop[K] {
+  def keys: List[K]
 
-  def stat: PartialFunction[Team, Double]
+  def stat: PartialFunction[K, Double]
 
-  lazy val ranked: List[Team] = teams.filter(stat.isDefinedAt(_)).sortBy(stat(_))
+  lazy val ranked: List[K] = teams.filter(stat.isDefinedAt(_)).sortBy(stat(_))
 
-
-  def rank(t: Team): Option[Int] = ranked.indexOf(t) match {
+  def rank(t: K): Option[Int] = ranked.indexOf(t) match {
     case -1 => None
     case i => Some(i)
   }
 
-  def zScore(t: Team): Option[Double] = for (t <- stat.lift(t); m <- mean; sd <- stdDev) yield (t - m) / sd
+  def zScore(t: K): Option[Double] = for (t <- stat.lift(t); m <- mean; sd <- stdDev) yield (t - m) / sd
 
-
-  def percentile(t: Team): Option[Double] = rank(t).map(_.toDouble / ranked.size)
+  def percentile(t: K): Option[Double] = rank(t).map(_.toDouble / ranked.size)
 
   def count = ranked.size
-
 
   def min: Option[Double] = ranked.headOption.map(stat(_))
 
