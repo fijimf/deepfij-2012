@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.statx
 
 
-class Wins extends TeamStatistic {
+class Wins  {
   val name = "Wins"
   val higherIsBetter = true
 }
