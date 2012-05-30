@@ -1,8 +1,6 @@
 package com.fijimf.deepfij.server
 
-import cc.spray.test.SprayTest
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
-import cc.spray.http._
 import com.fijimf.deepfij.modelx.Team._
 import java.util.Date
 import com.fijimf.deepfij.modelx.Game._
