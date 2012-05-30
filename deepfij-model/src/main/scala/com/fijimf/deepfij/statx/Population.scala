@@ -1,6 +1,8 @@
 package com.fijimf.deepfij.statx
 
 import java.util.Date
+import scala.math._
+import org.apache.commons.math3.stat.StatUtils
 
 trait Population[K] extends MetaStatInfo {
 
@@ -27,12 +29,7 @@ trait Population[K] extends MetaStatInfo {
          n <- valueCount.get(x)) yield (1.0 + i) + ((n - 1.0) / 2.0)
   }
 
-  //  lazy val rankings: Map[K,]
-  //
-  //  def rank(t: K): Option[Int] = rankedPairs.map(_._1).indexOf(t) match {
-  //    case -1 => None
-  //    case i => Some(i)
-  //  }
+
   //
   //  def zScore(k: K): Option[Double] = for (t <- stat.lift(t); m <- mean; sd <- stdDev) yield (t - m) / sd
   //
@@ -40,29 +37,34 @@ trait Population[K] extends MetaStatInfo {
   //
   //  def count = ranked.size
   //
-  //  def min: Option[Double] = ranked.headOption.map(stat(_))
-  //
-  //  def max: Option[Double] = ranked.lastOption.map(stat(_))
-  //
-  //  def med: Option[Double] = if (ranked.isEmpty) {
-  //    None
-  //  } else {
-  //    Some(ranked.size % 2 match {
-  //      case 0 => (stat(ranked(count / 2)) + stat(ranked(count / 2 - 1))) / 2.0
-  //      case 1 => stat(ranked(count / 2))
-  //    })
-  //  }
-  //
-  //  def mean: Option[Double] = if (ranked.isEmpty) {
-  //    None
-  //  } else {
-  //    Some(StatUtils.mean(ranked.map(stat.lift(_)).flatten.toArray))
-  //  }
-  //
-  //  def stdDev: Option[Double] = if (ranked.isEmpty) {
-  //    None
-  //  } else {
-  //    Some(sqrt(StatUtils.populationVariance(ranked.map(stat.lift(_)).flatten.toArray)))
-  //  }
+  def min: Option[Double] = values.lastOption
+  def max: Option[Double] = values.headOption
+//  def minItem: List[String] = values.headOption.map()
+//  def maxItem: List[String] = values.lastOption
+
+    def med: Option[Double] = if (values.isEmpty) {
+      None
+    } else {
+      val n = values.size
+      Some(n % 2 match {
+        case 0 => (values(n / 2) + values(n / 2 - 1)) / 2.0
+        case 1 => values(n / 2)
+      })
+    }
+
+    lazy val count: Int = values.size
+    lazy val missing: Int = keys.size - count
+
+    lazy val mean: Option[Double] = if (values.isEmpty) {
+      None
+    } else {
+      Some(StatUtils.mean(values.toArray))
+    }
+
+    lazy val stdDev: Option[Double] = if (values.isEmpty) {
+      None
+    } else {
+      Some(sqrt(StatUtils.populationVariance(values.toArray)))
+    }
 
 }
