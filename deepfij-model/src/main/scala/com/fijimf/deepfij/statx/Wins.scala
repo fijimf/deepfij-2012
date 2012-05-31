@@ -6,16 +6,44 @@ import com.fijimf.deepfij.modelx.{Game, Team, Schedule}
 
 case class ModelKey(key: String, higherIsBetter: Boolean) extends MetaStatInfo
 
-case class
+case class ModelContext[T](contexts: Map[ModelKey, ModelValues[T]] = Map.empty) {
+
+  def get(k: ModelKey, d: Date, s: T): Option[Double] = contexts.get(k).map(_.get(d,s))
+
+  def update(k: ModelKey, d: Date, s: T, x: Double): ModelContext = {
+    contexts.get(k) match {
+      case Some(m) => {
+        ModelContext(contexts + (k -> m.update(d, s, x)))
+      }
+      case None => {
+        ModelValues(contexts + (k -> (ModelValues().update(d, s, x))))
+      }
+    }
+  }
+}
+
+case class ModelValues[T](values: Map[Date, Map[T, Double]] = Map.empty) {
+
+  def get(d: Date, t: T): Option[Double] = values.get(d).map(_.get(t))
+
+  def update(d: Date, t: T, x: Double): ModelValues[T] = {
+    values.get(d) match {
+      case Some(m) => {
+        ModelValues(values + (m + (t -> x)))
+      }
+      case None => {
+        ModelValues(values + Map(d -> Map(t -> x)))
+      }
+    }
+  }
+}
 
 trait StatisticalModel[T] {
-  type ModelValues = Map[Date, Map[T, Double]]
-  type ModelContext = Map[ModelKey, ModelValues]
 
   def keys: List[ModelKey]
 
   def init(): ModelContext = {
-    keys.map(k => (k -> Map.empty[Date, Map[T, Double]])).toMap
+    keys.map(k => (k -> ModelContext())).toMap
   }
 
   def process(s: Schedule, ctx: ModelContext): ModelContext = ctx
@@ -45,7 +73,7 @@ trait StatisticalModel[T] {
       }
 
       def function(sp: Schedule, k: T, d: Date) = {
-        requires (sp == s)
+        require(sp == s)
         for (p <- m.get(d); q <- p.get(k)) yield q
       }
 
@@ -84,15 +112,7 @@ class WonLostModel extends SinglePassGameModel[Team] {
 
   def valueEndDate(s: Schedule) = s.gameList.maxBy(_.date).map(_.date)
 
-  def processGame(g: Game, ctx: ModelContext) = {
-    val wins: ModelValues = ctx(w)
-    ctx+=wins.get(g.date) match {
-      case Some(m)=>{
-
-      }
-      case None=> {
-        val m=Map(g.winner->1)
-      }
-    }
+  def processGames(d:Date, gs: List[Game], ctx: ModelContext) = {
+    ctx.update(ctx.get(w,g.date, g.winner).getOrElse(0)+1)
   }
 }
