@@ -45,53 +45,70 @@ class StatisticTestSuite extends FunSuite {
   }
   test("Population basics") {
     val pop: Population[String] = st.population(null, d1)
-    assert(pop.name == "Test")
-    assert(pop.keys == List("A", "B", "C", "D", "E", "F"))
-    assert(pop.date == d1)
-    assert(pop.stat("A") == Some(1))
-    assert(pop.stat("B") == Some(2))
-    assert(pop.stat("C") == Some(2))
-    assert(pop.stat("D") == Some(3))
-    assert(pop.stat("E") == Some(12))
-    assert(pop.stat("F") == None)
+    assert(pop.name === "Test")
+    assert(pop.keys === List("A", "B", "C", "D", "E", "F"))
+    assert(pop.date === d1)
+    assert(pop.stat("A") === Some(1))
+    assert(pop.stat("B") === Some(2))
+    assert(pop.stat("C") === Some(2))
+    assert(pop.stat("D") === Some(3))
+    assert(pop.stat("E") === Some(12))
+    assert(pop.stat("F") === None)
   }
   test("Population standard rank, one tie, missing data") {
     val pop: Population[String] = st.population(null, d1)
-    assert(pop.rank("A") == Some(5))
-    assert(pop.rank("B") == Some(3))
-    assert(pop.rank("C") == Some(3))
-    assert(pop.rank("D") == Some(2))
-    assert(pop.rank("E") == Some(1))
-    assert(pop.rank("F") == None)
+    assert(pop.rank("A") === Some(5))
+    assert(pop.rank("B") === Some(3))
+    assert(pop.rank("C") === Some(3))
+    assert(pop.rank("D") === Some(2))
+    assert(pop.rank("E") === Some(1))
+    assert(pop.rank("F") === None)
   }
 
   test("Population fractional rank, one tie, missing data") {
     val pop: Population[String] = st.population(null, d1)
-    assert(pop.fractionalRank("A") == Some(5))
-    assert(pop.fractionalRank("B") == Some(3.5))
-    assert(pop.fractionalRank("C") == Some(3.5))
-    assert(pop.fractionalRank("D") == Some(2))
-    assert(pop.fractionalRank("E") == Some(1))
-    assert(pop.fractionalRank("F") == None)
+    assert(pop.fractionalRank("A") === Some(5))
+    assert(pop.fractionalRank("B") === Some(3.5))
+    assert(pop.fractionalRank("C") === Some(3.5))
+    assert(pop.fractionalRank("D") === Some(2))
+    assert(pop.fractionalRank("E") === Some(1))
+    assert(pop.fractionalRank("F") === None)
   }
 
   test("Population max, min, med") {
     val pop: Population[String] = st.population(null, d1)
-    assert(pop.count == 5)
-    assert(pop.missing == 1)
-    assert(pop.max == Some(12.0))
-    assert(pop.min == Some(1.0))
-    assert(pop.med == Some(2.0))
-    //     assert(pop.maxItem == List("E"))
-    //     assert(pop.minItem == List("A"))
+    assert(pop.count === 5)
+    assert(pop.missing === 1)
+    assert(pop.max === Some(12.0))
+    assert(pop.min === Some(1.0))
+    assert(pop.med === Some(2.0))
   }
 
   test("Population mean, std dev ") {
     val pop: Population[String] = st.population(null, d1)
+    assert(pop.mean === Some(4.0))
+    assert(pop.stdDev === Some(4.049691346263317))
+  }
 
-    assertEquals(pop.mean, 4.0, 0.01)
+  test("Population percentile") {
+    val pop: Population[String] = st.population(null, d1)
+    assert(pop.percentile("A") === Some(0))
+    assert(pop.percentile("B") === Some(0.4))
+    assert(pop.percentile("C") === Some(0.4))
+    assert(pop.percentile("D") === Some(0.6))
+    assert(pop.percentile("E") === Some(0.8))
+    assert(pop.percentile("F") === None)
+  }
 
-    assertEquals(pop.stdDev, 4.049691346263317, 0.01)
+  test("Population top N, bottom N") {
+    val pop: Population[String] = st.population(null, d1)
+
+    assert(pop.topN(1) === List("E" -> 12))
+    assert(pop.topN(3) === List("E" -> 12, "D" -> 3, "B" -> 2, "C" -> 2))
+    assert(pop.topN(30) === List("E" -> 12, "D" -> 3, "B" -> 2, "C" -> 2, "A" -> 1))
+    assert(pop.bottomN(1) === List("A" -> 1))
+    assert(pop.bottomN(3) === List("B" -> 2, "C" -> 2, "A" -> 1))
+    assert(pop.bottomN(30) === List("E" -> 12, "D" -> 3, "B" -> 2, "C" -> 2, "A" -> 1))
 
   }
 
