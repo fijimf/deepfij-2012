@@ -1,9 +1,3 @@
-/*
- * Created by IntelliJ IDEA.
- * User: fijimf
- * Date: 5/29/12
- * Time: 11:58 PM
- */
 package com.fijimf.deepfij.statx
 
 import org.scalatest.FunSuite
@@ -31,20 +25,20 @@ class StatisticTestSuite extends FunSuite {
       d6 -> Map("A" -> 1.0, "B" -> 2.0, "C" -> 2.0, "D" -> 7.0, "E" -> 16.0, "F" -> 6.0)
     )
 
-    def keys(s: Schedule) = (data.values.map(_.keys).flatten).toSet.toList.sorted
+    def keys = (data.values.map(_.keys).flatten).toSet.toList.sorted
 
-    def startDate(s: Schedule) = d1
+    def startDate = d1
 
-    def endDate(s: Schedule) = d6
+    def endDate = d6
 
-    def function(s: Schedule, k: String, d: Date) = data.get(d).flatMap(_.get(k))
+    def function( k: String, d: Date) = data.get(d).flatMap(_.get(k))
 
     def name = "Test"
 
     def higherIsBetter = true
   }
   test("Population basics") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population(d1)
     assert(pop.name === "Test")
     assert(pop.keys === List("A", "B", "C", "D", "E", "F"))
     assert(pop.date === d1)
@@ -56,7 +50,7 @@ class StatisticTestSuite extends FunSuite {
     assert(pop.stat("F") === None)
   }
   test("Population standard rank, one tie, missing data") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
     assert(pop.rank("A") === Some(5))
     assert(pop.rank("B") === Some(3))
     assert(pop.rank("C") === Some(3))
@@ -66,7 +60,7 @@ class StatisticTestSuite extends FunSuite {
   }
 
   test("Population fractional rank, one tie, missing data") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
     assert(pop.fractionalRank("A") === Some(5))
     assert(pop.fractionalRank("B") === Some(3.5))
     assert(pop.fractionalRank("C") === Some(3.5))
@@ -76,7 +70,7 @@ class StatisticTestSuite extends FunSuite {
   }
 
   test("Population max, min, med") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
     assert(pop.count === 5)
     assert(pop.missing === 1)
     assert(pop.max === Some(12.0))
@@ -85,13 +79,13 @@ class StatisticTestSuite extends FunSuite {
   }
 
   test("Population mean, std dev ") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
     assert(pop.mean === Some(4.0))
     assert(pop.stdDev === Some(4.049691346263317))
   }
 
   test("Population percentile") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
     assert(pop.percentile("A") === Some(0))
     assert(pop.percentile("B") === Some(0.4))
     assert(pop.percentile("C") === Some(0.4))
@@ -101,7 +95,7 @@ class StatisticTestSuite extends FunSuite {
   }
 
   test("Population top N, bottom N") {
-    val pop: Population[String] = st.population(null, d1)
+    val pop: Population[String] = st.population( d1)
 
     assert(pop.topN(1) === List("E" -> 12))
     assert(pop.topN(3) === List("E" -> 12, "D" -> 3, "B" -> 2, "C" -> 2))

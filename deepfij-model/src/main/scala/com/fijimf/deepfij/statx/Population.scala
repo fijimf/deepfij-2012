@@ -4,7 +4,7 @@ import java.util.Date
 import scala.math._
 import org.apache.commons.math3.stat.StatUtils
 
-trait Population[K] extends MetaStatInfo {
+trait Population[K] extends StatInfo {
 
   def keys: List[K]
 
@@ -36,11 +36,12 @@ trait Population[K] extends MetaStatInfo {
     valuePairs.take(m).map(p => (p._2 -> p._1))
   }
 
-  def bottomN(n:Int):List[(K,Double)] = {
+  def bottomN(n: Int): List[(K, Double)] = {
     val x = valuePairs.takeRight(n).headOption
-    val m = x.map(_._1).map(d=>count-valueIndex(d)).getOrElse(0)
+    val m = x.map(_._1).map(d => count - valueIndex(d)).getOrElse(0)
     valuePairs.takeRight(m).map(p => (p._2 -> p._1))
   }
+
   def percentile(k: K): Option[Double] = rank(k).map(1 - _.toDouble / count)
 
   lazy val min: Option[Double] = values.lastOption

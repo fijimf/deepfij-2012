@@ -1,20 +1,17 @@
 package com.fijimf.deepfij.statx
 
-import com.fijimf.deepfij.modelx.{Schedule, Team}
 import java.util.Date
+import com.fijimf.deepfij.modelx.{Game, Team, Schedule}
 
 
-object Points {
-  def apply(s: Schedule)(d: Date): Points = {
-    val gs = s.gameList.filter(g => g.date.before(d) && g.resultOpt.isDefined)
+class PointsModel extends SinglePassGameModel[Team] {
+  def keys = null
 
-    new Points() {
-    }
+  def valueKeys(s: Schedule) = null
 
-  }
-}
+  def valueStartDate(s: Schedule) = null
 
-trait Points {
+  def valueEndDate(s: Schedule) = null
 
-
+  def processGame(g: Game, ctx: ModelContext[Team]) = null
 }

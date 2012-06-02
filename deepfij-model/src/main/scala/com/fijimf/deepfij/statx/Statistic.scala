@@ -3,45 +3,46 @@ package com.fijimf.deepfij.statx
 import com.fijimf.deepfij.modelx.Schedule
 import java.util.Date
 
-trait Statistic[K] extends MetaStatInfo {
-  parent =>
-  def keys(s: Schedule): List[K]
 
-  def startDate(s: Schedule): Date
+trait Statistic[K] extends StatInfo {
+  statistic =>
+  def keys: List[K]
 
-  def endDate(s: Schedule): Date
+  def startDate: Date
 
-  def population(s: Schedule, d: Date): Population[K] = {
+  def endDate: Date
+
+  def function(k: K, d: Date): Option[Double]
+
+  def population( d: Date): Population[K] = {
     new Population[K] {
 
-      val name = parent.name
+      val name = statistic.name
 
-      val higherIsBetter = parent.higherIsBetter
+      val higherIsBetter = statistic.higherIsBetter
 
-      val stat = (k:K)=>parent.function(s, k, d)
+      val stat = (k: K) => statistic.function(k, d)
 
       val date = d
 
-      val keys = parent.keys(s)
+      val keys = statistic.keys
     }
   }
 
-  def series(s: Schedule, k: K): TimeSeries[K] = {
+  def series(k: K): TimeSeries[K] = {
     new TimeSeries[K] {
 
-      val name = parent.name
+      val name = statistic.name
 
-      val higherIsBetter = parent.higherIsBetter
+      val higherIsBetter = statistic.higherIsBetter
 
 
-      val stat = (d:Date)=>parent.function(s, k, d)
+      val stat = (d: Date) => statistic.function(k, d)
       val key = k
 
-      val endDate = parent.endDate(s)
+      val endDate = statistic.endDate
 
-      val startDate = parent.startDate(s)
+      val startDate = statistic.startDate
     }
   }
-
-  def function(s: Schedule, k: K, d: Date): Option[Double]
 }
