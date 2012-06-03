@@ -27,13 +27,13 @@ trait StatisticalModel[T] {
 
       def higherIsBetter = k.higherIsBetter
 
-      def keys(s: Schedule) = scheduleKeys(s)
+      def keys = scheduleKeys(s)
 
-      def startDate(s: Schedule) = scheduleStartDate(s)
+      def startDate = scheduleStartDate(s)
 
-      def endDate(s: Schedule) = scheduleEndDate(s)
+      def endDate = scheduleEndDate(s)
 
-      def function(sp: Schedule, t: T, d: Date) = {
+      def function(t: T, d: Date) = {
         ctx.get(k,d,t)
       }
 
