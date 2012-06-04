@@ -1,14 +1,15 @@
 package com.fijimf.deepfij.statx
 
 import com.fijimf.deepfij.modelx.{Schedule, Game}
+import java.util.Date
 
 trait SinglePassGameModel[T] extends StatisticalModel[T] {
 
-  def processGame(g: Game, ctx: ModelContext[T]): ModelContext[T]
+  def processGames(d:Date, gs: List[Game], ctx: ModelContext[T]): ModelContext[T]
 
   override def process(s: Schedule, context: ModelContext[T]) = {
-    s.gameList.sortBy(_.date).foldLeft(context) {
-      case (ctx, game) => processGame(game, ctx)
+    s.gameList.groupBy(_.date).foldLeft(context) {
+      case (ctx, (date, games)) => processGames(date, games, ctx)
     }
   }
 }
