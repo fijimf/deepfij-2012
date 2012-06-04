@@ -1,11 +1,12 @@
-package com.fijimf.deepfij.statx
+package com.fijimf.deepfij.statx.models
 
 import java.util.Date
 import com.fijimf.deepfij.modelx.{Game, Team, Schedule}
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
+import com.fijimf.deepfij.statx.{TeamModel, ModelContext, StatInfoImpl, SinglePassGameModel}
 
 
-class PointsModel extends SinglePassGameModel[Team] {
+class PointsModel extends SinglePassGameModel[Team] with TeamModel{
   val obsTypes = List(
     ("points-for", true),
     ("points-against", false),
@@ -21,12 +22,6 @@ class PointsModel extends SinglePassGameModel[Team] {
   private[this] var runningTotals = Map.empty[Team, PointsRunning]
 
   val statistics = for ((k, hib) <- obsTypes; p <- popStats) yield StatInfoImpl(k + "-" + p, hib)
-
-  def scheduleKeys(s: Schedule) = s.teamList.sortBy(_.name)
-
-  def scheduleStartDate(s: Schedule) = s.gameList.minBy(_.date).date
-
-  def scheduleEndDate(s: Schedule) = s.gameList.maxBy(_.date).date
 
   def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
     gs.filter(g => (g.resultOpt.isDefined)).map(g => {
@@ -54,7 +49,7 @@ class PointsModel extends SinglePassGameModel[Team] {
 
         //TRICKSY -- taking advantage of teh fact that obsTypes is in the same order as PointsRunning
         obsTypes.zip(tot.productIterator.toIterable).foldLeft(ctx) {
-          case (c:ModelContext[Team],((k: String, hib: Boolean), xs: List[Double])) => {
+          case (c: ModelContext[Team], ((k: String, hib: Boolean), xs: List[Double])) => {
             val s = new DescriptiveStatistics(xs.toArray)
             c.update(StatInfoImpl(k + "-max", hib), d, team, s.getMax)
               .update(StatInfoImpl(k + "-min", hib), d, team, s.getMin)

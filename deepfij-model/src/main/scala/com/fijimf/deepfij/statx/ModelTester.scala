@@ -3,6 +3,7 @@ package com.fijimf.deepfij.statx
 import com.fijimf.deepfij.modelx.{Team, Schedule, ScheduleDao}
 import java.util.Date
 import java.text.SimpleDateFormat
+import models.WonLostModel
 
 
 object ModelTester {
