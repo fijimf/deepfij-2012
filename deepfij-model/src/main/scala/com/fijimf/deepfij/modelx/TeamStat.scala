@@ -35,18 +35,6 @@ class TeamStat(
 }
 
 class TeamStatDao extends BaseDao[TeamStat, Long] {
-  def population(key: String, date: Date): List[TeamStat] = {
-    entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.key=:key and date=:date")
-      .setParameter("key", key)
-      .setParameter("date", date)
-      .getResultList.toList.asInstanceOf[List[TeamStat]]
-  }
 
-  def timeSeries(key: String, teamKey: String): List[TeamStat] = {
-    entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.key=:key and team.key=:teamKey ORDER BY date")
-      .setParameter("key", key)
-      .setParameter("teamKey", teamKey)
-      .getResultList.toList.asInstanceOf[List[TeamStat]]
-  }
 
 }
