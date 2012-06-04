@@ -10,7 +10,7 @@ import io.{BufferedSource, Source}
 //"http://kenpom.com/cbbga12.txt"
 case class KenPomScraper(url: String, aliasResource: String) extends HttpScraper with GameReader {
   val dfmt = new SimpleDateFormat("MM/dd/yyyy")
-  val gameData = loadTextPage(url).map(s => {
+  lazy val gameData = loadTextPage(url).map(s => {
     val d = dfmt.parse(s.substring(0, 10))
     val at = s.substring(11, 33).trim()
     val as = s.substring(34, 37).trim().toInt
@@ -19,7 +19,7 @@ case class KenPomScraper(url: String, aliasResource: String) extends HttpScraper
     (d, ht, Some(hs), at, Some(as))
   })
 
-  def aliasList = {
+  lazy val aliasList = {
     val is: InputStream = getClass.getClassLoader.getResourceAsStream(aliasResource)
     val src: BufferedSource = Source.fromInputStream(is)
     src.getLines.map(_.split(",")).map(arr => (arr(0), arr(1))).toList
