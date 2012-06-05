@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.statx.models
 
 import java.util.Date
-import com.fijimf.deepfij.modelx.{Game, Team, Schedule}
+import com.fijimf.deepfij.modelx.{Game, Team}
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import com.fijimf.deepfij.statx.{TeamModel, ModelContext, StatInfoImpl, SinglePassGameModel}
 

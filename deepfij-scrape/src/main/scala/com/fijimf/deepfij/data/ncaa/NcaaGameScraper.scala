@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat
 import dispatch.{url, Http}
 import com.fijimf.deepfij.data.generic.GameReader
 import json.{Team, GameResponse}
-import collection.Iterable
 import com.codahale.jerkson.Json._
 
 class NcaaGameScraper(teams: Map[String, String]) extends GameReader {

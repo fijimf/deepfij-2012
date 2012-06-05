@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.view
 
 import java.text.SimpleDateFormat
-import com.fijimf.deepfij.modelx.{Conference, Game, Team}
+import com.fijimf.deepfij.modelx.Team
 
 
 object SearchResultPanel {

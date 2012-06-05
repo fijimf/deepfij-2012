@@ -10,10 +10,8 @@ import org.scalatra.ScalatraFilter
 import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
-import java.util.Date
-import org.apache.commons.lang.time.DateUtils
 import com.fijimf.deepfij.modelx.{ScheduleDao, QuoteDao, ConferenceDao, TeamDao}
-import com.fijimf.deepfij.workflow.{Scraper, UpdateGamesAndResults, FullRebuild}
+import com.fijimf.deepfij.workflow.Scraper
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.text.SimpleDateFormat

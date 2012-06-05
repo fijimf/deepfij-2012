@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.statx.models
 
 import java.util.Date
-import com.fijimf.deepfij.modelx.{Game, Team, Schedule}
+import com.fijimf.deepfij.modelx.{Game, Team}
 import com.fijimf.deepfij.statx.{TeamModel, ModelContext, StatInfoImpl, SinglePassGameModel}
 
 class WonLostModel extends SinglePassGameModel[Team] with TeamModel {

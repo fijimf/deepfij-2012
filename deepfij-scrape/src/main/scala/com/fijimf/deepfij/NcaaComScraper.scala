@@ -1,9 +1,8 @@
 package com.fijimf.deepfij
 
 
-import data.ncaa.NcaaTeamScraper
 import java.lang.String
-import repo.{ScheduleRepository}
+import repo.ScheduleRepository
 
 
 object NcaaComScraper {

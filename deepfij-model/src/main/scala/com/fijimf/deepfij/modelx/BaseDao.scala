@@ -1,6 +1,6 @@
 package com.fijimf.deepfij.modelx
 
-import javax.persistence.{EntityNotFoundException, Persistence, EntityManager}
+import javax.persistence.EntityNotFoundException
 
 
 abstract class BaseDao[T: ClassManifest, ID] extends Transactional {

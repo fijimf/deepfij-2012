@@ -1,8 +1,5 @@
 package com.fijimf.deepfij.view
 
-import java.text.SimpleDateFormat
-import com.fijimf.deepfij.modelx.Conference
-
 
 object MissingResourcePanel {
 

@@ -1,12 +1,12 @@
 package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.data.generic.{GameReader, ConferenceReader, TeamReader}
-import com.fijimf.deepfij.data.ncaa.{NcaaTeamScraper, NcaaGameScraper}
-import com.fijimf.deepfij.repo.{TeamData, ScheduleRepository}
+import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
+import com.fijimf.deepfij.repo.ScheduleRepository
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.util.Date
-import com.fijimf.deepfij.util.{DateStream, StringNormalizer}
-import collection.immutable.{List, Map}
+import com.fijimf.deepfij.util.DateStream
+import collection.immutable.List
 import org.apache.log4j.Logger
 
 case class Scraper(t: TeamReader, c: ConferenceReader, g: GameReader) {

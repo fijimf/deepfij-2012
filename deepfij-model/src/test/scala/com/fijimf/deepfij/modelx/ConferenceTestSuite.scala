@@ -2,7 +2,6 @@ package com.fijimf.deepfij.modelx
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import javax.persistence.PersistenceException
 
 @RunWith(classOf[JUnitRunner])

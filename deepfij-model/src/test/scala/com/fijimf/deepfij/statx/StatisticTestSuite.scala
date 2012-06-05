@@ -3,7 +3,6 @@ package com.fijimf.deepfij.statx
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import com.fijimf.deepfij.modelx.Schedule
 import java.util.Date
 import java.text.SimpleDateFormat
 import scala.Predef._

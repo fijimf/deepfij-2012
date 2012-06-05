@@ -2,7 +2,6 @@ package com.fijimf.deepfij.modelx
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import java.util.Date
 import java.text.SimpleDateFormat
 import com.fijimf.deepfij.modelx.Team._

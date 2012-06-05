@@ -1,12 +1,7 @@
 package com.fijimf.deepfij.data.ncaa
 
-import com.codahale.jerkson.Json._
-import dispatch.{url, Http}
-import json.GameResponse
 import xml.{NodeSeq, Node}
-import java.text.SimpleDateFormat
 import collection.immutable.{Map, List}
-import java.util.Date
 import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader, HttpScraper}

@@ -3,7 +3,6 @@ package com.fijimf.deepfij.modelx
 
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
 class SchemaTestSuite extends DaoTestSuite{

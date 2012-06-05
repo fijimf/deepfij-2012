@@ -4,9 +4,9 @@ import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.config.IniSecurityManagerFactory
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.subject.Subject
-import org.apache.shiro.authc.{AuthenticationInfo, UsernamePasswordToken}
-import org.apache.shiro.crypto.hash.{SimpleHash, Sha256Hash}
-import org.apache.shiro.util.{ByteSource, SimpleByteSource, Factory}
+import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.crypto.hash.SimpleHash
+import org.apache.shiro.util.{ByteSource, Factory}
 
 
 object ShiroTester {
