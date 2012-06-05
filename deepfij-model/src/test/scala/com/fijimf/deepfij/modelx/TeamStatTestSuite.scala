@@ -44,8 +44,8 @@ class TeamStatTestSuite extends DaoTestSuite {
     teamStatDao.save(new TeamStat(metaStat = mst, team = r, date = jan03, value = 29.0))
 
     val series = teamStatDao.timeSeries("wins", "georgetown")
-    assert(series.startDate == jan01)
-    assert(series.endDate == jan03)
+    assert(series.startDate === jan01)
+    assert(series.endDate === jan03)
   }
 
   test("Find population") {
@@ -65,8 +65,8 @@ class TeamStatTestSuite extends DaoTestSuite {
     teamStatDao.save(new TeamStat(metaStat = mst, team = rt, date = jan01, value = 29.0))
 
     val pop = teamStatDao.population("wins", jan01)
-    assert(pop.count == 3)
-    assert(pop.max == 38)
-    assert(pop.min == 28)
+    assert(pop.count === 3)
+    assert(pop.max === Some(38.0))
+    assert(pop.min === Some(28.0))
   }
 }
