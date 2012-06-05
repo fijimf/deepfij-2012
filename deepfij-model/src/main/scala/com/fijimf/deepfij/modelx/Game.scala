@@ -26,6 +26,7 @@ class Game(
             val awayTeam: Team = null,
 
             @(Column@field)(name = "date", nullable = false)
+            @(Temporal@field)(value=TemporalType.DATE)
             val date: Date = new Date,
 
             @(Column@field)(name = "isNeutralSite", nullable = false)

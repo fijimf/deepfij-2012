@@ -25,6 +25,7 @@ class TeamStat(
                 val team: Team = null,
 
                 @(Column@field)(name = "date")
+                @(Temporal@field)(value=TemporalType.DATE)
                 val date: Date = new Date(),
 
                 @(Column@field)(name = "value")

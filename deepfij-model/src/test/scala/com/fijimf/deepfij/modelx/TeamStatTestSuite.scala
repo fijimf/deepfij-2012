@@ -44,7 +44,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     teamStatDao.save(new TeamStat(metaStat = mst, team = r, date = jan03, value = 29.0))
 
     val series = teamStatDao.timeSeries("wins", "georgetown")
-    assert(series.startDate === jan01)
+    assert(series.startDate===jan01)
     assert(series.endDate === jan03)
   }
 
