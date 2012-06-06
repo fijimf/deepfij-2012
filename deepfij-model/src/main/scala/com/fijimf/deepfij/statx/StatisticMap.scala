@@ -2,7 +2,7 @@ package com.fijimf.deepfij.statx
 
 import java.util.Date
 
-case class StatisticMap[T](name: String, higherIsBetter: Boolean, data: Map[(Date, T), Double]) extends Statistic[T] {
+case class StatisticMap[T](statKey:String, name: String, format:String, higherIsBetter: Boolean, data: Map[(Date, T), Double]) extends Statistic[T] {
   val (d, k) = data.keys.unzip
 
   def keys = k.toSet.toList

@@ -16,6 +16,9 @@ trait Statistic[K] extends StatInfo {
 
   def population( d: Date): Population[K] = {
     new Population[K] {
+      val format = statistic.format
+
+      val statKey = statistic.statKey
 
       val name = statistic.name
 
@@ -31,7 +34,9 @@ trait Statistic[K] extends StatInfo {
 
   def series(k: K): TimeSeries[K] = {
     new TimeSeries[K] {
+      val format = statistic.format
 
+      val statKey = statistic.statKey
       val name = statistic.name
 
       val higherIsBetter = statistic.higherIsBetter

@@ -1,15 +1,15 @@
 package com.fijimf.deepfij.statx.models
 
 import java.util.Date
-import com.fijimf.deepfij.modelx.{Game, Team}
-import com.fijimf.deepfij.statx.{TeamModel, ModelContext, StatInfoImpl, SinglePassGameModel}
+import com.fijimf.deepfij.modelx.{Game, Team, MetaStat}
+import com.fijimf.deepfij.statx.{TeamModel, ModelContext, SinglePassGameModel}
 
 class WonLostModel extends SinglePassGameModel[Team] with TeamModel {
-  val w: StatInfoImpl = StatInfoImpl("wins", higherIsBetter = true)
-  val l: StatInfoImpl = StatInfoImpl("losses", higherIsBetter = false)
-  val wp: StatInfoImpl = StatInfoImpl("wp", higherIsBetter = true)
-  val ws: StatInfoImpl = StatInfoImpl("win-streak", higherIsBetter = true)
-  val ls: StatInfoImpl = StatInfoImpl("loss-streak", higherIsBetter = false)
+  val w = new MetaStat(name="Wins", statKey="wins", format="%3.0f", higherIsBetter = true)
+  val l = new MetaStat(name="Losses", statKey="losses", format="%3.0f", higherIsBetter = false)
+  val wp = new MetaStat(name ="Winning Pct.", statKey="wp", format="%3.0f", higherIsBetter = true)
+  val ws = new MetaStat(name ="Win Streak", statKey="win-streak", format="%3.0f", higherIsBetter = true)
+  val ls = new MetaStat(name ="Loss Streak", statKey="loss-streak", format="%3.0f", higherIsBetter = false)
 
   case class WonLostRunning(wins: Double, losses: Double, winStreak: Double, lossStreak: Double)
 

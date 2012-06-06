@@ -21,7 +21,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     val c = conferenceDao.save(new Conference(0L, s, "big-east", "Big East"))
     val r = teamDao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
 
-    val mst = metaStatDao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))
+    val mst = metaStatDao.save(new MetaStat(statKey = "wins", name = "Wins", higherIsBetter = true))
 
     val tst = teamStatDao.save(new TeamStat(metaStat = mst, team = r, date = new Date(), value = 28.0))
     assert(tst.id > 0)
@@ -37,7 +37,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     val c = conferenceDao.save(new Conference(0L, s, "big-east", "Big East"))
     val r = teamDao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
 
-    val mst = metaStatDao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))
+    val mst = metaStatDao.save(new MetaStat(statKey = "wins", name = "Wins", higherIsBetter = true))
 
     teamStatDao.save(new TeamStat(metaStat = mst, team = r, date = jan01, value = 28.0))
     teamStatDao.save(new TeamStat(metaStat = mst, team = r, date = jan02, value = 28.0))
@@ -58,7 +58,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     val rs = teamDao.save(new Team(key = "villanova", name = "Villanova", schedule = s, conference = c, longName = "Villanova", updatedAt = new Date))
     val rt = teamDao.save(new Team(key = "syracuse", name = "Syracuse", schedule = s, conference = c, longName = "Syracuse", updatedAt = new Date))
 
-    val mst = metaStatDao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))
+    val mst = metaStatDao.save(new MetaStat(statKey = "wins", name = "Wins", higherIsBetter = true))
 
     teamStatDao.save(new TeamStat(metaStat = mst, team = rr, date = jan01, value = 38.0))
     teamStatDao.save(new TeamStat(metaStat = mst, team = rs, date = jan01, value = 28.0))

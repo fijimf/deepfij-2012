@@ -38,24 +38,24 @@ class TeamStat(
 
 class TeamStatDao extends BaseDao[TeamStat, Long] {
 
-  def statistic(key: String): Statistic[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.key=:key")
-      .setParameter("key", key)
+  def statistic(statKey: String): Statistic[Team] = {
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:key")
+      .setParameter("statKey", statKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats)
   }
 
-  def population(key: String, date: Date): Population[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.key=:key and date=:date")
-      .setParameter("key", key)
+  def population(statKey: String, date: Date): Population[Team] = {
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:statKey and date=:date")
+      .setParameter("statKey", statKey)
       .setParameter("date", date)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats).population(stats.head.date)
   }
 
-  def timeSeries(key: String, teamKey: String): TimeSeries[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.key=:key and team.key=:teamKey ORDER BY date")
-      .setParameter("key", key)
+  def timeSeries(statKey: String, teamKey: String): TimeSeries[Team] = {
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:statKey and team.key=:teamKey ORDER BY date")
+      .setParameter("statKey", statKey)
       .setParameter("teamKey", teamKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats).series(stats.head.team)
@@ -63,11 +63,13 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
 
   private[this] def listToStat(stats: List[TeamStat]): Statistic[Team] = {
     require(!stats.isEmpty, "Cannot create stat for empty result")
-    val name = stats.head.metaStat.key
+    val statKey = stats.head.metaStat.statKey
+    val name = stats.head.metaStat.name
+    val format = stats.head.metaStat.format
     val hib = stats.head.metaStat.higherIsBetter
 
     val values: Map[(Date, Team), Double] = stats.map(s => (s.date, s.team) -> s.value).toMap
-    StatisticMap(name, hib, values)
+    StatisticMap(statKey, name, format, hib, values)
   }
 
 }

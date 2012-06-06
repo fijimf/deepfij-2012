@@ -1,27 +1,32 @@
 package com.fijimf.deepfij.statx.models
 
 import java.util.Date
-import com.fijimf.deepfij.modelx.{Game, Team}
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
-import com.fijimf.deepfij.statx.{TeamModel, ModelContext, StatInfoImpl, SinglePassGameModel}
+import com.fijimf.deepfij.statx.{TeamModel, ModelContext, SinglePassGameModel}
+import com.fijimf.deepfij.modelx.{MetaStat, Game, Team}
 
 
-class PointsModel extends SinglePassGameModel[Team] with TeamModel{
+class PointsModel extends SinglePassGameModel[Team] with TeamModel {
   val obsTypes = List(
-    ("points-for", true),
-    ("points-against", false),
-    ("score-margin", true),
-    ("score-total", true),
-    ("log-score-ratio", true)
+    ("Points For", "points-for", true),
+    ("Points Against", "points-against", false),
+    ("Margin", "score-margin", true),
+    ("Total Score", "score-total", true),
+    ("Log Scoring Ratio", "log-score-ratio", true)
   )
 
-  val popStats = List("max", "min", "mean", "stdev", "sum")
+  val popStats = List(("Max", "max", "%4.0f"), ("Min", "min", "%4.0f"), ("Mean", "mean", "%8.3f"), ("Std Dev", "stdev", "%9.3f"), ("Sum", "sum", "%6.0f"))
 
   case class PointsRunning(pointsFor: List[Double], pointsAgainst: List[Double], scoreMargin: List[Double], scoreTotal: List[Double], logScoreRatio: List[Double])
 
   private[this] var runningTotals = Map.empty[Team, PointsRunning]
 
-  val statistics = for ((k, hib) <- obsTypes; p <- popStats) yield StatInfoImpl(k + "-" + p, hib)
+  val statisticLookup = (
+    for ((n, k, hib) <- obsTypes; (pn, p, fmt) <- popStats)
+    yield (k, p) -> new MetaStat(name = pn + " " + n, statKey = k + "-" + p, format = fmt, higherIsBetter = hib)
+    ).toMap
+
+  val statistics = statisticLookup.values.toList
 
   def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
     gs.filter(g => (g.resultOpt.isDefined)).map(g => {
@@ -47,15 +52,15 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel{
       (ctx, team) => {
         val tot = runningTotals(team)
 
-        //TRICKSY -- taking advantage of teh fact that obsTypes is in the same order as PointsRunning
+        //TRICKSY -- taking advantage of the fact that obsTypes is in the same order as PointsRunning
         obsTypes.zip(tot.productIterator.toIterable).foldLeft(ctx) {
-          case (c: ModelContext[Team], ((k: String, hib: Boolean), xs: List[Double])) => {
+          case (c: ModelContext[Team], ((n:String, k: String, hib: Boolean), xs: List[Double])) => {
             val s = new DescriptiveStatistics(xs.toArray)
-            c.update(StatInfoImpl(k + "-max", hib), d, team, s.getMax)
-              .update(StatInfoImpl(k + "-min", hib), d, team, s.getMin)
-              .update(StatInfoImpl(k + "-mean", hib), d, team, s.getMean)
-              .update(StatInfoImpl(k + "-stdev", hib), d, team, s.getStandardDeviation)
-              .update(StatInfoImpl(k + "-sum", hib), d, team, s.getSum)
+            c.update(statisticLookup(k, "max"), d, team, s.getMax)
+              .update(statisticLookup(k, "min"), d, team, s.getMin)
+              .update(statisticLookup(k, "mean"), d, team, s.getMean)
+              .update(statisticLookup(k, "stdev"), d, team, s.getStandardDeviation)
+              .update(statisticLookup(k, "sum"), d, team, s.getSum)
           }
         }
       }

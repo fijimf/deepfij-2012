@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.statx.models
 
-import com.fijimf.deepfij.modelx.Team
-import com.fijimf.deepfij.statx.{StatInfoImpl, StatisticalModel, TeamModel}
+import com.fijimf.deepfij.statx.{ StatisticalModel, TeamModel}
+import com.fijimf.deepfij.modelx.{MetaStat, Team}
 
 
 /**Measure
@@ -13,5 +13,5 @@ import com.fijimf.deepfij.statx.{StatInfoImpl, StatisticalModel, TeamModel}
     6) adjNormMargin = adjMargin/Opp(StDev[margin])
  */
 class PointsPlusModel extends StatisticalModel[Team] with TeamModel {
-  def statistics = List.empty[StatInfoImpl]
+  def statistics = List.empty[MetaStat]
 }

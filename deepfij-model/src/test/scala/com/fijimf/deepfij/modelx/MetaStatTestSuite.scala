@@ -9,7 +9,7 @@ class MetaStatTestSuite extends DaoTestSuite{
   val dao: MetaStatDao = new MetaStatDao
 
   test("Create") {
-    val mst = dao.save(new MetaStat(key = "wins", name = "Wins", higherIsBetter = true))
+    val mst = dao.save(new MetaStat(statKey = "wins", name = "Wins", higherIsBetter = true))
     assert(mst.id > 0)
     val d: Option[MetaStat] = dao.findBy(mst.id)
     assert(d.isDefined)

@@ -22,16 +22,20 @@ trait StatisticalModel[T] {
   def createStatistics(s: Schedule): Map[String, Statistic[T]] = {
     val ctx: ModelContext[T] = complete(process(s, initialize()))
 
-    statistics.map(k=> (k.name -> new Statistic[T] {
-      def name = k.name
+    statistics.map(k=> (k.statKey -> new Statistic[T] {
+      val format = k.format
 
-      def higherIsBetter = k.higherIsBetter
+      val statKey = k.statKey
 
-      def keys = scheduleKeys(s)
+      val name = k.name
 
-      def startDate = scheduleStartDate(s)
+      val higherIsBetter = k.higherIsBetter
 
-      def endDate = scheduleEndDate(s)
+      val keys = scheduleKeys(s)
+
+      val startDate = scheduleStartDate(s)
+
+      val endDate = scheduleEndDate(s)
 
       def function(t: T, d: Date) = {
         ctx.get(k,d,t)
