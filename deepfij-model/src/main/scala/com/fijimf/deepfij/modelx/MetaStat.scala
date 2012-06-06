@@ -32,6 +32,15 @@ class MetaStat(@(Id@field)
 }
 
 class MetaStatDao extends BaseDao[MetaStat, Long] {
-
+  def findByStatKey(statKey: String): Option[MetaStat] = {
+    try {
+      val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat WHERE statKey=:statKey").setParameter("statKey", statKey).getSingleResult.asInstanceOf[MetaStat]
+      Some(m)
+    }
+    catch {
+      case x: NoResultException => None
+      case x: NonUniqueResultException => None
+    }
+  }
 }
 

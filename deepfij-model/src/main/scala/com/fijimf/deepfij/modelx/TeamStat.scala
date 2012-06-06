@@ -4,7 +4,7 @@ import annotation.target.field
 import javax.persistence._
 import java.util.Date
 import scala.collection.JavaConversions._
-import com.fijimf.deepfij.statx.{StatisticMap, Statistic, TimeSeries, Population}
+import com.fijimf.deepfij.statx._
 
 @Entity
 @Table(name = "teamStat",
@@ -25,7 +25,7 @@ class TeamStat(
                 val team: Team = null,
 
                 @(Column@field)(name = "date")
-                @(Temporal@field)(value=TemporalType.DATE)
+                @(Temporal@field)(value = TemporalType.DATE)
                 val date: Date = new Date(),
 
                 @(Column@field)(name = "value")
@@ -71,5 +71,6 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
     val values: Map[(Date, Team), Double] = stats.map(s => (s.date, s.team) -> s.value).toMap
     StatisticMap(statKey, name, format, hib, values)
   }
+
 
 }
