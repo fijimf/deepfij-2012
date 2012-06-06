@@ -10,7 +10,6 @@ import org.scalatra.ScalatraFilter
 import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
-import com.fijimf.deepfij.modelx.{ScheduleDao, QuoteDao, ConferenceDao, TeamDao}
 import com.fijimf.deepfij.workflow.Scraper
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
@@ -18,6 +17,7 @@ import java.text.SimpleDateFormat
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
+import com.fijimf.deepfij.modelx._
 
 class Controller extends ScalatraFilter with ScheduleController{
   val log=Logger.getLogger(this.getClass)
@@ -25,6 +25,7 @@ class Controller extends ScalatraFilter with ScheduleController{
   val cd = new ConferenceDao()
   val qd = new QuoteDao()
   val sd = new ScheduleDao()
+  val std = new TeamStatDao()
 
   val scraper = Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
 

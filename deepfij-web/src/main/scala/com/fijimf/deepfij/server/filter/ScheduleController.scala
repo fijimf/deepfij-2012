@@ -4,6 +4,9 @@ import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
 import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleCreatePanel}
+import com.fijimf.deepfij.statx.models.WonLostModel
+import com.fijimf.deepfij.statx.Statistic
+import com.fijimf.deepfij.modelx.Team
 
 trait ScheduleController {
   this: Controller =>
@@ -88,7 +91,14 @@ trait ScheduleController {
   def recalc(key: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
-    //    scraper.scrape(UpdateGamesAndResults(key, fromDate, toDate))
+    sd.findByKey(key).map(s => {
+      val ms = new WonLostModel().createStatistics(s)
+      ms.foreach{case (k: String, stat: Statistic[Team]) => {
+
+      }}
+    })
+
+
   }
 
 
