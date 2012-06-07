@@ -4,12 +4,13 @@ import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
 import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleCreatePanel}
-import com.fijimf.deepfij.statx.models.WonLostModel
-import com.fijimf.deepfij.statx.Statistic
-import com.fijimf.deepfij.modelx.Team
+import com.fijimf.deepfij.repo.StatisticRepository
+import com.fijimf.deepfij.statx.models.{PointsModel, WonLostModel}
 
 trait ScheduleController {
   this: Controller =>
+
+  val statRepo: StatisticRepository = new StatisticRepository
 
   get("/schedule/new") {
     contentType = "text/html"
@@ -56,7 +57,7 @@ trait ScheduleController {
   }
   post("/schedule/recalc") {
     val key: String = params("key")
-    recalc(key, params("from"), params("to"))
+    recalc(key)
     redirect("/schedule/show/" + key)
   }
 
@@ -88,14 +89,10 @@ trait ScheduleController {
     }
   }
 
-  def recalc(key: String, from: String, to: String) {
-    val fromDate = yyyymmdd.parse(from)
-    val toDate = yyyymmdd.parse(to)
+  def recalc(key: String) {
     sd.findByKey(key).map(s => {
-      val ms = new WonLostModel().createStatistics(s)
-      ms.foreach{case (k: String, stat: Statistic[Team]) => {
-
-      }}
+      statRepo.publish(new WonLostModel().createStatistics(s))
+      statRepo.publish(new PointsModel().createStatistics(s))
     })
 
 

@@ -17,4 +17,13 @@ class MetaStatTestSuite extends DaoTestSuite{
     assert(d.get.values.isEmpty)
   }
 
+  test("Find by key") {
+    val mst = dao.save(new MetaStat(statKey = "wins", name = "Wins", higherIsBetter = true))
+    assert(mst.id > 0)
+    val d: Option[MetaStat] = dao.findByStatKey("wins")
+    assert(d.isDefined)
+    assert(d.get.name == "Wins")
+    assert(d.get.values.isEmpty)
+  }
+
 }

@@ -10,7 +10,7 @@ object ScheduleEditPanel {
 
   def apply(s: Schedule): NodeSeq = {
     Seq[Node](
-    <h1>Edit Schedule</h1>,
+      <h1>Edit Schedule</h1>,
       renameDiv(s),
       rebuildDiv(s),
       updateResultsDiv(s),
@@ -23,13 +23,17 @@ object ScheduleEditPanel {
     <div class="row">
       <div class="span4">
         <form class="well form-inline" method="POST" action="/schedule/makeprimary">
-            <label>Set '{s.key}' as primary.</label><input id="key" name="key" type="hidden" value={s.key}/>
+          <label>Set '
+            {s.key}
+            ' as primary.</label> <input id="key" name="key" type="hidden" value={s.key}/>
           <button type="submit" class="btn btn-success">Primary</button>
         </form>
       </div>
       <div class="span4">
         <form class="well form-inline" method="POST" action="/schedule/delete">
-          <label>Delete '{s.key}'.</label><input id="key" name="key" type="hidden" value={s.key}/>
+          <label>Delete '
+            {s.key}
+            '.</label> <input id="key" name="key" type="hidden" value={s.key}/>
           <button type="submit" class="btn btn-danger">Delete</button>
         </form>
       </div>
@@ -46,10 +50,7 @@ object ScheduleEditPanel {
     <div class="row">
       <div class="span8">
         <form class="well form-inline" method="POST" action="/schedule/recalc">
-          <label>From</label>
-            <input id="from" name="from" type="text" class="span2" value={from}/>
-          <label>To</label>
-            <input id="to" name="to" type="text" class="span2" value={to}/>
+            <input id="key" name="key" type="hidden" value={s.key}/>
           <button type="submit" class="btn btn-primary">Regenerate Stats</button>
         </form>
       </div>

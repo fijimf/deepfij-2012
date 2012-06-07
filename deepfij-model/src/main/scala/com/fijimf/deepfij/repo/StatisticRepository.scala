@@ -23,14 +23,21 @@ class StatisticRepository extends Transactional {
   }
 
   def publish(statistic: Statistic[Team]) {
+    logger.info("Publishing " + statistic.statKey)
     transactional {
-      logger.info("Publishing " + statistic.statKey)
       msd.findByStatKey(statistic.statKey).foreach(m => msd.delete(m.id))
-      val ms = msd.save(new MetaStat(name = statistic.name, statKey = statistic.statKey, format = statistic.format, higherIsBetter = statistic.higherIsBetter))
-      for (d <- DateStream(statistic.startDate, statistic.endDate);
-           t <- statistic.keys;
-           x <- statistic.function(t, d)) {
-        tsd.save(new TeamStat(metaStat = ms, team = t, date = d, value = x))
+    }
+    val ms = msd.save(new MetaStat(name = statistic.name, statKey = statistic.statKey, format = statistic.format, higherIsBetter = statistic.higherIsBetter))
+    for (d <- DateStream(statistic.startDate, statistic.endDate)) {
+      transactional {
+        for (t <- statistic.keys;
+             x <- statistic.function(t, d)) {
+          if (x.isInfinite || x.isNaN) {
+            logger.warn("Skipping %s %s %s ==> %f".format(statistic.statKey, t.key, d.toString, x))
+          } else {
+            tsd.save(new TeamStat(metaStat = ms, team = t, date = d, value = x))
+          }
+        }
       }
     }
   }
