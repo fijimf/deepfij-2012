@@ -39,14 +39,14 @@ class TeamStat(
 class TeamStatDao extends BaseDao[TeamStat, Long] {
 
   def statistic(statKey: String): Statistic[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:key")
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:key")
       .setParameter("statKey", statKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats)
   }
 
   def population(statKey: String, date: Date): Population[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:statKey and date=:date")
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.date=:date")
       .setParameter("statKey", statKey)
       .setParameter("date", date)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
@@ -54,7 +54,7 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
   }
 
   def timeSeries(statKey: String, teamKey: String): TimeSeries[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where metaStat.statKey=:statKey and team.key=:teamKey ORDER BY date")
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.team.key=:teamKey ORDER BY date")
       .setParameter("statKey", statKey)
       .setParameter("teamKey", teamKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
