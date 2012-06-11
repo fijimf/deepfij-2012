@@ -39,7 +39,7 @@ class TeamStat(
 class TeamStatDao extends BaseDao[TeamStat, Long] {
 
   def statistic(statKey: String): Statistic[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:key")
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey")
       .setParameter("statKey", statKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats)

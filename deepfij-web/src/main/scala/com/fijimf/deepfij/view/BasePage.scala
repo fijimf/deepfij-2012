@@ -19,6 +19,7 @@ object BasePage {
         <script src="/scripts/jquery-1.7.1.min.js"></script>
         <script src="/scripts/bootstrap.min.js"></script>
         <script src="/scripts/quoteloader.js"></script>
+        <script src="/scripts/d3.v2.min.js"></script>
 
           <link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css"/>
           <link href="/style/bootstrap.css" rel="stylesheet" type="text/css"/>

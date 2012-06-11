@@ -2,10 +2,10 @@ package com.fijimf.deepfij.server.filter
 
 import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.server.Util._
-import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
 import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleCreatePanel}
 import com.fijimf.deepfij.repo.StatisticRepository
 import com.fijimf.deepfij.statx.models.{PointsModel, WonLostModel}
+import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
 
 trait ScheduleController {
   this: Controller =>

@@ -6,6 +6,7 @@
  */
 package com.fijimf.deepfij.server.filter
 
+import api.StatController
 import org.scalatra.ScalatraFilter
 import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
@@ -19,7 +20,7 @@ import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 
-class Controller extends ScalatraFilter with ScheduleController{
+class Controller extends ScalatraFilter with ScheduleController with StatController {
   val log=Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()

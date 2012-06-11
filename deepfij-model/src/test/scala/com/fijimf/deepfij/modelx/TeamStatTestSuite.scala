@@ -33,7 +33,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     val jan01: Date = fmt.parse("01/01/2011")
     val jan02: Date = fmt.parse("01/02/2011")
     val jan03: Date = fmt.parse("01/03/2011")
-    val s = scheduleDao.save(new Schedule(0L, "test", "Test"))
+    val s = scheduleDao.save(new Schedule(0L, "test", "Test", true))
     val c = conferenceDao.save(new Conference(0L, s, "big-east", "Big East"))
     val r = teamDao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
 
@@ -52,7 +52,7 @@ class TeamStatTestSuite extends DaoTestSuite {
     val fmt = new SimpleDateFormat("MM/dd/yyyy")
 
     val jan01: Date = fmt.parse("01/01/2011")
-    val s = scheduleDao.save(new Schedule(0L, "test", "Test"))
+    val s = scheduleDao.save(new Schedule(0L, "test", "Test", true))
     val c = conferenceDao.save(new Conference(0L, s, "big-east", "Big East"))
     val rr = teamDao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
     val rs = teamDao.save(new Team(key = "villanova", name = "Villanova", schedule = s, conference = c, longName = "Villanova", updatedAt = new Date))
