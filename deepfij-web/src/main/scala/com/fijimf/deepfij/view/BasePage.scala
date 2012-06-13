@@ -18,20 +18,9 @@ case class BasePage(override val title: String, override val content: Option[Nod
   override val links = List(
     Link("http://fonts.googleapis.com/css?family=Lobster", "stylesheet", "text/css"),
     Link("/style/bootstrap.css", "stylesheet", "text/css"),
-    Link("/style/deepfij.css", "shortcut icon", "text/css"),
-    Link("assets/ico/favicon.ico", "stylesheet", "image/x-icon")
+    Link("/style/deepfij.css", "stylesheet", "text/css"),
+    Link("assets/ico/favicon.ico", "shortcut icon", "image/x-icon")
   )
-
-  override def navbar: Node = {
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="#">DeepFij</a>{navbarLeftItems}{navbarSearch}{navbarRightItems}
-        </div>
-      </div>
-    </div>
-  }
-
 
   override def navbarSearch: Option[Node] = {
     Some(<form action="/search" method="get" class="navbar-search pull-left">
@@ -40,7 +29,6 @@ case class BasePage(override val title: String, override val content: Option[Nod
   }
 
   override def navbarLeftItems: Option[Node] = {
-
     Some(<ul class="nav">
       <li class="active">
         <a href="/">Home</a>

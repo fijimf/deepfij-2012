@@ -14,11 +14,11 @@ object TeamPanel {
     </a>
   }
 
-  def apply(team: Team):NodeSeq = {
+  def apply(team: Team): NodeSeq = {
     val w = team.wins.size
     val l = team.losses.size
     val cw = team.wins.filter(g => g.homeTeam.conference == g.awayTeam.conference).size
-    val cl = team.wins.filter(g => g.homeTeam.conference == g.awayTeam.conference).size
+    val cl = team.losses.filter(g => g.homeTeam.conference == g.awayTeam.conference).size
     <div class="row">
       <div class="span1">
         {logoImage(team)}
@@ -28,7 +28,9 @@ object TeamPanel {
           {team.name + " " + team.nicknameOpt.getOrElse("") + " (" + w + "-" + l + ", " + cw + "-" + cl + ")"}
         </h1>
         <h3>
-          <a href={"/conference/"+team.conference.key}>{team.conference.name}</a>
+          <a href={"/conference/" + team.conference.key}>
+            {team.conference.name}
+          </a>
         </h3>
       </div>
     </div>

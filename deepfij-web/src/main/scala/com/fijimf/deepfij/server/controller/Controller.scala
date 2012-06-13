@@ -47,8 +47,8 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
   get("/team/:key") {
     contentType = "text/html"
     td.findByKey(params("key")) match {
-      case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t)))
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key"))))
+      case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t))).toHtml5()
+      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key")))).toHtml5()
     }
   }
 

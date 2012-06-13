@@ -34,7 +34,3 @@ section > .row {
     font-style: italic;
 }
 
-body {
-    background-image: -webkit-linear-gradient(top, #DDE 20px, white 190px);
-    background-repeat: no-repeat;
-}
