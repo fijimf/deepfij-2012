@@ -1,6 +1,6 @@
-package com.fijimf.deepfij.server.filter.api
+package com.fijimf.deepfij.server.controller.api
 
-import com.fijimf.deepfij.server.filter.Controller
+import com.fijimf.deepfij.server.controller.Controller
 import com.fijimf.deepfij.modelx.Team
 import com.fijimf.deepfij.statx.Population
 import java.text.SimpleDateFormat
@@ -10,9 +10,8 @@ import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{StatPanel, BasePage}
 
 
-trait StatController {
+trait StatApi {
   this: Controller =>
-
 
   case class Stat(name: String, yyyymmddd: String, mean: Double, stdDev: Double, observations: List[Obs])
 
@@ -20,14 +19,13 @@ trait StatController {
 
   get("/stat/:key") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(StatPanel(params("key")))))
+    BasePage(title = "Deep Fij Admin", content = Some(StatPanel(params("key")))).toHtml5()
   }
   get("/api/stat/:key") {
     contentType = "application/json"
     val s = std.statistic(params("key"))
     generateJSON(s.name, s.endDate, s.population(s.endDate))
   }
-
 
   get("/api/stat/:key/:date") {
     contentType = "application/json"

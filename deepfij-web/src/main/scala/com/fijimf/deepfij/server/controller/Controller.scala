@@ -4,9 +4,9 @@
  * Date: 5/16/12
  * Time: 2:32 AM
  */
-package com.fijimf.deepfij.server.filter
+package com.fijimf.deepfij.server.controller
 
-import api.StatController
+import api.StatApi
 import org.scalatra.ScalatraFilter
 import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
@@ -20,8 +20,8 @@ import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 
-class Controller extends ScalatraFilter with ScheduleController with StatController {
-  val log=Logger.getLogger(this.getClass)
+class Controller extends ScalatraFilter with ScheduleController with StatApi {
+  val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
   val qd = new QuoteDao()
@@ -37,7 +37,7 @@ class Controller extends ScalatraFilter with ScheduleController with StatControl
 
   get("/") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)))
+    BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
   }
 
   get("/date/:yyyymmdd") {
@@ -46,33 +46,31 @@ class Controller extends ScalatraFilter with ScheduleController with StatControl
 
   get("/team/:key") {
     contentType = "text/html"
-    val key: String = params("key")
-    html5Wrapper(td.findByKey(key) match {
+    td.findByKey(params("key")) match {
       case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t)))
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", key)))
-    })
+      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key"))))
+    }
   }
 
   get("/conference/:key") {
     contentType = "text/html"
-    val key: String = params("key")
-    html5Wrapper(cd.findByKey(key) match {
-      case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c)))
-      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", key)))
-    })
+    cd.findByKey(params("key")) match {
+      case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c))).toHtml5()
+      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
+    }
   }
 
 
   get("/admin") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())))
+    BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())).toHtml5()
   }
 
 
 
   get("/login") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Login", content = Some(LoginPanel())))
+    BasePage(title = "Login", content = Some(LoginPanel())).toHtml5()
   }
 
   post("/login") {

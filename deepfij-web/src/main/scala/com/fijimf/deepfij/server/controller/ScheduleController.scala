@@ -1,4 +1,4 @@
-package com.fijimf.deepfij.server.filter
+package com.fijimf.deepfij.server.controller
 
 import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
 import com.fijimf.deepfij.server.Util._
@@ -14,7 +14,7 @@ trait ScheduleController {
 
   get("/schedule/new") {
     contentType = "text/html"
-    html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleCreatePanel())))
+    BasePage(title = "Deep Fij Admin", content = Some(ScheduleCreatePanel())).toHtml5()
   }
 
   post("/schedule/new") {
@@ -25,40 +25,37 @@ trait ScheduleController {
   get("/schedule/show/:key") {
     contentType = "text/html"
     sd.findByKey(params("key")) match {
-      case Some(schedule) => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleShowPanel(schedule))))
-      case None => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", params("key")))))
+      case Some(schedule) => BasePage(title = "Deep Fij Admin", content = Some(ScheduleShowPanel(schedule))).toHtml5()
+      case None => BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", params("key")))).toHtml5()
     }
   }
 
   get("/schedule/edit/:key") {
     contentType = "text/html"
-    val key: String = params("key")
-    sd.findByKey(key) match {
-      case Some(schedule) => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(ScheduleEditPanel(schedule))))
-      case None => html5Wrapper(BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", key))))
+    sd.findByKey(params("key")) match {
+      case Some(schedule) => BasePage(title = "Deep Fij Admin", content = Some(ScheduleEditPanel(schedule))).toHtml5()
+      case None => BasePage(title = "Deep Fij Admin", content = Some(MissingResourcePanel("schedule", params("key")))).toHtml5()
     }
   }
 
   post("/schedule/rebuild") {
-    val key: String = params("key")
-    rebuild(key, params("from"), params("to"))
-    redirect("/schedule/show/" + key)
+    rebuild(params("key"), params("from"), params("to"))
+    redirect("/schedule/show/" + params("key"))
   }
 
   post("/schedule/results") {
-    val key: String = params("key")
-    results(key, params("from"), params("to"))
-    redirect("/schedule/show/" + key)
+    results(params("key"), params("from"), params("to"))
+    redirect("/schedule/show/" + params("key"))
   }
+
   post("/schedule/rename") {
-    val key: String = params("key")
-    rename(key, params("name"))
-    redirect("/schedule/show/" + key)
+    rename(params("key"), params("name"))
+    redirect("/schedule/show/" + params("key"))
   }
+
   post("/schedule/recalc") {
-    val key: String = params("key")
-    recalc(key)
-    redirect("/schedule/show/" + key)
+    recalc(params("key"))
+    redirect("/schedule/show/" + params("key"))
   }
 
   post("/schedule/delete") {
@@ -67,21 +64,19 @@ trait ScheduleController {
   }
 
   post("/schedule/makeprimary") {
-    val key: String = params("key")
-    sd.setPrimary(key)
-    log.info("Setting " + key + " as primary")
-    redirect("/schedule/show/" + key)
+    sd.setPrimary(params("key"))
+    redirect("/schedule/show/" + params("key"))
   }
 
 
-  def create(key: String, name: String, from: String, to: String) {
+  private def create(key: String, name: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
     val cfg = FullRebuild(key, name, fromDate, toDate)
     scraper.scrape(cfg)
   }
 
-  def rebuild(key: String, from: String, to: String) {
+  private def rebuild(key: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
     for (s <- sd.findByKey(key)) {
@@ -89,30 +84,28 @@ trait ScheduleController {
     }
   }
 
-  def recalc(key: String) {
+  private def recalc(key: String) {
     sd.findByKey(key).map(s => {
       statRepo.publish(new WonLostModel().createStatistics(s))
       statRepo.publish(new PointsModel().createStatistics(s))
     })
-
-
   }
 
 
-  def results(key: String, from: String, to: String) {
+  private def results(key: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
     scraper.scrape(UpdateGamesAndResults(key, fromDate, toDate))
   }
 
-  def rename(key: String, name: String) {
+  private def rename(key: String, name: String) {
     sd.findByKey(key).map(s => {
       s.name = name
       sd.save(s)
     })
   }
 
-  def delete(key: String) {
+  private def delete(key: String) {
     sd.findByKey(key).map(s => {
       sd.delete(s.id)
     })

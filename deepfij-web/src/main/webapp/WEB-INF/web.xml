@@ -24,7 +24,7 @@
 
     <filter>
         <filter-name>scalatra-filter</filter-name>
-        <filter-class>com.fijimf.deepfij.server.filter.Controller</filter-class>
+        <filter-class>com.fijimf.deepfij.server.controller.Controller</filter-class>
     </filter>
 
     <filter-mapping>
@@ -34,14 +34,14 @@
 
 
     <!--<servlet>-->
-        <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
-        <!--<servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>-->
-        <!--<async-supported>true</async-supported>-->
+    <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
+    <!--<servlet-class>cc.spray.connectors.Servlet30ConnectorServlet</servlet-class>-->
+    <!--<async-supported>true</async-supported>-->
     <!--</servlet>-->
 
     <!--<servlet-mapping>-->
-        <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
+    <!--<servlet-name>SprayConnectorServlet</servlet-name>-->
+    <!--<url-pattern>/*</url-pattern>-->
     <!--</servlet-mapping>-->
 
 </web-app>
