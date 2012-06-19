@@ -19,16 +19,16 @@ object UserListPanel {
             {users.map(u => {
             <tr>
               <td>
-                {u.getId()}
+                {u.id}
               </td>
               <td>
-                {u.getEmail()}
+                {u.email}
               </td>
               <td>
-                {u.getRoles}
+                {u.roleList.mkString(", ")}
               </td>
               <td>
-                <a href={"/user/edit/" + u.getId()}>Edit</a>
+                <a href={"/user/edit/" + u.id}>Edit</a>
               </td>
             </tr>
           })}
