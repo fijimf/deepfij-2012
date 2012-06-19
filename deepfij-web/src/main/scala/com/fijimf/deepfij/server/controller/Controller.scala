@@ -19,6 +19,7 @@ import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
+import team.TeamPanel
 
 class Controller extends ScalatraFilter with ScheduleController with StatApi {
   val log = Logger.getLogger(this.getClass)

@@ -1,4 +1,4 @@
-package com.fijimf.deepfij.view
+package com.fijimf.deepfij.view.team
 
 import com.fijimf.deepfij.modelx.{Game, Team}
 import java.text.SimpleDateFormat
