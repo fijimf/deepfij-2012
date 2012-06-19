@@ -1,9 +1,5 @@
 package com.fijimf.deepfij.view
 
-import collection.immutable.Map
-import org.apache.shiro.SecurityUtils
-import org.apache.shiro.subject.Subject
-import com.fijimf.deepfij.server.Util._
 import xml.{Node, NodeSeq}
 
 case class BasePage(override val title: String, override val content: Option[NodeSeq]) extends Page {
@@ -12,6 +8,7 @@ case class BasePage(override val title: String, override val content: Option[Nod
     "/scripts/jquery-1.7.1.min.js",
     "/scripts/bootstrap.min.js",
     "/scripts/quoteloader.js",
+    "/scripts/statLoader.js",
     "/scripts/d3.v2.min.js"
   )
 
