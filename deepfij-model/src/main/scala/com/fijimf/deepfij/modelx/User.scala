@@ -2,6 +2,7 @@ package com.fijimf.deepfij.modelx
 
 import javax.persistence._
 import java.util.Date
+import scala.collection.JavaConversions._
 import annotation.target.field
 
 @Entity
@@ -30,8 +31,10 @@ class User(
             var updatedAt: Date = new Date
             ) {
   def this() = {
-    this(0L, "", "",java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Role]], new Date())
+    this(0L, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Role]], new Date())
   }
+
+  @transient lazy val roleList = roles.toList
 }
 
 class UserDao extends BaseDao[User, Long] {
