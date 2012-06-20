@@ -54,4 +54,5 @@ $(document).ready(function () {
                 .text(function(d){
                     return d.name;
                 });
-             
+        });
+});
