@@ -6,14 +6,13 @@ import com.fijimf.deepfij.statx.Population
 import java.text.SimpleDateFormat
 import com.codahale.jerkson.Json
 import java.util.Date
-import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{StatPanel, BasePage}
 
 
 trait StatApi {
   this: Controller =>
 
-  case class Stat(name: String, yyyymmddd: String, mean: Double, stdDev: Double, observations: List[Obs])
+  case class Stat(name: String, yyyymmddd: String, max:Double, min:Double, mean: Double, stdDev: Double, observations: List[Obs])
 
   case class Obs(name: String, rank: Double, value: Double)
 
@@ -40,7 +39,7 @@ trait StatApi {
     val os: List[Obs] = population.topN(population.keys.size).map {
       case (team: Team, d: Double) => Obs(team.name, population.rank(team).getOrElse(0.0), d)
     }
-    val data: Stat = Stat(name, fmt.format(date), population.mean.getOrElse(0), population.stdDev.getOrElse(0), os)
+    val data: Stat = Stat(name, fmt.format(date), population.max.getOrElse(0),population.min.getOrElse(0),population.mean.getOrElse(0), population.stdDev.getOrElse(0), os)
     Json.generate(data)
   }
 

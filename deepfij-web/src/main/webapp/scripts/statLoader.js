@@ -1,23 +1,56 @@
 $(document).ready(function () {
     $.get("/api/stat/wins", { },
         function (data) {
-            $('#stat #name').replaceWith(data.name)
-            $('#stat #mean').replaceWith(" "+data.mean)
-            $('#stat #stddev').replaceWith(" "+data.stdDev)
+            $('#statName').text(data.name)
+            $('#statMean').append(data.mean.toFixed(3))
+            $('#statStdDev').append(data.stdDev.toFixed(3))
 
-            var outerW = 500;
-            var outerH = 200;
-            d3.select("#stat #shit").append()
-              var colours = ["#08519C", "#3182BD", "#6BAED6", "#BDD7E7", "#EFF3FF"]; // ColorBrewer Blues
-              var vis;
-              var x0 = function (d) { return d.y0 * w; }; // lower bound
-              var x1 = function (d) { return (d.y0 + d.y) * w; } // upper bound
-              var y = function (d) { return d.x * h / 3; };
+            var width = 800;
+            var barHeight = 14;
+            var height = barHeight * data.observations.length;
 
-                vis = d3.select("#vis")
-                    .append("svg:svg")
-                    .attr("width", outerW)
-                    .attr("height", outerH);
+            // var data = [4, 8, 15, 16, 23, 42];
+
+            var x = d3.scale.linear()
+                .domain([0, data.max])
+                .range([0, width]);
+
+
+            var chart = d3.select("#chart")
+                .append("svg")
+                .attr("class", "chart")
+                .attr("width", width)
+                .attr("height", height)
+
+            chart.selectAll("rect")
+                .data(data.observations, function (d) {
+                    return d.name;
+                })
+                .enter().append("rect")
+                .attr("y", function (d, i) {
+                    return i * barHeight;
+                })
+                .attr("width", function (d, i) {
+                    return x(d.value);
+                })
+                .attr("height", barHeight)
+                .attr("stroke", "white")
+                .attr("fill", "steelblue");
+
+            chart.selectAll("text")
+                .data(data.observations, function (d) {
+                    return d.name;
+                })
+
+                .enter().append("text")
+                .attr("x", x(d.value))
+                .attr("y", function (d, i) {
+                    return i * barHeight;
+                })
+                .attr("dx", -3)// padding-right
+                .attr("dy", ".35em")// vertical-align: middle
+                .attr("text-anchor", "end")// text-align: right
+                .text(d.name);
 
         });
 })
