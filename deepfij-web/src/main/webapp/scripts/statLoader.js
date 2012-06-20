@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    $.get("/api/stat/wins", { },
+function teamStatBarChart(var s) {
+    $.get("/api/stat/"+s, { },
         function (stat) {
             $('#statName').text(stat.name)
             $('#statMean').append(stat.mean.toFixed(3))
@@ -48,11 +48,13 @@ $(document).ready(function () {
                     return i * barHeight;
                 })
                 .attr("dx", "-5px")// padding-right
-                .attr("dy", "1.55em")// vertical-align: middle
+                .attr("dy", "1.25em")// vertical-align: middle
                 .attr("text-anchor", "end")// text-align: right
-                .attr("style","color:white; font-size: 8px; font-weight: bold;")
+                .style("fill","white")
+                .style("font-size","8px")
+                .style("font-weight","bold")
                 .text(function(d){
                     return d.name;
                 });
         });
-});
+    }
