@@ -1,18 +1,17 @@
 $(document).ready(function () {
     $.get("/api/stat/wins", { },
-        function (data) {
-            $('#statName').text(data.name)
-            $('#statMean').append(data.mean.toFixed(3))
-            $('#statStdDev').append(data.stdDev.toFixed(3))
+        function (stat) {
+            $('#statName').text(stat.name)
+            $('#statMean').append(stat.mean.toFixed(3))
+            $('#statStdDev').append(stat.stdDev.toFixed(3))
 
+            var data = stat.observations
             var width = 800;
             var barHeight = 14;
-            var height = barHeight * data.observations.length;
-
-            // var data = [4, 8, 15, 16, 23, 42];
+            var height = barHeight * data.length;
 
             var x = d3.scale.linear()
-                .domain([0, data.max])
+                .domain([0, stat.max])
                 .range([0, width]);
 
 
@@ -23,7 +22,7 @@ $(document).ready(function () {
                 .attr("height", height)
 
             chart.selectAll("rect")
-                .data(data.observations, function (d) {
+                .data(data, function (d) {
                     return d.name;
                 })
                 .enter().append("rect")
@@ -38,19 +37,21 @@ $(document).ready(function () {
                 .attr("fill", "steelblue");
 
             chart.selectAll("text")
-                .data(data.observations, function (d) {
+                .data(data, function (d) {
                     return d.name;
                 })
-
                 .enter().append("text")
-                .attr("x", x(d.value))
+                .attr("x", function(d){
+                    return x(d.value);
+                })
                 .attr("y", function (d, i) {
                     return i * barHeight;
                 })
-                .attr("dx", -3)// padding-right
-                .attr("dy", ".35em")// vertical-align: middle
+                .attr("dx", "-5px")// padding-right
+                .attr("dy", "1.55em")// vertical-align: middle
                 .attr("text-anchor", "end")// text-align: right
-                .text(d.name);
-
-        });
-})
+                .attr("style","color:white; font-size: 8px; font-weight: bold;")
+                .text(function(d){
+                    return d.name;
+                });
+             
