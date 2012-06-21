@@ -1,5 +1,5 @@
-function teamStatBarChart(var s) {
-    $.get("/api/stat/"+s, { },
+function teamStatBarChart(s) {
+    $.get("/api/stat/" + s, { },
         function (stat) {
             $('#statName').text(stat.name)
             $('#statMean').append(stat.mean.toFixed(3))
@@ -20,6 +20,8 @@ function teamStatBarChart(var s) {
                 .attr("class", "chart")
                 .attr("width", width)
                 .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(10,15)");
 
             chart.selectAll("rect")
                 .data(data, function (d) {
@@ -41,7 +43,7 @@ function teamStatBarChart(var s) {
                     return d.name;
                 })
                 .enter().append("text")
-                .attr("x", function(d){
+                .attr("x", function (d) {
                     return x(d.value);
                 })
                 .attr("y", function (d, i) {
@@ -50,11 +52,23 @@ function teamStatBarChart(var s) {
                 .attr("dx", "-5px")// padding-right
                 .attr("dy", "1.25em")// vertical-align: middle
                 .attr("text-anchor", "end")// text-align: right
-                .style("fill","white")
-                .style("font-size","8px")
-                .style("font-weight","bold")
-                .text(function(d){
+                .style("fill", "white")
+                .style("font-size", "8px")
+                .style("font-weight", "bold")
+                .text(function (d) {
                     return d.name;
                 });
+
+            chart.selectAll("rule")
+                .data(x.ticks(10))
+                .enter().append("text")
+                .attr("class", "rule")
+                .attr("x", x)
+                .attr("y", 0)
+                .attr("dy", -3)
+                .attr("text-anchor", "middle")
+                .text(function (d) {
+                    return d;
+                });
         });
-    }
+}
