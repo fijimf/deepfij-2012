@@ -31,7 +31,7 @@ object StatPanel {
       </div>
       <script>
         {"""$(document).ready(function () {
-      teamStatBarChart('%s')
+      teamStatBubbleChart('%s')
       })""".format(key)}
       </script>
   }

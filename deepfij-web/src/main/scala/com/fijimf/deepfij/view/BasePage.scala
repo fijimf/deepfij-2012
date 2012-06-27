@@ -9,6 +9,7 @@ case class BasePage(override val title: String, override val content: Option[Nod
     "/scripts/bootstrap.min.js",
     "/scripts/quoteloader.js",
     "/scripts/statLoader.js",
+    "/scripts/statbubble.js",
     "/scripts/d3.v2.min.js"
   )
 
