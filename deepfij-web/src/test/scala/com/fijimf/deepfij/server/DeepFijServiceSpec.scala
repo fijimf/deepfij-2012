@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.server
 
 import controller.Controller
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{FunSpec, BeforeAndAfterEach}
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 
@@ -10,9 +10,12 @@ import org.apache.shiro.util.Factory
 import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.config.IniSecurityManagerFactory
 import org.apache.shiro.SecurityUtils
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 
 
-class DeepFijServiceSpec extends ScalatraFunSuite with BeforeAndAfterEach {
+@RunWith(classOf[JUnitRunner])
+class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterEach {
 
   val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
   val securityManager: SecurityManager = factory.getInstance();
@@ -23,40 +26,52 @@ class DeepFijServiceSpec extends ScalatraFunSuite with BeforeAndAfterEach {
   val sdao: ScheduleDao = new ScheduleDao
   val cdao: ConferenceDao = new ConferenceDao
   val tdao: TeamDao = new TeamDao
-  val dao: GameDao = new GameDao
+  val gdao: GameDao = new GameDao
+  val rdao: ResultDao = new ResultDao
 
   override def beforeEach() {
     PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
 
-    val s = sdao.save(new Schedule(0L, "test", "Test"))
+    val s = sdao.save(new Schedule(0L, "test", "Test", isPrimary = true))
     val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
-    val q = tdao.save(new Team(key = "marquette", name = "Marquette", schedule = s, conference = c, longName = "Marquette", updatedAt = new Date))
-    val r = tdao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
-    val gg = dao.save(new Game(schedule = s, homeTeam = q, awayTeam = r))
+    val ta = tdao.save(new Team(key = "marquette", name = "Marquette", schedule = s, conference = c, longName = "Marquette", updatedAt = new Date))
+    val tb = tdao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
+    val tc = tdao.save(new Team(key = "syracuse", name = "Syracuse", schedule = s, conference = c, longName = "Syracuse", updatedAt = new Date))
+    val ga = gdao.save(new Game(schedule = s, homeTeam = ta, awayTeam = tb))
+    val gb = gdao.save(new Game(schedule = s, homeTeam = tc, awayTeam = tb))
+    val res = rdao.save(new Result(game = gb, homeScore = 50, awayScore = 123))
   }
 
-  def activeScheduleKey() = "test"
-
-
-  test("Return team missing for a missing key") {
-    get("/team/xxx") {
-      status should equal(200)
-      body should include(
-        """The team keyed by the value 'xxx' could not be found."""
-      )
+  describe("The DeepfijController filter") {
+    describe("for an unknown team") {
+      it("should return status OK") {
+        get("/team/xxx") {
+          status should equal(200)
+        }
+      }
+      it("should have the valid error message") {
+        get("/team/xxx") {
+          body should include(
+            """The team keyed by the value 'xxx' could not be found."""
+          )
+        }
+      }
+    }
+    describe("for a known team") {
+      get("/team/georgetown") {
+        it("should return status OK") {
+          status should equal(200)
+        }
+        it("should have a heading with the team's short name and the record") {
+          body should include regex ("""<h1>(/s+)Georgetown  \(1-0, 1-0\)(\s+)</h1>""")
+        }
+        it("display a link to the conference page") {
+          body should include regex ("""<a href="/conference/big-east">(\s+)Big East(\s+)</a>""")
+        }
+      }
     }
   }
-
-
-  test("Return a team page for a valid key") {
-    get("/team/georgetown") {
-      status should equal(200)
-      body should include( """Georgetown  (0-0, 0-0)""")
-      body should include( """<a href="/conference/big-east">Big East</a>""")
-    }
-  }
-
   //  test("Return a confernece for a valid key") {
   //    val response = testService(HttpRequest(HttpMethods.GET, "/conference/big-east")) {
   //      service
