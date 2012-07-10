@@ -46,7 +46,7 @@ trait Page {
   def toNodeSeq(flash: Map[String, String] = Map.empty): NodeSeq = {
     <html lang="en">
       <head>
-          <meta charset="utf-8"/>
+        <meta charset="utf-8"/>
         <title>
           {title}
         </title>{scripts.map(s => <script src={s}></script>)}{links.map(l => <link href={l.href} rel={l.rel} type={l.typ}/>)}
@@ -54,19 +54,20 @@ trait Page {
       </head>
 
       <body style="padding-top: 50px;">
-        {navbar}<div class="container">
-        <div class="row">
-          <div class="span12">
-            <p class="epigram"></p>
-          </div>
-        </div>{if (content.isDefined) content.get}<div class="row">
+        {navbar}<div></div>
+        <div class="container">
+          <div class="row">
+            <div class="span12">
+              <p class="epigram">How bad it gets you can't imagine; the burning wax, the breath of reptiles.</p>
+            </div>
+          </div>{if (content.isDefined) content.get}<div class="row">
         </div>
-        <footer class="footer">
-          <p>
-            {"Copyright 2007-2012 Jim Frohnhofer"}
-          </p>
-        </footer>
-      </div>
+          <footer class="footer">
+            <p>
+              {"Copyright 2007-2012 Jim Frohnhofer"}
+            </p>
+          </footer>
+        </div>
       </body>
     </html>
   }
