@@ -1,15 +1,24 @@
 package com.fijimf.deepfij.server
 
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import controller.Controller
+import org.scalatest.BeforeAndAfterEach
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 
 import org.scalatra.test.scalatest._
-import org.eclipse.jetty.http.HttpMethods
-import org.scalatra.test.ScalatraTests
+import org.apache.shiro.util.Factory
+import org.apache.shiro.mgt.SecurityManager
+import org.apache.shiro.config.IniSecurityManagerFactory
+import org.apache.shiro.SecurityUtils
 
 
-class DeepFijServiceSpec extends ScalatraTests with ScalatraFunSuite with BeforeAndAfterEach {
+class DeepFijServiceSpec extends ScalatraFunSuite with BeforeAndAfterEach {
+
+  val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
+  val securityManager: SecurityManager = factory.getInstance();
+
+  SecurityUtils.setSecurityManager(securityManager)
+  addFilter(classOf[Controller], "/*")
 
   val sdao: ScheduleDao = new ScheduleDao
   val cdao: ConferenceDao = new ConferenceDao
@@ -30,34 +39,24 @@ class DeepFijServiceSpec extends ScalatraTests with ScalatraFunSuite with Before
   def activeScheduleKey() = "test"
 
 
-  //
-  //  test("Return team missing for a missing key") {
-  //    val response = tester.HttpRequest(HttpMethods.GET, "/team/xxx")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //    val s: String = response.content.get.toString
-  //    assert(s.contains("""<div class="alert alert-error">
-  //          The team keyed by the value 'xxx' could not be found.
-  //        </div>"""))
-  //  }
-  //
-  //  test("Return a team page for a valid key") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/team/georgetown")) {
-  //      service
-  //    }.response
-  //    val s: String = response.content.get.toString
-  //    assert(response.status === StatusCodes.OK)
-  //    assert(s.contains("""      <div class="span11">
-  //        <h1>
-  //          Georgetown  (0-0, 0-0)
-  //        </h1>
-  //        <h3>
-  //          <a href="/conference/big-east">Big East</a>
-  //        </h3>
-  //      </div>"""))
-  //  }
-  //
+  test("Return team missing for a missing key") {
+    get("/team/xxx") {
+      status should equal(200)
+      body should include(
+        """The team keyed by the value 'xxx' could not be found."""
+      )
+    }
+  }
+
+
+  test("Return a team page for a valid key") {
+    get("/team/georgetown") {
+      status should equal(200)
+      body should include( """Georgetown  (0-0, 0-0)""")
+      body should include( """<a href="/conference/big-east">Big East</a>""")
+    }
+  }
+
   //  test("Return a confernece for a valid key") {
   //    val response = testService(HttpRequest(HttpMethods.GET, "/conference/big-east")) {
   //      service
