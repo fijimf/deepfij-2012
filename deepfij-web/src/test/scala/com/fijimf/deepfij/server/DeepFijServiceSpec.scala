@@ -16,6 +16,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterEach {
+  System.setProperty("deepfij.persistenceUnitName", "deepfij-test")
 
   val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
   val securityManager: SecurityManager = factory.getInstance();

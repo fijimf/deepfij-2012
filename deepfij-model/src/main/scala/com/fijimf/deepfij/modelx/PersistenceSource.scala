@@ -8,7 +8,7 @@ import java.io.File
 
 
 object PersistenceSource {
-  val persistenceUnitName = "deepfij"
+  val persistenceUnitName = System.getProperty("deepfij.persistenceUnitName", "deepfij")
   val entityManagerFactory: EntityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName)
   val entityManager: EntityManager = entityManagerFactory.createEntityManager()
   entityManager.setFlushMode(FlushModeType.AUTO)
@@ -40,21 +40,21 @@ object PersistenceSource {
     }
   }
 
-//  def main(args: Array[String]) {
-//    dropDatabase()
-//    println(testDatabase())
-//
-//    buildDatabase()
-//    println(testDatabase())
-//
-//  }
-//
+  //  def main(args: Array[String]) {
+  //    dropDatabase()
+  //    println(testDatabase())
+  //
+  //    buildDatabase()
+  //    println(testDatabase())
+  //
+  //  }
+  //
   def main(args: Array[String]) {
 
-      val tempFile = File.createTempFile("schema", ".sql")
-      schemaExport.setOutputFile(tempFile.getAbsolutePath)
-      schemaExport.execute(true, false, false, false)
-      println(tempFile.getAbsolutePath)
+    val tempFile = File.createTempFile("schema", ".sql")
+    schemaExport.setOutputFile(tempFile.getAbsolutePath)
+    schemaExport.execute(true, false, false, false)
+    println(tempFile.getAbsolutePath)
 
   }
 }
