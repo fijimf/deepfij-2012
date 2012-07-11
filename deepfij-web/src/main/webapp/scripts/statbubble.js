@@ -2,11 +2,10 @@ function teamStatBubbleChart(s) {
     $.get("/api/stat/bubble/" + s, { },
         function (stat) {
             $('#statName').text(stat.name);
-            $('#statMean').append(stat.mean.toFixed(3));
-            $('#statStdDev').append(stat.stdDev.toFixed(3));
+//            $('#statMean').append(stat.mean.toFixed(3));
+//            $('#statStdDev').append(stat.stdDev.toFixed(3));
 
-            var data = {name:stat.name,
-                children:stat.observations};
+            var data = stat;
 
 
             var r = 960;
@@ -51,7 +50,7 @@ function teamStatBubbleChart(s) {
                             return fill(d.name);
                         }
                     }
-                });
+                }).style("stroke","#222");
 
 //            node.append("text")
 //                .attr("text-anchor", "middle")
