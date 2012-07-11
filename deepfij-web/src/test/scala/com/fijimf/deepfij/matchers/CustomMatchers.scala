@@ -14,7 +14,13 @@ trait CustomMatchers {
         catching(classOf[Exception]).opt {
           XML.load(new StringReader(xml.trim))
         } match {
-          case Some(x) => MatchResult(true, left.toString + " was not valid html5", left.toString + " was valid html5")
+          case Some(x) => {
+            if ((x \ "html" \ "head").isEmpty || (x \ "html" \ "body").isEmpty) {
+              MatchResult(false, left.toString + " was not valid html5", left.toString + " was valid html5")
+            } else {
+              MatchResult(true, left.toString + " was not valid html5", left.toString + " was valid html5")
+            }
+          }
           case None => MatchResult(false, left.toString + " was not valid html5", left.toString + " was valid html5")
         }
       } else {
