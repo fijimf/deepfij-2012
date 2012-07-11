@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.server
 
 import controller.Controller
-import org.scalatest.{FunSpec, BeforeAndAfterEach}
+
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 
@@ -12,10 +12,13 @@ import org.apache.shiro.config.IniSecurityManagerFactory
 import org.apache.shiro.SecurityUtils
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.FunSpec
+import org.scalatest.BeforeAndAfterEach
+import com.fijimf.deepfij.matchers.CustomMatchers
 
 
 @RunWith(classOf[JUnitRunner])
-class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterEach {
+class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterEach with CustomMatchers {
   System.setProperty("deepfij.persistenceUnitName", "deepfij-test")
 
   val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
@@ -29,6 +32,7 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   val tdao: TeamDao = new TeamDao
   val gdao: GameDao = new GameDao
   val rdao: ResultDao = new ResultDao
+
 
   override def beforeEach() {
     PersistenceSource.buildDatabase()
@@ -45,87 +49,21 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   }
 
   describe("The DeepfijController filter") {
-    describe("for an unknown team") {
-      it("should return status OK") {
-        get("/team/xxx") {
+    describe("for the root url") {
+      it("should return OK status and a valid page") {
+        get("/") {
           status should equal(200)
-        }
-      }
-      it("should have the valid error message") {
-        get("/team/xxx") {
-          body should include(
-            """The team keyed by the value 'xxx' could not be found."""
-          )
+          body should be(validHtml5)
         }
       }
     }
-    describe("for a known team") {
-      get("/team/georgetown") {
-        it("should return status OK") {
+    describe("for a bad team key") {
+      it("should return OK status and a valid page") {
+        get("/team/xxxx") {
           status should equal(200)
-        }
-        it("should have a heading with the team's short name and the record") {
-          body should include regex ("""<h1>(/s+)Georgetown  \(1-0, 1-0\)(\s+)</h1>""")
-        }
-        it("display a link to the conference page") {
-          body should include regex ("""<a href="/conference/big-east">(\s+)Big East(\s+)</a>""")
+          body should be(validHtml5)
         }
       }
     }
   }
-  //  test("Return a confernece for a valid key") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/conference/big-east")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //    val s: String = response.content.get.toString
-  //    assert(s.contains("""<div class="span12">
-  //        <h1>
-  //          Big East
-  //        </h1>
-  //      </div>"""))
-  //
-  //  }
-  //  test("Return conference missing for a missing conference key") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/conference/zzz")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //    val s: String = response.content.get.toString
-  //    assert(s.contains("""<div class="alert alert-error">
-  //          The conference keyed by the value 'zzz' could not be found.
-  //        </div>"""))
-  //  }
-  //  test("Return a quote") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/quote")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //  }
-  //  test("Return the login screen") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/login")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //  }
-  //  test("Search") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/search?q=geo")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //  }
-  //  test("Return a date panel") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/date/20120401")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //  }
-  //  test("Return admin screen") {
-  //    val response = testService(HttpRequest(HttpMethods.GET, "/admin")) {
-  //      service
-  //    }.response
-  //    assert(response.status === StatusCodes.OK)
-  //  }
 }
-
-
