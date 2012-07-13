@@ -20,8 +20,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.8" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.8" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.1" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: net.databinder:dispatch-http_2.9.1:0.8.5" level="project" />
@@ -63,6 +61,8 @@
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.14" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time-hibernate:1.2" level="project" />
   </component>
 </module>
 

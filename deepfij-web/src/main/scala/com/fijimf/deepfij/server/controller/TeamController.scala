@@ -14,6 +14,7 @@ trait TeamController {
   }
 
   get("/team/new") {
+    contentType = "text/html"
   }
 
   post("/team/new") {
@@ -27,7 +28,6 @@ trait TeamController {
 
   post("/team/delete") {
   }
-
 
 
 }
