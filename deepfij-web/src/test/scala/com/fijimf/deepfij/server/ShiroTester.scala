@@ -14,18 +14,18 @@ object ShiroTester {
     println("Hello")
 
     val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
-    val securityManager: SecurityManager = factory.getInstance();
+    val securityManager: SecurityManager = factory.getInstance()
 
     SecurityUtils.setSecurityManager(securityManager)
 
-    val currentUser:Subject = SecurityUtils.getSubject()
-    val hex: String = new SimpleHash("SHA-256","mutombo", ByteSource.Util.bytes("Fridge Rulesfijimf@gmail.com"), 1024).toHex
+    val currentUser: Subject = SecurityUtils.getSubject
+    val hex: String = new SimpleHash("SHA-256", "mutombo", ByteSource.Util.bytes("Fridge Rulesfijimf@gmail.com"), 1024).toHex
     println(hex)
 
-    if ( !currentUser.isAuthenticated) {
-      val token:UsernamePasswordToken = new UsernamePasswordToken("fijimf@gmail.com", "mutombo");
-      token.setRememberMe(true);
-      currentUser.login(token);
+    if (!currentUser.isAuthenticated) {
+      val token: UsernamePasswordToken = new UsernamePasswordToken("fijimf@gmail.com", "mutombo")
+      token.setRememberMe(true)
+      currentUser.login(token)
 
       currentUser.checkRole("ADMIN")
       println(currentUser.isAuthenticated)

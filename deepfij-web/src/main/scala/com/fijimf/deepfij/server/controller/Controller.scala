@@ -80,13 +80,13 @@ class Controller extends ScalatraFilter with ScheduleController with TeamControl
   notFound {
     contentType = "text/html"
     status(404)
-    BasePage(title = "Not Found", Some(<h1>Not Found</h1>)).toHtml5()
+    BasePage(title = "Not Found", content = Some(<h1>Not Found</h1>)).toHtml5()
   }
 
 
   def logout: Any = {
     contentType = "text/html"
-    SecurityUtils.getSubject.logout
+    SecurityUtils.getSubject.logout()
     redirect("/")
   }
 

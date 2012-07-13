@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringUtils
 
   def this() = this(0L)
 
-  override def toString() = {
+  override def toString = {
     "Alias(" + id + " " + team.name + "-> " + alias + ")"
   }
 

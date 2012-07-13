@@ -70,15 +70,20 @@ import org.apache.commons.lang.StringUtils
   require(StringUtils.isBlank(key) == StringUtils.isBlank(name), "Key can be blank if and only if name is blank")
   require((schedule == null && conference == null) || (conference.schedule.id == schedule.id), "Schedule id and conference schedule id do not match.")
 
-  override def toString() = {
+  override def toString = {
     "Team(" + id + ", " + key + ", " + name + ", " + conference.name + ", " + schedule.name + ")"
   }
 
   def nicknameOpt = Option(nickname)
+
   def primaryColorOpt = Option(primaryColor)
+
   def secondaryColorOpt = Option(secondaryColor)
+
   def logoOpt = Option(logo)
+
   def officialUrlOpt = Option(officialUrl)
+
   @transient lazy val homeGameList = homeGames.toList
   @transient lazy val awayGameList = awayGames.toList
 

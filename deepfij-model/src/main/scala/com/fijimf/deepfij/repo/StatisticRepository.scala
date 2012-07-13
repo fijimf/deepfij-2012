@@ -33,7 +33,7 @@ class StatisticRepository extends Transactional {
         for (t <- statistic.keys;
              x <- statistic.function(t, d)) {
           if (x.isInfinite || x.isNaN) {
-            logger.warn("Skipping %s %s %s ==> %f".format(statistic.statKey, t.key, d.toString, x))
+            logger.warn("Skipping %s %s %s ==> %lf".format(statistic.statKey, t.key, d.toString, x))
           } else {
             tsd.save(new TeamStat(metaStat = ms, team = t, date = d, value = x))
           }

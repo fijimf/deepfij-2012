@@ -12,7 +12,7 @@ object PersistenceSource {
   val entityManagerFactory: EntityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName)
   val entityManager: EntityManager = entityManagerFactory.createEntityManager()
   entityManager.setFlushMode(FlushModeType.AUTO)
-  val cfg = new Ejb3Configuration().configure(persistenceUnitName, null).getHibernateConfiguration;
+  val cfg = new Ejb3Configuration().configure(persistenceUnitName, null).getHibernateConfiguration
   val schemaExport = new SchemaExport(cfg)
 
   def buildDatabase() {

@@ -42,7 +42,7 @@ trait Population[K] extends StatInfo {
     valuePairs.takeRight(m).map(p => (p._2 -> p._1))
   }
 
-  def percentile(k: K): Option[Double] = rank(k).map(1 - _.toDouble / count)
+  def percentile(k: K): Option[Double] = rank(k).map(1.0 - _ / count)
 
   lazy val min: Option[Double] = values.lastOption
 

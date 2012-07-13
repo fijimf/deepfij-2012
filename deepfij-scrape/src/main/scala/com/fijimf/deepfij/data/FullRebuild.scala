@@ -4,19 +4,6 @@ import com.fijimf.deepfij.repo.ScheduleRepository
 import generic.{GameReader, TeamReader, ConferenceReader}
 import java.util.Date
 
-
-trait Workflow {
-  val repo = new ScheduleRepository
-
-}
-
-
-
-
-trait AliasStrategy {
-  def createAliasesValues(teamData: List[Map[String, String]], dirtyNames: List[(String, Double)]): Map[String, String]
-}
-
 trait FullRebuild extends Workflow {
   self: ConferenceReader with TeamReader with AliasStrategy with GameReader =>
 

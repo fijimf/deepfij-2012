@@ -38,7 +38,7 @@ class Conference(
     this(0L, null, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], new Date())
   }
 
-  override def toString() = {
+  override def toString = {
     "Conference( " + id + ", " + schedule.key + ", " + ", " + key + ", " + name + ", " + updatedAt + ")"
   }
 
@@ -71,7 +71,8 @@ class ConferenceDao extends BaseDao[Conference, Long] {
       case x: NonUniqueResultException => None
     }
   }
-  def findByKey(sk:String, k: String): Option[Conference] = {
+
+  def findByKey(sk: String, k: String): Option[Conference] = {
     try {
       val c: Conference = entityManager.createQuery("SELECT q FROM Conference q where q.schedule.key=:scheduleKey AND key=:key").setParameter("scheduleKey", sk).setParameter("key", k).getSingleResult.asInstanceOf[Conference]
       println(c.name + " " + c.teams.size)

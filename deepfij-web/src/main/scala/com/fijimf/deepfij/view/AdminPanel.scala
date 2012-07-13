@@ -16,7 +16,7 @@ object AdminPanel {
             ("collapseUsers", <h3>Users</h3>, <p>Lorem</p>),
             ("collapseQuotes", <h3>Quotes</h3>, <p>Lorem</p>)
           ),
-          true)}
+          parent = true)}
         </div>
       </div>
       <script src="/scripts/popaccordion.js"></script>

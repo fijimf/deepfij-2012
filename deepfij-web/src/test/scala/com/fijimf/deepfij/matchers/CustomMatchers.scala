@@ -14,21 +14,21 @@ trait CustomMatchers {
         catching(classOf[Exception]).opt {
           XML.load(new StringReader(x.trim))
         } match {
-          case Some(xml) => MatchResult(true, left.toString + " was not valid html5", left.toString + " was valid html5")
-          case None => MatchResult(false, left.toString + " was not valid html5", left.toString + " was valid html5")
+          case Some(xml) => MatchResult(matches = true, failureMessage = left.toString + " was not valid html5", negatedFailureMessage = left.toString + " was valid html5")
+          case None => MatchResult(matches = false, failureMessage = left.toString + " was not valid html5", negatedFailureMessage = left.toString + " was valid html5")
         }
       } else {
-        MatchResult(false, "Incorrect DOCTYPE", "Correct DOCTYPE")
+        MatchResult(matches = false, failureMessage = "Incorrect DOCTYPE", negatedFailureMessage = "Correct DOCTYPE")
       }
     }
 
-    def checkXml(xml:Elem):MatchResult ={
-      if ((xml\"head").isEmpty)
-        MatchResult(false, "Missing <head>","Not Missing <head>")
-      else if ((xml\"body").isEmpty)
-        MatchResult(false, "Missing <head>","Not Missing <head>")
+    def checkXml(xml: Elem): MatchResult = {
+      if ((xml \ "head").isEmpty)
+        MatchResult(matches = false, failureMessage = "Missing <head>", negatedFailureMessage = "Not Missing <head>")
+      else if ((xml \ "body").isEmpty)
+        MatchResult(matches = false, failureMessage = "Missing <head>", negatedFailureMessage = "Not Missing <head>")
       else
-        MatchResult(true, "Invalid HTML","Valid HTML")
+        MatchResult(matches = true, failureMessage = "Invalid HTML", negatedFailureMessage = "Valid HTML")
     }
   }
 

@@ -22,7 +22,7 @@ case class KenPomScraper(url: String, aliasResource: String) extends HttpScraper
   lazy val aliasList = {
     val is: InputStream = getClass.getClassLoader.getResourceAsStream(aliasResource)
     val src: BufferedSource = Source.fromInputStream(is)
-    src.getLines.map(_.split(",")).map(arr => (arr(0), arr(1))).toList
+    src.getLines().map(_.split(",")).map(arr => (arr(0), arr(1))).toList
   }
 
   def gameList(date: Date): List[(String, Option[Int], String, Option[Int])] = gameData.filter(g => DateUtils.isSameDay(g._1, date)).map(g => (g._2, g._3, g._4, g._5))

@@ -22,8 +22,14 @@ object ModelTester {
     val atop20: List[(Team, Double)] = statistics("log-score-ratio-mean").population(new SimpleDateFormat("yyyyMMdd").parse("20120121")).topN(20)
     val btop20: List[(Team, Double)] = statistics("log-score-ratio-mean").population(new SimpleDateFormat("yyyyMMdd").parse("20120221")).topN(20)
     val ctop20: List[(Team, Double)] = statistics("log-score-ratio-mean").population(new SimpleDateFormat("yyyyMMdd").parse("20120321")).topN(20)
-    println(atop20.map{case (team: Team, d: Double) => "%-32s %5.2f".format(team.name, d)}.mkString("\n"))
-    println(btop20.map{case (team: Team, d: Double) => "%-32s %5.2f".format(team.name, d)}.mkString("\n"))
-    println(ctop20.map{case (team: Team, d: Double) => "%-32s %5.2f".format(team.name, d)}.mkString("\n"))
+    println(atop20.map {
+      case (team: Team, d: Double) => "%-32s %5.2lf".format(team.name, d)
+    }.mkString("\n"))
+    println(btop20.map {
+      case (team: Team, d: Double) => "%-32s %5.2lf".format(team.name, d)
+    }.mkString("\n"))
+    println(ctop20.map {
+      case (team: Team, d: Double) => "%-32s %5.2lf".format(team.name, d)
+    }.mkString("\n"))
   }
 }

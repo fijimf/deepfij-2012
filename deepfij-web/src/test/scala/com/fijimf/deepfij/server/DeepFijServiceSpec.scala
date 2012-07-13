@@ -22,7 +22,7 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   System.setProperty("deepfij.persistenceUnitName", "deepfij-test")
 
   val factory: Factory[SecurityManager] = new IniSecurityManagerFactory("classpath:shiro.ini")
-  val securityManager: SecurityManager = factory.getInstance();
+  val securityManager: SecurityManager = factory.getInstance()
 
   SecurityUtils.setSecurityManager(securityManager)
   addFilter(classOf[Controller], "/*")
@@ -54,41 +54,41 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
         status should equal(200)
         body should be(validHtml5)
       }
-      get("/team/xxx"){
+      get("/team/xxx") {
         status should equal(200)
         body should be(validHtml5)
       }
-      get("/team/georgetown"){
+      get("/team/georgetown") {
         status should equal(200)
         body should be(validHtml5)
       }
-      get("/conference/xxx"){
+      get("/conference/xxx") {
         status should equal(200)
         body should be(validHtml5)
       }
-      get("/conference/big-east"){
+      get("/conference/big-east") {
         status should equal(200)
         body should be(validHtml5)
       }
     }
 
-//    it ("should return OK status for known static resources") {
-//      get("/style/deepfij.css") {
-//        status should equal(200)
-//      }
-//
-//      get("/scripts/quoteloader.js") {
-//        status should equal(200)
-//      }
-//    }
-//
-//    it ("shoudl return a 404 for a missing resource"){
-//      get("/scripts/abc.js") {
-//        status should equal(404)
-//      }
-//    }
-    it ("should report a 404 and valid HTML for a bad request"){
-      get("/I-am-a-bad/request"){
+    //    it ("should return OK status for known static resources") {
+    //      get("/style/deepfij.css") {
+    //        status should equal(200)
+    //      }
+    //
+    //      get("/scripts/quoteloader.js") {
+    //        status should equal(200)
+    //      }
+    //    }
+    //
+    //    it ("shoudl return a 404 for a missing resource"){
+    //      get("/scripts/abc.js") {
+    //        status should equal(404)
+    //      }
+    //    }
+    it("should report a 404 and valid HTML for a bad request") {
+      get("/I-am-a-bad/request") {
         status should equal(404)
         body should be(validHtml5)
       }
