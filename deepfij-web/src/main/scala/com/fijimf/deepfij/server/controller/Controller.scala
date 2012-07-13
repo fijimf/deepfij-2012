@@ -6,9 +6,8 @@
  */
 package com.fijimf.deepfij.server.controller
 
-import api.StatApi
+import api.StatsController
 import org.scalatra.ScalatraFilter
-import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
 import com.fijimf.deepfij.workflow.Scraper
@@ -19,9 +18,8 @@ import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
-import team.TeamPanel
 
-class Controller extends ScalatraFilter with ScheduleController with StatApi {
+class Controller extends ScalatraFilter with ScheduleController with TeamController with ConferenceController with StatsController {
   val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
@@ -33,9 +31,6 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
-  before() {
-  }
-
   get("/") {
     contentType = "text/html"
     BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
@@ -45,21 +40,7 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   }
 
-  get("/team/:key") {
-    contentType = "text/html"
-    td.findByKey(params("key")) match {
-      case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t))).toHtml5()
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key")))).toHtml5()
-    }
-  }
 
-  get("/conference/:key") {
-    contentType = "text/html"
-    cd.findByKey(params("key")) match {
-      case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c))).toHtml5()
-      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
-    }
-  }
 
 
   get("/admin") {
@@ -82,6 +63,24 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   get("/logout") {
     logout
+  }
+
+  get("/scripts/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  get("/style/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  get("/images/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  notFound {
+    contentType = "text/html"
+    status(404)
+    BasePage(title = "Not Found", Some(<h1>Not Found</h1>)).toHtml5()
   }
 
 
