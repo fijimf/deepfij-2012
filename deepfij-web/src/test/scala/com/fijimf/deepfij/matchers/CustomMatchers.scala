@@ -4,7 +4,6 @@ import org.scalatest.matchers.{MatchResult, BeMatcher}
 import xml.{Elem, XML}
 import scala.util.control.Exception._
 import java.io.StringReader
-import org.scalatest.matchers.Matchers.HavePropertyMatcherGenerator
 
 trait CustomMatchers {
 

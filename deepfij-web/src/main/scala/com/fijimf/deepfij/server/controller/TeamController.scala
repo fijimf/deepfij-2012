@@ -13,5 +13,21 @@ trait TeamController {
     }
   }
 
+  get("/team/new") {
+  }
+
+  post("/team/new") {
+  }
+
+  get("/team/edit/:key") {
+  }
+
+  post("/team/edit/:key") {
+  }
+
+  post("/team/delete") {
+  }
+
+
 
 }
