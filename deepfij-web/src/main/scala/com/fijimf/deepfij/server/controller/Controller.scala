@@ -18,7 +18,6 @@ import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
-import team.TeamPanel
 
 class Controller extends ScalatraFilter with ScheduleController with StatApi {
   val log = Logger.getLogger(this.getClass)
@@ -32,9 +31,6 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
-  before() {
-  }
-
   get("/") {
     contentType = "text/html"
     BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
@@ -44,21 +40,7 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   }
 
-  get("/team/:key") {
-    contentType = "text/html"
-    td.findByKey(params("key")) match {
-      case Some(t) => BasePage(title = t.name, content = Some(TeamPanel(t))).toHtml5()
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key")))).toHtml5()
-    }
-  }
 
-  get("/conference/:key") {
-    contentType = "text/html"
-    cd.findByKey(params("key")) match {
-      case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c))).toHtml5()
-      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
-    }
-  }
 
 
   get("/admin") {
