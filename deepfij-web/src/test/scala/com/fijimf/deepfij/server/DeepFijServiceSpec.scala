@@ -49,6 +49,50 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   }
 
   describe("The DeepfijController filter") {
+    it("should always return OK status and valid HTML for the supported urls") {
+      get("/") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+      get("/team/xxx"){
+        status should equal(200)
+        body should be(validHtml5)
+      }
+      get("/team/georgetown"){
+        status should equal(200)
+        body should be(validHtml5)
+      }
+      get("/conference/xxx"){
+        status should equal(200)
+        body should be(validHtml5)
+      }
+      get("/conference/big-east"){
+        status should equal(200)
+        body should be(validHtml5)
+      }
+    }
+
+//    it ("should return OK status for known static resources") {
+//      get("/style/deepfij.css") {
+//        status should equal(200)
+//      }
+//
+//      get("/scripts/quoteloader.js") {
+//        status should equal(200)
+//      }
+//    }
+//
+//    it ("shoudl return a 404 for a missing resource"){
+//      get("/scripts/abc.js") {
+//        status should equal(404)
+//      }
+//    }
+    it ("should report a 404 and valid HTML for a bad request"){
+      get("/I-am-a-bad/request"){
+        status should equal(404)
+        body should be(validHtml5)
+      }
+    }
     describe("for the root url") {
       it("should return OK status and a valid page") {
         get("/") {

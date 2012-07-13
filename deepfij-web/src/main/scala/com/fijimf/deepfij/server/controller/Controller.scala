@@ -8,7 +8,6 @@ package com.fijimf.deepfij.server.controller
 
 import api.StatApi
 import org.scalatra.ScalatraFilter
-import com.fijimf.deepfij.server.Util._
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
 import com.fijimf.deepfij.workflow.Scraper
@@ -82,6 +81,24 @@ class Controller extends ScalatraFilter with ScheduleController with StatApi {
 
   get("/logout") {
     logout
+  }
+
+  get("/scripts/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  get("/style/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  get("/images/*") {
+    filterChain.doFilter(request, response)
+  }
+
+  notFound {
+    contentType = "text/html"
+    status(404)
+    BasePage(title = "Not Found", Some(<h1>Not Found</h1>)).toHtml5()
   }
 
 
