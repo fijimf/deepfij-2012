@@ -6,6 +6,7 @@ case class BasePage(override val title: String, override val content: Option[Nod
 
   override val scripts = List(
     "/scripts/jquery-1.7.1.min.js",
+    "/scripts/bootstrap-colorpicker.js",
     "/scripts/bootstrap.min.js",
     "/scripts/quoteloader.js",
     "/scripts/statLoader.js",
