@@ -17,6 +17,7 @@ case class BasePage(override val title: String, override val content: Option[Nod
   override val links = List(
     Link("http://fonts.googleapis.com/css?family=Lobster", "stylesheet", "text/css"),
     Link("/style/bootstrap.css", "stylesheet", "text/css"),
+    Link("/style/colorpicker.css", "stylesheet", "text/css"),
     Link("/style/deepfij.css", "stylesheet", "text/css"),
     Link("assets/ico/favicon.ico", "shortcut icon", "image/x-icon")
   )
