@@ -58,14 +58,47 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
         status should equal(200)
         body should be(validHtml5)
       }
+
       get("/team/georgetown") {
         status should equal(200)
         body should be(validHtml5)
       }
+
+      get("/team/new") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
+      post("/team/new") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
+      get("/team/edit/xxxx") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
+      get("/team/edit/georgetown") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
+      post("/team/edit/georgetown") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
+      post("/team/delete") {
+        status should equal(200)
+        body should be(validHtml5)
+      }
+
       get("/conference/xxx") {
         status should equal(200)
         body should be(validHtml5)
       }
+
       get("/conference/big-east") {
         status should equal(200)
         body should be(validHtml5)

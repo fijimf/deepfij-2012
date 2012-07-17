@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.server.controller
 
 import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
-import com.fijimf.deepfij.view.team.TeamPanel
+import com.fijimf.deepfij.view.team.{TeamEditPanel, TeamPanel}
 
 trait TeamController {
   this: Controller =>
@@ -15,18 +15,27 @@ trait TeamController {
 
   get("/team/new") {
     contentType = "text/html"
+    BasePage(title = "New Team", content = Some(TeamEditPanel(None))).toHtml5()
   }
 
   post("/team/new") {
+    contentType = "text/html"
+    BasePage(title = "New Team", content = Some(TeamEditPanel(None))).toHtml5()
   }
 
   get("/team/edit/:key") {
+    contentType = "text/html"
+    BasePage(title = "New Team", content = Some(TeamEditPanel(None))).toHtml5()
   }
 
   post("/team/edit/:key") {
+    contentType = "text/html"
+    BasePage(title = "New Team", content = Some(TeamEditPanel(None))).toHtml5()
   }
 
   post("/team/delete") {
+    contentType = "text/html"
+    BasePage(title = "New Team", content = Some(TeamEditPanel(None))).toHtml5()
   }
 
 
