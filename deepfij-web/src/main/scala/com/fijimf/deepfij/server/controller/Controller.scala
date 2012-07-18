@@ -38,7 +38,8 @@ class Controller extends ScalatraFilter with ScalateSupport with ScheduleControl
   }
 
   get("/foo") {
-    templateEngine.layout("pages/test.mustache")
+    contentType = "text/html"
+    templateEngine.layout("pages/test.mustache", Map("who" -> "Jim"))
   }
 
   get("/date/:yyyymmdd") {

@@ -116,7 +116,6 @@
             <groupId>org.fusesource.scalate</groupId>
             <artifactId>scalate-core</artifactId>
             <version>1.5.3</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
