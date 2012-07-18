@@ -18,8 +18,9 @@ import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
+import org.scalatra.scalate.ScalateSupport
 
-class Controller extends ScalatraFilter with ScheduleController with TeamController with ConferenceController with StatsController {
+class Controller extends ScalatraFilter with ScalateSupport with ScheduleController with TeamController with ConferenceController with StatsController {
   val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
@@ -34,6 +35,10 @@ class Controller extends ScalatraFilter with ScheduleController with TeamControl
   get("/") {
     contentType = "text/html"
     BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
+  }
+
+  get("/foo") {
+    templateEngine.layout("pages/test.mustache")
   }
 
   get("/date/:yyyymmdd") {
