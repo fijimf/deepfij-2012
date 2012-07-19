@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>
+        {{name}}
+    </title>
+    <script src="/scripts/jquery-1.7.1.min.js"></script>
+    <script src="/scripts/bootstrap-colorpicker.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script src="/scripts/quoteloader.js"></script>
+    <script src="/scripts/statLoader.js"></script>
+    <script src="/scripts/statbubble.js"></script>
+    <script src="/scripts/d3.v2.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lobster"/>
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap.css"/>
+    <link type="text/css" rel="stylesheet" href="/style/colorpicker.css"/>
+    <link type="text/css" rel="stylesheet" href="/style/deepfij.css"/>
+    <link type="image/x-icon" rel="shortcut icon" href="assets/ico/favicon.ico"/>
+</head>
+
+<body style="padding-top: 50px;">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">DeepFij</a>
+            <ul class="nav">
+                <li class="active">
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/admin">Admin</a>
+                </li>
+                <li>
+                    <a href="/about">About</a>
+                </li>
+            </ul>
+            <form method="get" class="navbar-search pull-left" action="/search">
+                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."></input>
+            </form>
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/user">
+                        fijimf@gmail.com
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div></div>
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <p class="epigram">How bad it gets you can't imagine; the burning wax, the breath of reptiles.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span1">
+            <a target="_blank" href="#">
+                <img src=""></img>
+            </a>
+        </div>
+        <div class="span11">
+            <h1>
+                {{record}}
+            </h1>
+
+            <h3>
+                <a href="/conference/big-east">
+                    {{conference}}
+                </a>
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <table class="table table-bordered table-condensed">
+                <tbody>
+                <tr class="row-noresult">
+                    <td>
+                        7/10/2012
+                    </td>
+                    <td>
+
+                    </td>
+                    <td></td>
+                    <td>@
+                        <a href="/team/marquette">
+                            Marquette
+                        </a>
+                    </td>
+                </tr>
+                <tr class="row-win">
+                    <td>
+                        7/10/2012
+                    </td>
+                    <td>
+                        W
+                    </td>
+                    <td>
+                        123 - 50
+                    </td>
+                    <td>@
+                        <a href="/team/syracuse">
+                            Syracuse
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="span6">
+            <table class="table table-bordered table-condensed">
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <footer class="footer">
+        <p>
+            Copyright 2007-2012 Jim Frohnhofer
+        </p>
+    </footer>
+</div>
+</body>
+</html>
