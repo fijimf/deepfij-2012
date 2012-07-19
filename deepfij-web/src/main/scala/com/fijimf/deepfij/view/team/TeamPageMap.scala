@@ -17,9 +17,18 @@ class TeamPageMap {
       "conferenceLosses" -> team.losses.filter(g => g.homeTeam.conference == g.awayTeam.conference).size
     "games" -> team.games.map(g => {
       val opp = if (g.homeTeam == team) g.awayTeam else g.homeTeam
+      val result = if (g.resultOpt.isDefined) {
+        Map(
+          "wl" -> if (g.isWin(team)) "W" else "L",
+        "score" -> "%d - %d".format(g.resultOpt.get.homeScore, g.resultOpt.get.awayScore)
+        )
+      }
       Map(
         "opponent" -> Map("name" -> opp.name, "key" -> opp.key)
-      ) ++ if
+      "date" -> g.date.toString
+
+      )
+
 
     })
     )
