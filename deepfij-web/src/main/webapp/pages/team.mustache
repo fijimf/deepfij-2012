@@ -70,9 +70,11 @@
             </h1>
 
             <h3>
-                <a href="/conference/big-east">
-                    {{conference}}
+                {{#conference}}
+                <a href="/conference/{{key}}">
+                    {{name}}
                 </a>
+                {{/conference}}
             </h3>
         </div>
     </div>
@@ -80,36 +82,24 @@
         <div class="span6">
             <table class="table table-bordered table-condensed">
                 <tbody>
+                {{#games}}
                 <tr class="row-noresult">
                     <td>
-                        7/10/2012
+                        {{date}}
                     </td>
                     <td>
-
+                        {{wl}}
                     </td>
-                    <td></td>
-                    <td>@
-                        <a href="/team/marquette">
-                            Marquette
+                    <td>{{score}}</td>
+                    <td>
+                        {{#opponent}}
+                        <a href="/team/{{key}}">
+                            {{name}}
                         </a>
+                        {{/opponent}}
                     </td>
                 </tr>
-                <tr class="row-win">
-                    <td>
-                        7/10/2012
-                    </td>
-                    <td>
-                        W
-                    </td>
-                    <td>
-                        123 - 50
-                    </td>
-                    <td>@
-                        <a href="/team/syracuse">
-                            Syracuse
-                        </a>
-                    </td>
-                </tr>
+                {{/games}}
                 </tbody>
             </table>
         </div>
