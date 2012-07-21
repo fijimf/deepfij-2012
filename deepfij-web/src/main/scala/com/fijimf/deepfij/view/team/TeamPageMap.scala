@@ -7,18 +7,21 @@ import java.text.SimpleDateFormat
 
 
 object TeamPageMap {
-  val fmt = new SimpleDateFormat("yyyyMMdd")
+  val fmt = new SimpleDateFormat("MM-dd-yyyy")
 
   def apply(team: Team): Map[String, Any] = {
     val ctx = Map(
       "name" -> team.name,
       "key" -> team.key,
+      "logoUrl" -> team.logoOpt.getOrElse("#"),
+      "officalUrl" -> team.officialUrlOpt.getOrElse("#"),
+      "nickname" -> team.nicknameOpt.getOrElse(" "),
       "conference" -> Map("name" -> team.conference.name, "key" -> team.conference.key),
       "wins" -> team.wins.size,
       "losses" -> team.losses.size,
       "conferenceWins" -> team.wins.filter(g => g.homeTeam.conference == g.awayTeam.conference).size,
       "conferenceLosses" -> team.losses.filter(g => g.homeTeam.conference == g.awayTeam.conference).size,
-      "games" -> team.games.map(g => {
+      "games" -> team.games.sortBy(_.date).map(g => {
         gameToMap(g, team)
       })
     )
