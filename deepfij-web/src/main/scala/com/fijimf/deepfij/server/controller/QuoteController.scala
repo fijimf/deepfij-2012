@@ -1,6 +1,5 @@
 package com.fijimf.deepfij.server.controller
 
-import com.fijimf.deepfij.server.Util._
 import com.fijimf.deepfij.view.{MissingResourcePanel, BasePage}
 import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleCreatePanel}
 
@@ -19,9 +18,14 @@ trait QuoteController {
     BasePage(title = "Deep Fij Admin", content = Some(ScheduleCreatePanel())).toHtml5()
   }
 
+  get("/quote/list") {
+    contentType = "text/html"
+    templateEngine.layout("pages/team.mustache", Map("quotes" -> qd.findAll().map(q => Map("id" -> q.id, "quotes" -> q.quote, "source" -> q.source, "url" -> q.url))))
+  }
+
   post("/quote/new") {
-    create(params("key"), params("name"), params("from"), params("to"))
-    redirect("/quote/show/" + params("key"))
+    val id = createQuote(params("quote"), params("source"), params("url"))
+    redirect("/quote/show/" + id)
   }
 
   get("/quote/show/:id") {
@@ -51,11 +55,12 @@ trait QuoteController {
     redirect("/admin#collapseQuotes")
   }
 
-  private[this] def deleteQuote(k: String) {
+  def deleteQuote(k: String) {
 
   }
 
-  private[this] def create(a: String, b: String, c: String, d: String) {
-
+  def createQuote(q: String, s: String, u: String): Integer = {
+    0
   }
+
 }

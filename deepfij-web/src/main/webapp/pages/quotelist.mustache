@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Quotes</title>
+    <script src="/scripts/jquery-1.7.1.min.js"></script>
+    <script src="/scripts/bootstrap-colorpicker.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script src="/scripts/quoteloader.js"></script>
+    <script src="/scripts/statLoader.js"></script>
+    <script src="/scripts/statbubble.js"></script>
+    <script src="/scripts/d3.v2.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lobster"/>
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap.css"/>
+    <link type="text/css" rel="stylesheet" href="/style/colorpicker.css"/>
+    <link type="text/css" rel="stylesheet" href="/style/deepfij.css"/>
+    <link type="image/x-icon" rel="shortcut icon" href="assets/ico/favicon.ico"/>
+</head>
+
+<body style="padding-top: 50px;">
+{{> navbar}}
+<div class="container">
+    {{> epigram}}
+    <div class="row">
+        <div class="span12">
+            <h1>
+                Quotes
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <a href="quote/new">New Quote</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <table class="table table-bordered table-condensed" style="table-layout: fixed;">
+                <thead/>
+                <tbody>
+                {{#quotes}}
+                <tr>
+                    <td>{{quote}}</td>
+                    <td>{{source}}</td>
+                    <td>{{url}}</td>
+                </tr>
+                {{/quotes}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer class="footer">
+        <p>
+            Copyright 2007-2012 Jim Frohnhofer
+        </p>
+    </footer>
+</div>
+</body>
+</html>
