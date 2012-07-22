@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <title>
         {{name}}
     </title>
@@ -36,18 +36,20 @@
                 </li>
             </ul>
             <form method="get" class="navbar-search pull-left" action="/search">
-                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."></input>
+                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."/>
             </form>
+            {{#user}}
             <ul class="nav pull-right">
                 <li>
                     <a href="/user">
-                        fijimf@gmail.com
+                        {{name}}
                     </a>
                 </li>
                 <li>
                     <a href="/logout">Logout</a>
                 </li>
             </ul>
+            {{/user}}
         </div>
     </div>
 </div>
@@ -70,13 +72,9 @@
             </h1>
 
             <div class="row">
-                <div class="span2">
+                <div class="span11">
                     <h3>
                         ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
-                    </h3>
-                </div>
-                <div class="span5">
-                    <h3>
                         {{#conference}}
                         <a href="/conference/{{key}}">
                             {{name}}

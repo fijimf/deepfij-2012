@@ -11,11 +11,11 @@ trait CustomMatchers {
     def apply(left: String) = {
       val (doctype, x) = left.splitAt(left.indexOf("<html"))
       if (doctype.trim == "<!DOCTYPE html>") {
-        catching(classOf[Exception]).opt {
+        catching(classOf[Exception]).either {
           XML.load(new StringReader(x.trim))
         } match {
-          case Some(xml) => MatchResult(matches = true, failureMessage = left.toString + " was not valid html5", negatedFailureMessage = left.toString + " was valid html5")
-          case None => MatchResult(matches = false, failureMessage = left.toString + " was not valid html5", negatedFailureMessage = left.toString + " was valid html5")
+          case Right(xml) => MatchResult(matches = true, failureMessage = left.toString + " was not valid html5", negatedFailureMessage = left.toString + " was valid html5")
+          case Left(e) => MatchResult(matches = false, failureMessage = left.toString + " was not valid html5\n"+e.getMessage, negatedFailureMessage = left.toString + " was valid html5")
         }
       } else {
         MatchResult(matches = false, failureMessage = "Incorrect DOCTYPE", negatedFailureMessage = "Correct DOCTYPE")

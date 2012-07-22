@@ -28,7 +28,7 @@ object TeamPageMap {
 
     val subject: Subject = SecurityUtils.getSubject
     val userCtx = if (subject.isRemembered || subject.isAuthenticated) {
-      Map("user" -> subject.getPrincipal)
+      Map("user" -> Map("name"->subject.getPrincipal.toString))
     } else {
       Map.empty[String, Any]
     }
