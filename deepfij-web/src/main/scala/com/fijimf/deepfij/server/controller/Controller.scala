@@ -64,7 +64,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ScheduleControl
   post("/login") {
     contentType = "text/html"
     SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password"), true))
-    WebUtils.redirectToSavedRequest(request, response, "/login")
+    WebUtils.redirectToSavedRequest(request, response, "/")
   }
 
   get("/logout") {
