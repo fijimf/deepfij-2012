@@ -20,7 +20,7 @@ trait QuoteController {
 
   get("/quote/list") {
     contentType = "text/html"
-    templateEngine.layout("pages/team.mustache", Map("quotes" -> qd.findAll().map(q => Map("id" -> q.id, "quotes" -> q.quote, "source" -> q.source, "url" -> q.url))))
+    templateEngine.layout("pages/quotelist.mustache", Map("quotes" -> qd.findAll().map(q => Map("id" -> q.id, "quotes" -> q.quote, "source" -> q.source, "url" -> q.url))))
   }
 
   post("/quote/new") {
