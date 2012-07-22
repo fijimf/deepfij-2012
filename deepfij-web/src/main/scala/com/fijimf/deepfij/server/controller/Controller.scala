@@ -37,11 +37,6 @@ class Controller extends ScalatraFilter with ScalateSupport with ScheduleControl
     BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
   }
 
-  get("/foo") {
-    contentType = "text/html"
-    templateEngine.layout("pages/test.mustache", Map("who" -> "Jim"))
-  }
-
   get("/date/:yyyymmdd") {
 
   }

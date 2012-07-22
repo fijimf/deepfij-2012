@@ -1,0 +1,43 @@
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">DeepFij</a>
+            <ul class="nav">
+                <li class="active">
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/admin">Admin</a>
+                </li>
+                <li>
+                    <a href="/about">About</a>
+                </li>
+            </ul>
+            <form method="get" class="navbar-search pull-left" action="/search">
+                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."/>
+            </form>
+            {{#user}}
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/user">
+                        {{name}}
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+            {{/user}}
+            {{^user}}
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/login">Login</a>
+                </li>
+                <li>
+                    <a href="/register">Register</a>
+                </li>
+            </ul>
+            {{/user}}
+        </div>
+    </div>
+</div>
