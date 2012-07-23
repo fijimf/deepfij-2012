@@ -24,7 +24,7 @@
     <div class="row">
         <div class="span12">
             <h1>
-                Quotes
+                New Quote
             </h1>
         </div>
     </div>
@@ -36,34 +36,13 @@
     <div class="row">
         <div class="span12">
             <table class="table table-bordered table-condensed" style="table-layout: fixed;">
-                <thead>
-                <th>ID</th>
-                <th>Quote</th>
-                <th>Source</th>
-                <th>URL</th>
-                <th></th>
-                </thead>
+                <thead/>
                 <tbody>
-                <form>
-
-                    <tr>
-                        <td></td>
-                        <td><input type="text"/></td>
-                        <td><input type="text"/></td>
-                        <td><input type="text"/></td>
-                        <td><input type="submit"/></td>
-                    </tr>
-                </form>
                 {{#quotes}}
                 <tr>
-                    <td>{{id}}</td>
                     <td>{{quote}}</td>
                     <td>{{source}}</td>
                     <td>{{url}}</td>
-                    <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </td>
                 </tr>
                 {{/quotes}}
                 </tbody>
