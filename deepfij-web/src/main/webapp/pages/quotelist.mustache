@@ -23,47 +23,38 @@
     {{> epigram}}
     <div class="row">
         <div class="span12">
-            <h1>
-                Quotes
-            </h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span12">
-            <a href="/quote/new">New Quote</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span12">
+            <h1>New Quote</h1>
+            <form class="well form-horizontal" action="/quote/new" method="post">
+                <label>Quote</label><input type="text" class="span10" name=quote placeholder="Go on! Stick it where it hurts!"/>
+                <label>Source</label><input type="text" class="span6" name="source" placeholder="Ian Dury"/>
+                <label>URL</label><input type="text" class="span4" name="url" placeholder="www.someexample.com"/>
+                <button type="submit" class="btn">Add Quote</button>
+            </form>
+            <h1>Quotes</h1>
             <table class="table table-bordered table-condensed" style="table-layout: fixed;">
                 <thead>
-                <th>ID</th>
-                <th>Quote</th>
-                <th>Source</th>
-                <th>URL</th>
-                <th></th>
+                <tr>
+                    <th style="width: 1em;" rowspan="2">ID</th>
+                    <th colspan="2">Quote</th>
+                    <th style="width: 5em;"></th>
+                </tr>
+                <tr>
+                    <th style="width: 12em;" >Source</th>
+                    <th>URL</th>
+                    <th style="width: 5em;"></th>
+                </tr>
                 </thead>
                 <tbody>
-                <form>
-
-                    <tr>
-                        <td></td>
-                        <td><input type="text"/></td>
-                        <td><input type="text"/></td>
-                        <td><input type="text"/></td>
-                        <td><input type="submit"/></td>
-                    </tr>
-                </form>
                 {{#quotes}}
                 <tr>
-                    <td>{{id}}</td>
-                    <td>{{quote}}</td>
-                    <td>{{source}}</td>
-                    <td>{{url}}</td>
-                    <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </td>
+                    <td style="width: 1em;" rowspan="2">{{id}}</td>
+                    <td colspan="2">{{quote}}</td>
+                    <td style="width: 5em;" >Edit</td>
+                </tr>
+                <tr>
+                    <td style="width: 12em;" >{{source}}</td>
+                    <td><a href="{{url}}">{{url}}</a></td>
+                    <td style="width: 5em;">Delete</td>
                 </tr>
                 {{/quotes}}
                 </tbody>
