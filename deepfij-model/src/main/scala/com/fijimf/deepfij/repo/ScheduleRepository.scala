@@ -5,17 +5,6 @@ import java.util.Date
 import org.apache.commons.lang.time.DateUtils
 import org.apache.log4j.Logger
 
-object TeamData {
-  val Key = "key"
-  val Name = "name"
-  val ConferenceName = "conference"
-  val LongName = "longName"
-  val Nickname = "nickname"
-  val PrimaryColor = "primaryColor"
-  val SecondaryColor = "secondaryColor"
-  val OfficialUrl = "officialUrl"
-  val LogoUrl = "logo"
-}
 
 class ScheduleRepository extends Transactional {
   val logger = Logger.getLogger(this.getClass)
@@ -121,6 +110,6 @@ class ScheduleRepository extends Transactional {
     }
   }
 
-  def setPrimary(key:String) = scheduleDao.setPrimary(key)
+  def setPrimary(key: String) = scheduleDao.setPrimary(key)
 
 }
