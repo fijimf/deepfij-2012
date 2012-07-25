@@ -1,0 +1,39 @@
+<deepfij>
+    <name>NCAA 2011-12</name>
+    <key>ncaam2012</key>
+    <data-sources>
+        <conferences>
+            <reader>
+                <class></class>
+                <init-param></init-param>
+            </reader>
+        </conferences>
+        <aliases>
+            <reader>
+                <class></class>
+                <init-param></init-param>
+            </reader>
+        </aliases>
+        <teams>
+            <reader>
+                <class></class>
+                <init-param></init-param>
+            </reader>
+        </teams>
+        <games>
+            <reader>
+                <class></class>
+                <init-param></init-param>
+            </reader>
+        </games>
+        <results>
+            <reader>
+                <class></class>
+                <init-param></init-param>
+            </reader>
+        </results>
+    </data-sources>
+    <statistical-models>
+
+    </statistical-models>
+</deepfij>
