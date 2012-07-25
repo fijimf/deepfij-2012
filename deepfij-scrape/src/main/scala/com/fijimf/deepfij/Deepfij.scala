@@ -1,15 +1,12 @@
 package com.fijimf.deepfij
 
+import modelx.{Team, Schedule, Conference, Alias}
+
 class Deepfij {
 
 }
 
-case class DeepfijSchedule(name: String, key: String){
+case class DeepfijSchedule(name: String, key: String) {
 
 }
 
-trait Reader[T] {
-   initParams:Map[String,Any]
-
-
-}
