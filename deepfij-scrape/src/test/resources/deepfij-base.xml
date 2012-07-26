@@ -1,0 +1,15 @@
+<deepfij>
+    <schedule>
+        <data>
+            <conferences>
+                <init>
+                    <reader></reader>
+                </init>
+            </conferences>
+            <teams></teams>
+            <aliases></aliases>
+            <games></games>
+            <results></results>
+        </data>
+    </schedule>
+</deepfij>
