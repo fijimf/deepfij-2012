@@ -1,5 +1,5 @@
 <deepfij>
-    <schedule>
+    <schedule name="NCAA 2011-2012" key="ncaa2012">
         <data>
             <conferences>
                 <init>

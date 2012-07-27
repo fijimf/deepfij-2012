@@ -1,14 +1,14 @@
 package com.fijimf.deepfij
 
-import xml.{Node, Elem, XML}
-import java.io.InputStream
-import io.Source
+import data.ncaa.json.Team
+import modelx.{Alias, Conference}
+import xml.{Node, XML}
 
 
 object Deepfij {
+
   def apply(config: String): Deepfij = {
     val stream = classOf[Deepfij].getClassLoader.getResourceAsStream(config)
-    //val s=Source.fromInputStream(stream).getLines().mkString("\n")
     Deepfij(XML.load(stream))
   }
 
@@ -19,9 +19,6 @@ object Deepfij {
   def parseFactories(n: Node): List[ScheduleFactory] = List.empty[ScheduleFactory]
 
 
-}
-
-class ScheduleFactory {
 }
 
 class Deepfij(fs: List[ScheduleFactory]) {
@@ -38,5 +35,19 @@ class Deepfij(fs: List[ScheduleFactory]) {
   // compare to database
 
 
+}
+
+case class ScheduleFactory(key: String,
+                           name: String,
+                           confReaders: List[Reader[Conference]],
+                           teamReaders: List[Reader[Team]],
+                           aliasReaders: List[Reader[Alias]],
+                           gameReaders: List[Reader[Team]],
+                           resultReaders: List[Reader[Team]]) {
+
+}
+
+trait Reader[T] {
+  def init: Int = 0
 }
 
