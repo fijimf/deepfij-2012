@@ -12,7 +12,7 @@ trait ScraperConfig {
 }
 
 case object Info extends ScraperConfig {
-  //TODO This can me made better with partial functions and inheritance.
+
   override def parseArgs(args: List[String]) = this
 
 }

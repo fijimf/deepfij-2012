@@ -1,53 +1,72 @@
 package com.fijimf.deepfij
 
 import data.ncaa.json.Team
-import modelx.{Alias, Conference}
+import modelx.{ScheduleDao, Alias, Conference}
 import xml.{Node, XML}
+import org.apache.log4j.Logger
 
 
-object Deepfij {
+case object NotInitialized extends ManagerStatus
 
-  def apply(config: String): Deepfij = {
-    val stream = classOf[Deepfij].getClassLoader.getResourceAsStream(config)
-    Deepfij(XML.load(stream))
+case object Running extends ManagerStatus
+
+trait ScheduleManager {
+  def key: String
+
+  def name: String
+
+  def status: ManagerStatus
+
+  def parent: Deepfij
+}
+
+case class NewManager(key: String,
+                      name: String,
+
+                      parent: Deepfij,
+                      confReaders: List[Reader[Conference]],
+                      teamReaders: List[Reader[Team]],
+                      aliasReaders: List[Reader[Alias]],
+                      gameReaders: List[Reader[Team]],
+                      resultReaders: List[Reader[Team]]) extends ScheduleManager {
+  val log = Logger.getLogger(this.getClass)
+  val sd = new ScheduleDao
+  val status = NotInitialized
+
+  def verifySchedule(): ScheduleManager = {
+    log.info("Schedule %s exists in database.  Verifying. ")
+    new RunningManager(key, name, Running, parent, confReaders, teamReaders, aliasReaders, gameReaders, resultReaders)
   }
 
-  def apply(xml: Node): Deepfij = {
-    new Deepfij(parseFactories(xml))
+  def createSchedule(): ScheduleManager = {
+    log.info("Schedule %s does not exist in database.  Creating. ")
+    new RunningManager(key, name, Running, parent, confReaders, teamReaders, aliasReaders, gameReaders, resultReaders)
   }
 
-  def parseFactories(n: Node): List[ScheduleFactory] = List.empty[ScheduleFactory]
-
+  def initialize(): ScheduleManager = {
+    log.info("Initializing schedle %s(%s)".format(key, name))
+    sd.findByKey(key) match {
+      case Some(s) => verifySchedule()
+      case None => createSchedule()
+    }
+  }
 
 }
 
-class Deepfij(fs: List[ScheduleFactory]) {
-
-  //getName
-  //getKey
-  //Check Database for schedule
-  //yes == verify name
-  //no == create
-  //
-  // if
-  //Conference reader => () => Map[String, String]
-  //build conferences
-  // compare to database
-
-
-}
-
-case class ScheduleFactory(key: String,
-                           name: String,
-                           confReaders: List[Reader[Conference]],
-                           teamReaders: List[Reader[Team]],
-                           aliasReaders: List[Reader[Alias]],
-                           gameReaders: List[Reader[Team]],
-                           resultReaders: List[Reader[Team]]) {
-
+case class RunningManager(key: String,
+                          name: String,
+                          status: ManagerStatus,
+                          parent: Deepfij,
+                          confReaders: List[Reader[Conference]],
+                          teamReaders: List[Reader[Team]],
+                          aliasReaders: List[Reader[Alias]],
+                          gameReaders: List[Reader[Team]],
+                          resultReaders: List[Reader[Team]]) extends ScheduleManager {
 }
 
 trait Reader[T] {
   def init: Int = 0
+
+
 }
 
