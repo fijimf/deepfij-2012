@@ -5,15 +5,15 @@ import java.util.Date
 import com.fijimf.deepfij.modelx.{ConferenceDao, Schedule, Conference}
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 
-class ConferenceSource(params: Map[String, String], schedule: Schedule) {
+class ConferenceSource(schedule: Schedule) {
   val conferenceDao = new ConferenceDao
 
   def load: List[Map[String, String]] = {
-    NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet.map(n => (Map("key" -> nameToKey(n), "name" -> n)).toList
+    NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet.map(n => (Map("key" -> nameToKey(n), "name" -> n))).toList
   }
 
   def update(date: Date): List[Map[String, String]] = {
-    List.empty
+    NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet.map(n => (Map("key" -> nameToKey(n), "name" -> n))).toList
   }
 
   def fromKey(key: String): Option[Conference] = {
