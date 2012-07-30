@@ -7,6 +7,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSpec, FunSuite}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers._
+import workflow.Deepfij
 
 
 @RunWith(classOf[JUnitRunner])
@@ -24,9 +25,6 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
     val df = Deepfij("deepfij-base.xml")
     it("can be read from an included xml file") {
       df should not be (null)
-    }
-    it("should have one factory") {
-      df.fs.size should be(1)
     }
 
 

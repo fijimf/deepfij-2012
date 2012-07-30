@@ -2,6 +2,7 @@ package com.fijimf.deepfij
 
 import data.ncaa.json.Team
 import modelx.{ScheduleDao, Alias, Conference}
+import workflow.{Deepfij, ManagerStatus}
 import xml.{Node, XML}
 import org.apache.log4j.Logger
 

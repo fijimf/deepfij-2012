@@ -6,6 +6,8 @@ import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader, HttpScraper}
 import collection.parallel.ForkJoinTasks
+import com.fijimf.deepfij.util.Timing._
+import collection.immutable
 
 object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader {
   val logger = Logger.getLogger(NcaaTeamScraper.getClass)
@@ -36,7 +38,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
         Some(TeamData.Name -> tr.name),
         Some(TeamData.LongName -> tr.fullName),
         Some(TeamData.ConferenceName -> tr.conference),
-        tr.nickname.map((TeamData.Nickname->_)),
+        tr.nickname.map((TeamData.Nickname -> _)),
         tr.logo.map((TeamData.LogoUrl -> _)),
         tr.primaryColor.map((TeamData.PrimaryColor -> _)),
         tr.secondaryColor.map((TeamData.SecondaryColor -> _)),
@@ -51,10 +53,17 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
   private[this] lazy val allNcaaTeams: Map[String, String] = {
     logger.info("Loading canonical team names")
     val pairs: Seq[(String, String)] = "abcdefghijklmnopqrstuvwxyz".par.map((c: Char) => {
-      logger.info("Loading '" + c + "'")
-      (loadPage("http://www.ncaa.com/schools/" + c + "/") \\ "span").filter((node: Node) => (node \ "@class").text == "field-content").map((node: Node) => (node \ "a").map((node: Node) => {
+      val pageUrl: String = "http://www.ncaa.com/schools/" + c + "/"
+      val (ms, pageXml) = timed[Node] {
+        loadPage(pageUrl)
+      }
+      logger.info("Loaded '" + c + "' => " + pageUrl + " in " + ms + " ms.")
+      val teamNodes = (pageXml \\ "span").filter((node: Node) => (node \ "@class").text == "field-content")
+      val pageData = teamNodes.map((node: Node) => (node \ "a").map((node: Node) => {
         ((node \ "@href").text.split("/").last -> node.text)
       })).flatten
+      logger.info(pageData.mkString(","))
+      pageData
     }).flatten.seq
     pairs.toMap
   }
@@ -104,9 +113,23 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     val colorsKey = "Colors"
     val urlKey = "Url"
     val detailMap: Map[String, String] = (page \\ "td").map((node: Node) => node match {
-      case <td><h6>Nickname</h6><p>{nickname}</p></td> => Some((nicknameKey -> nickname.text))
-      case <td><h6>Athletics Website</h6><p><a>{url}</a></p></td> => Some((urlKey -> url.text))
-      case <td><h6>Colors</h6><p>{colors}</p></td> => Some((colorsKey -> colors.text))
+      case <td>
+        <h6>Nickname</h6> <p>
+        {nickname}
+        </p>
+        </td> => Some((nicknameKey -> nickname.text))
+      case <td>
+        <h6>Athletics Website</h6> <p>
+        <a>
+          {url}
+          </a>
+        </p>
+        </td> => Some((urlKey -> url.text))
+      case <td>
+        <h6>Colors</h6> <p>
+        {colors}
+        </p>
+        </td> => Some((colorsKey -> colors.text))
       case _ => None
     }).flatten.toMap
 
