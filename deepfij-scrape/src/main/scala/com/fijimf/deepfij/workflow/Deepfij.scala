@@ -1,5 +1,8 @@
 package com.fijimf.deepfij.workflow
 
+import com.fijimf.deepfij.ScheduleManager
+import xml.{Node, XML}
+
 case class Deepfij(managers: List[ScheduleManager]) {
 
 

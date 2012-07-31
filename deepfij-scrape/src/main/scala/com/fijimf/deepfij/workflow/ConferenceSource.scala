@@ -2,18 +2,20 @@ package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.util.Util._
 import java.util.Date
-import com.fijimf.deepfij.modelx.{ConferenceDao, Schedule, Conference}
+import com.fijimf.deepfij.modelx.{ScheduleDao, ConferenceDao, Schedule, Conference}
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 
 class ConferenceSource(schedule: Schedule) {
   val conferenceDao = new ConferenceDao
 
   def load: List[Map[String, String]] = {
-    NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet.map(n => (Map("key" -> nameToKey(n), "name" -> n))).toList
+    val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
+    toSet.map(n => (Map[String, String]("key" -> nameToKey(n), "name" -> n))).toList
   }
 
   def update(date: Date): List[Map[String, String]] = {
-    NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet.map(n => (Map("key" -> nameToKey(n), "name" -> n))).toList
+    val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
+    toSet.map(n => (Map[String, String]("key" -> nameToKey(n), "name" -> n))).toList
   }
 
   def fromKey(key: String): Option[Conference] = {
@@ -43,3 +45,16 @@ class ConferenceBuilder(schedule: Schedule) {
 
 }
 
+
+object Tester {
+  def main(args: Array[String]) {
+    val sd = new ScheduleDao()
+    val all: List[Schedule] = sd.findAll()
+    all.foreach(s => println(s.key))
+
+    val source: ConferenceSource = new ConferenceSource(sd.findByKey("test").get)
+
+    val csd = source.load
+    csd.foreach(ss => println(ss))
+  }
+}

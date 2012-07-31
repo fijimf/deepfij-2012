@@ -3,6 +3,7 @@ package com.fijimf.deepfij
 import data.ncaa.json.Team
 import modelx.{ScheduleDao, Alias, Conference}
 import org.apache.log4j.Logger
+import workflow.{Deepfij, ManagerStatus}
 
 
 case object NotInitialized extends ManagerStatus

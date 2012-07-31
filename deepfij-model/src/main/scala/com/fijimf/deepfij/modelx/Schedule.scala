@@ -61,6 +61,10 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
 
   def findAll(): List[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s").getResultList.toList.asInstanceOf[List[Schedule]]
 
+  def findPrimary(): Option[Schedule] = {
+    entityManager.createQuery("SELECT s FROM Schedule s WHERE s.isPrimary = TRUE").getResultList.toList.asInstanceOf[List[Schedule]].headOption
+  }
+
   def setPrimary(key: String) = {
     findAll().map(s => {
       s.isPrimary = (s.key == key)

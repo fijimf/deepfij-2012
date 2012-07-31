@@ -3,9 +3,9 @@ package com.fijimf.deepfij.util
 
 object Timing {
 
-  def elapsedTime(f:  => Unit): Double = {
+  def timed[T](f: => T): (Long, T) = {
     val start = System.currentTimeMillis()
-    f
-    (System.currentTimeMillis() - start).toDouble / 1000.0
+    val t: T = f
+    ((System.currentTimeMillis() - start), t)
   }
 }
