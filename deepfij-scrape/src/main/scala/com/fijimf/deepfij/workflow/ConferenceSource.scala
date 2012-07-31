@@ -56,5 +56,6 @@ object Tester {
     val source: ConferenceSource = new ConferenceSource(sd.findByKey("test").get)
 
     val csd = source.load
+    csd.foreach(ss => println(ss))
   }
 }
