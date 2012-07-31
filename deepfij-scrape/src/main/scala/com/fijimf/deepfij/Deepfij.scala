@@ -1,68 +1,71 @@
 package com.fijimf.deepfij
 
 import data.ncaa.json.Team
-import modelx.{ScheduleDao, Alias, Conference}
+import modelx.{Schedule, ScheduleDao, Alias, Conference}
 import org.apache.log4j.Logger
 import workflow.{Deepfij, ManagerStatus}
+import org.apache.commons.lang.StringUtils
 
 
 case object NotInitialized extends ManagerStatus
 
 case object Running extends ManagerStatus
 
-trait ScheduleManager {
-  def key: String
 
-  def name: String
-
-  def status: ManagerStatus
-
-  def parent: Deepfij
-}
-
-case class NewManager(key: String,
-                      name: String,
-
-                      parent: Deepfij,
-                      confReaders: List[Reader[Conference]],
-                      teamReaders: List[Reader[Team]],
-                      aliasReaders: List[Reader[Alias]],
-                      gameReaders: List[Reader[Team]],
-                      resultReaders: List[Reader[Team]]) extends ScheduleManager {
+case class ScheduleManager(key: String,
+                           name: String,
+                           parent: Deepfij,
+                           status: ManagerStatus,
+                           conferenceReaders: List[Reader[Conference]],
+                           teamReaders: List[Reader[Team]],
+                           aliasReaders: List[Reader[Alias]],
+                           gameReaders: List[Reader[Team]],
+                           resultReaders: List[Reader[Team]]) {
+  require(StringUtils.isNotBlank(name) && StringUtils.isNotBlank(key))
+  require(!conferenceReaders.isEmpty && !teamReaders.isEmpty && !aliasReaders.isEmpty && !gameReaders.isEmpty && !resultReaders.isEmpty)
   val log = Logger.getLogger(this.getClass)
   val sd = new ScheduleDao
-  val status = NotInitialized
 
-  def verifySchedule(): ScheduleManager = {
-    log.info("Schedule %s exists in database.  Verifying. ")
-    new RunningManager(key, name, Running, parent, confReaders, teamReaders, aliasReaders, gameReaders, resultReaders)
+
+  def loadConferences(reader: Reader[Conference])
+
+  def coldStartup {
+    sd.findByKey(key).map(s => sd.delete(s.id))
+    val schedule = sd.save(new Schedule(key = key, name = name))
+    loadConferences(conferenceReaders.head)
+    verifyConferences(conferenceReaders.tail)
+    loadAliases(aliasReaders.head)
+    verifyAliases(aliasReaders.tail)
+
+
   }
 
-  def createSchedule(): ScheduleManager = {
-    log.info("Schedule %s does not exist in database.  Creating. ")
-    new RunningManager(key, name, Running, parent, confReaders, teamReaders, aliasReaders, gameReaders, resultReaders)
+  def warmStartup {
+    val schedule = sd.findByKey(key) match {
+      case Some(s) => s
+      case None => sd.save(new Schedule(key = key, name = name))
+    }
+    if (schedule.conferenceList.isEmpty) {
+      loadConferences(conferenceReaders.head)
+    }
+    verifyConferences(conferenceReaders.tail)
   }
 
-  def initialize(): ScheduleManager = {
-    log.info("Initializing schedle %s(%s)".format(key, name))
-    sd.findByKey(key) match {
-      case Some(s) => verifySchedule()
-      case None => createSchedule()
+
+  def hotStartup {
+    val schedule = sd.findByKey(key) match {
+      case Some(s) => s
+      case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doewsn't exist");
     }
   }
 
+  def periodicCheck {}
+
+  def periodicUpdate {}
+
+
 }
 
-case class RunningManager(key: String,
-                          name: String,
-                          status: ManagerStatus,
-                          parent: Deepfij,
-                          confReaders: List[Reader[Conference]],
-                          teamReaders: List[Reader[Team]],
-                          aliasReaders: List[Reader[Alias]],
-                          gameReaders: List[Reader[Team]],
-                          resultReaders: List[Reader[Team]]) extends ScheduleManager {
-}
 
 trait Reader[T] {
   def init: Int = 0
