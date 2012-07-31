@@ -46,6 +46,23 @@ class ConferenceBuilder(schedule: Schedule) {
 }
 
 
+trait DataSource[T] {
+  def schedule: Schedule
+
+  def load: List[Map[String, String]]
+
+  def update(date: Date): List[Map[String, String]]
+
+  def fromKey(key: String): Option[T]
+
+  def build(data: Map[String, String]): Option[T]
+
+  def update(t: T, data: Map[String, String]): T
+
+  def verify(t: T, data: Map[String, String]): Boolean
+}
+
+
 object Tester {
   def main(args: Array[String]) {
     val sd = new ScheduleDao()

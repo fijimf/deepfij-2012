@@ -70,3 +70,15 @@ trait Reader[T] {
 
 }
 
+/**
+ * Use cases:
+ * cold startup <- if exists P(drop/create) SS(verify); if not exists P(create) SS(verify)
+ * warm startup <- if exists ALL(verify); if not exists P(create) SS(verify)
+ * hot startup  <- ALL(skip)
+ * periodic check <-
+ * periodic update <-
+ */
+
+
+
+
