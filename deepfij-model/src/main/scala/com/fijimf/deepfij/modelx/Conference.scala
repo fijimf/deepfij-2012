@@ -34,7 +34,7 @@ class Conference(
 
                   @(Column@field)(name = "updatedAt")
                   var updatedAt: Date = new Date
-                  ) {
+                  ) extends KeyedObject {
   def this() = {
     this(0L, null, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], new Date())
   }

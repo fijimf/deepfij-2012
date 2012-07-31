@@ -2,7 +2,7 @@ package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.util.Util._
 import java.util.Date
-import com.fijimf.deepfij.modelx.{ScheduleDao, ConferenceDao, Schedule, Conference}
+import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 
 class ConferenceSource(schedule: Schedule) {
@@ -37,7 +37,7 @@ class ConferenceBuilder(schedule: Schedule) {
     c
   }
 
-  def verify(c: Conference, data: Map[String, String]): Boolean = {
+  def verify(c: Conference, data: Map[String, String]): Option[(Conference, Conference)] = {
     (for (n <- data.get("name")) yield {
       c.name == n
     }).getOrElse(false)
@@ -46,12 +46,13 @@ class ConferenceBuilder(schedule: Schedule) {
 }
 
 
-trait DataSource[T] {
+trait Source[T >: KeyedObject] {
+
   def schedule: Schedule
 
   def load: List[Map[String, String]]
 
-  def update(date: Date): List[Map[String, String]]
+  def loadAsOf(date: Date): List[T]
 
   def fromKey(key: String): Option[T]
 
@@ -59,7 +60,7 @@ trait DataSource[T] {
 
   def update(t: T, data: Map[String, String]): T
 
-  def verify(t: T, data: Map[String, String]): Boolean
+  def verify(t: T, data: Map[String, String]): Option[(T, T)]
 }
 
 
