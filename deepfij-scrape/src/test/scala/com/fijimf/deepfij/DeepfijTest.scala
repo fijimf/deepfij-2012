@@ -19,13 +19,36 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
 
   }
 
-  describe("A Deeepfij object from the deepfij-base.xml ") {
-    val df = Deepfij("deepfij-base.xml")
-    it("can be read from an included xml file") {
+  val baseXml = """
+                  |<deepfij>
+                  |    <schedule name="NCAA 2011-2012" key="ncaa2012">
+                  |        <conferences>
+                  |            <reader class="com.fijimf.deepfij.workflow.ConferenceSource"/>
+                  |        </conferences>
+                  |        <aliases>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>
+                  |        </aliases>
+                  |        <teams>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+                  |        </teams>
+                  |        <games>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+                  |        </games>
+                  |        <results>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+                  |        </results>
+                  |    </schedule>
+                  |</deepfij>
+                """.stripMargin
+  describe("A Deeepfij object from xml ") {
+    val df = Deepfij(baseXml)
+    it("can be read ") {
       df should not be (null)
+      df.managers.size should be(1)
+      val mgr = df.managers.head
+      mgr.name should be("NCAA 2011-2012")
+      mgr.key should be("ncaa2012")
     }
-
-
   }
 
 }

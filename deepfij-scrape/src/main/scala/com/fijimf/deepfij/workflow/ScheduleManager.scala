@@ -15,7 +15,6 @@ import org.apache.log4j.Logger
 
 case class ScheduleManager(key: String,
                            name: String,
-                           parent: Deepfij,
                            status: ManagerStatus,
                            conferenceReaders: List[DataSource[Conference]],
                            teamReaders: List[DataSource[Team]],
@@ -46,11 +45,15 @@ case class ScheduleManager(key: String,
     val cs2: Map[String, Conference] = (for (data <- ds.load; c <- ds.build(schedule, data)) yield {
       c.key -> c
     }).toMap
-    (cs1.keySet ++ cs2.keySet).map(k => (cs1.get(k), cs2.get(k))) match {
-      case (Some(c1: Conference), Some(c2: Conference)) => if (!ds.verify(c1, c2)) (Some(c1), Some(c2))
-      case (_, Some(c2)) => (None, Some(c2))
-      case (Some(c1), _) => (Some(c1), None)
-    }
+    val keys: Set[String] = cs1.keySet ++ cs2.keySet
+    keys.map(k => {
+      (cs1.get(k), cs2.get(k)) match {
+        case (Some(c1), Some(c2)) => if (!ds.verify(c1, c2)) (Some(c1), Some(c2))
+        case (_, Some(c2)) => (None, Some(c2))
+        case (Some(c1), _) => (Some(c1), None)
+        case (None, None) => throw new IllegalStateException()
+      }
+    })
 
   }
 

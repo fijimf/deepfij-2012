@@ -3,7 +3,7 @@ package com.fijimf.deepfij.workflow
 import com.fijimf.deepfij.modelx._
 import java.util.Date
 
-class NullSource[T] extends DataSource[T] {
+class NullSource[T <: KeyedObject] extends DataSource[T] {
   def load = List.empty[Map[String, String]]
 
   def loadAsOf(date: Date) = List.empty[Map[String, String]]
