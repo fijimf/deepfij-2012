@@ -18,7 +18,9 @@ object Deepfij {
     new Deepfij(parse(xml))
   }
 
-  def parse(n: Node): List[ScheduleManager] = List.empty[ScheduleManager]
+  def parse(n: Node): List[ScheduleManager] = {
+
+  }
 
 
 }

@@ -55,7 +55,7 @@ class Conference(
   }
 }
 
-class ConferenceDao extends BaseDao[Conference, Long] with FindByKey[Conference] {
+class ConferenceDao extends BaseDao[Conference, Long] {
 
   import scala.collection.JavaConversions._
 

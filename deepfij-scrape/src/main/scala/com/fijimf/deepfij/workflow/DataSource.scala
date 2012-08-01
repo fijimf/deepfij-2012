@@ -5,17 +5,13 @@ import java.util.Date
 
 trait DataSource[T <: KeyedObject] {
 
-  def schedule: Schedule
-
   def load: List[Map[String, String]]
 
-  def loadAsOf(date: Date): List[T]
+  def loadAsOf(date: Date): List[Map[String, String]]
 
-  def fromKey(key: String): Option[T]
-
-  def build(data: Map[String, String]): Option[T]
+  def build(schedule: Schedule, data: Map[String, String]): Option[T]
 
   def update(t: T, data: Map[String, String]): T
 
-  def verify(t: T, data: Map[String, String]): Option[(T, T)]
+  def verify(t: T, u: T): Boolean
 }
