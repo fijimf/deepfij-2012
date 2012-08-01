@@ -4,6 +4,7 @@ import javax.persistence._
 import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
+import java.text.SimpleDateFormat
 
 @Entity
 @Table(name = "game")
@@ -26,7 +27,7 @@ class Game(
             val awayTeam: Team = null,
 
             @(Column@field)(name = "date", nullable = false)
-            @(Temporal@field)(value=TemporalType.DATE)
+            @(Temporal@field)(value = TemporalType.DATE)
             val date: Date = new Date,
 
             @(Column@field)(name = "isNeutralSite", nullable = false)
@@ -41,7 +42,7 @@ class Game(
 
             @(Column@field)(name = "updatedAt")
             var updatedAt: Date = new Date
-            ) {
+            ) extends KeyedObject {
   require((homeTeam == null && awayTeam == null) || (homeTeam != null))
 
   def this() = this(0L)
@@ -62,6 +63,10 @@ class Game(
 
   def loser: Option[Team] = {
     resultOpt.map(r => if (r.homeLoss) homeTeam else awayTeam)
+  }
+
+  def key = {
+    new SimpleDateFormat("yyyyMMdd").format(date) + ":" + homeTeam.key + ":" + awayTeam.key
   }
 }
 

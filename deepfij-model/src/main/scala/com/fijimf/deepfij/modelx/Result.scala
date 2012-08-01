@@ -24,13 +24,14 @@ class Result(
               var awayScore: Int = 0,
               @(Column@field)(name = "updatedAt")
               var updatedAt: Date = new Date
-              ) {
+              ) extends KeyedObject {
   def this() = this(0L)
 
   def homeWin = homeScore > awayScore
 
   def homeLoss = homeScore < awayScore
 
+  def key = game.key
 }
 
 

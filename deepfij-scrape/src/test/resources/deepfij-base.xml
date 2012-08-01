@@ -1,15 +1,7 @@
 <deepfij>
     <schedule name="NCAA 2011-2012" key="ncaa2012">
-        <data>
-            <conferences>
-                <init>
-                    <reader></reader>
-                </init>
-            </conferences>
-            <teams></teams>
-            <aliases></aliases>
-            <games></games>
-            <results></results>
-        </data>
+        <conferences>
+
+        </conferences>
     </schedule>
 </deepfij>

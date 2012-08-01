@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils
               @(OneToMany@field)(mappedBy = "awayTeam", fetch = FetchType.LAZY)
               val awayGames: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]]
 
-              ) {
+              ) extends KeyedObject {
   def this() = this(0L)
 
   require(StringUtils.isBlank(key) || key.matches("[a-z\\-]+"), "Only a-z and - allowed in team keys.")
