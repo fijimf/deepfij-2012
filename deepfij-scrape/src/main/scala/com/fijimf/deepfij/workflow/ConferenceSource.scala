@@ -36,17 +36,10 @@ class ConferenceBuilder(schedule: Schedule) {
     }
     c
   }
-
-  def verify(c: Conference, data: Map[String, String]): Option[(Conference, Conference)] = {
-    (for (n <- data.get("name")) yield {
-      c.name == n
-    }).getOrElse(false)
-  }
-
 }
 
 
-trait Source[T >: KeyedObject] {
+trait DataSource[T <: KeyedObject] {
 
   def schedule: Schedule
 

@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils
 
                @(Column@field)(name = "updatedAt")
                var updatedAt: Date = new Date
-               ) {
+               ) extends KeyedObject {
 
   require(StringUtils.isBlank(alias) || alias.matches("[a-zA-Z\\-\\.\\'\\&\\,\\(\\) ]+"), "Only a-z A-Z - . ' & , ( ) allowed in team alias.")
 
@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils
     "Alias(" + id + " " + team.name + "-> " + alias + ")"
   }
 
+  def key = alias
 }
 
 class AliasDao extends BaseDao[Alias, Long] {

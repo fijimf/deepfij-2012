@@ -3,7 +3,7 @@ package com.fijimf.deepfij
 import data.ncaa.json.Team
 import modelx._
 import org.apache.log4j.Logger
-import workflow.{Source, DataSource, Deepfij, ManagerStatus}
+import workflow.{DataSource, Deepfij, ManagerStatus}
 import org.apache.commons.lang.StringUtils
 import scala.Some
 
@@ -19,7 +19,7 @@ case class ScheduleManager(key: String,
                            status: ManagerStatus,
                            conferenceReaders: List[DataSource[Conference]],
                            teamReaders: List[Reader[Team]],
-                           aliasReaders: List[Reader[Alias]],
+                           aliasReaders: List[DataSource[Alias]],
                            gameReaders: List[Reader[Team]],
                            resultReaders: List[Reader[Team]]) {
   require(StringUtils.isNotBlank(name) && StringUtils.isNotBlank(key))
@@ -29,25 +29,22 @@ case class ScheduleManager(key: String,
   val cd = new ConferenceDao
 
 
-  def loadConferences(ds: Source[Conference]) {
+  def loadAliases(ds: DataSource[Alias]) {
+  }
+
+  def verifyAliases(dss: List[DataSource[Alias]]) {
+  }
+
+  def loadConferences(ds: DataSource[Conference]) {
     for (data <- ds.load; c <- ds.build(data)) {
       cd.save(c)
     }
   }
 
-  def verifyConferences(dss: List[Source[Conference]]) {
-
+  def verifyConferences(dss: List[DataSource[Conference]]) {
     for (ds <- dss) {
-      val cs = ds.schedule.conferenceList.map(c => (c.key -> c))
-
-      for (data <- ds.load; c <- ds.build(data)) {
-      } data <- ds.load; c <- ds.build(data))
-      {
-
-
-      }
     }
-
+  }
     def coldStartup {
       sd.findByKey(key).map(s => sd.delete(s.id))
       val schedule = sd.save(new Schedule(key = key, name = name))
@@ -74,7 +71,7 @@ case class ScheduleManager(key: String,
     def hotStartup {
       val schedule = sd.findByKey(key) match {
         case Some(s) => s
-        case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doewsn't exist");
+        case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
       }
     }
 
