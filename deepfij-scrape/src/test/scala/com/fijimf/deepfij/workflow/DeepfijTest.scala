@@ -1,11 +1,10 @@
-package com.fijimf.deepfij
+package com.fijimf.deepfij.workflow
 
-import modelx._
 import org.scalatest.{BeforeAndAfterEach, FunSpec}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers._
-import workflow.Deepfij
+import com.fijimf.deepfij.modelx.PersistenceSource
 
 
 @RunWith(classOf[JUnitRunner])
@@ -23,7 +22,7 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
                   |<deepfij>
                   |    <schedule name="NCAA 2011-2012" key="ncaa2012">
                   |        <conferences>
-                  |            <reader class="com.fijimf.deepfij.workflow.ConferenceSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
                   |        </conferences>
                   |        <aliases>
                   |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>

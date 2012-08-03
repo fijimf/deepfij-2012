@@ -57,14 +57,19 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
         loadPage(pageUrl)
       }
       logger.info("Loaded '" + c + "' => " + pageUrl + " in " + ms + " ms.")
-      val teamNodes = (pageXml \\ "span").filter((node: Node) => (node \ "@class").text == "field-content")
-      val pageData = teamNodes.map((node: Node) => (node \ "a").map((node: Node) => {
-        ((node \ "@href").text.split("/").last -> node.text)
-      })).flatten
-      logger.info(pageData.mkString(","))
-      pageData
+      scrapeAlphaTeamsPage(pageXml)
     }).flatten.seq
     pairs.toMap
+  }
+
+
+  def scrapeAlphaTeamsPage(pageXml: Node): Seq[(String, String)] = {
+    val teamNodes = (pageXml \\ "span").filter((node: Node) => (node \ "@class").text == "field-content")
+    val pageData = teamNodes.map((node: Node) => (node \ "a").map((node: Node) => {
+      ((node \ "@href").text.split("/").last -> node.text)
+    })).flatten
+    logger.info(pageData.mkString(","))
+    pageData
   }
 
   private[this] lazy val shortNames: Map[String, String] = {

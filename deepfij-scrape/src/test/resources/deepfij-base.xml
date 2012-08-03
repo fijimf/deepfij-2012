@@ -1,7 +1,7 @@
 <deepfij>
     <schedule name="NCAA 2011-2012" key="ncaa2012">
         <conferences>
-            <reader class="com.fijimf.deepfij.workflow.ConferenceSource"/>
+            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
         </conferences>
         <aliases>
             <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>

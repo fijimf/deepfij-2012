@@ -5,7 +5,7 @@ import java.util.Date
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 
-class ConferenceSource() extends DataSource[Conference] {
+class NcaaComConferenceSource() extends DataSource[Conference] {
   val conferenceDao = new ConferenceDao
 
   def load: List[Map[String, String]] = {
@@ -31,7 +31,7 @@ class ConferenceSource() extends DataSource[Conference] {
     c
   }
 
-  def loadAsOf(date: Date) = List.empty[Map[String, String]]
+  def loadAsOf(date: Date) = load
 
   def verify(t: Conference, u: Conference) = t.key == u.key && t.name == u.name
 }

@@ -9,31 +9,25 @@ class AliasSource() extends DataSource[Alias] {
   val aliasDao = new AliasDao
 
   def load: List[Map[String, String]] = {
-    val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
-    toSet.map(n => (Map[String, String]("key" -> nameToKey(n), "name" -> n))).toList
+    List.empty[Map[String, String]]
   }
 
   def update(date: Date): List[Map[String, String]] = {
-    val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
-    toSet.map(n => (Map[String, String]("key" -> nameToKey(n), "name" -> n))).toList
+    List.empty[Map[String, String]]
   }
 
   def build(schedule: Schedule, data: Map[String, String]): Option[Alias] = {
-    for (n <- data.get("name")) yield {
-      new Alias(schedule = schedule, name = n, key = nameToKey(n))
-    }
+    //TODO fixme
+    None
   }
 
-  def update(c: Alias, data: Map[String, String]): Alias = {
-    for (n <- data.get("name")) yield {
-      c.name = n
-    }
-    c
+  def update(a: Alias, data: Map[String, String]): Alias = {
+    //TODO fixme
+    a
   }
 
   def loadAsOf(date: Date) = List.empty[Map[String, String]]
 
-  def verify(t: Alias, u: Alias) = t.key == u.key && t.name == u.name
+  def verify(t: Alias, u: Alias) = false
+
 }
-
-
