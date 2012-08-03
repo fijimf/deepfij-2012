@@ -58,7 +58,8 @@ case class ScheduleManager(key: String,
   }
 
 
-  def coldStartup {
+  def coldStartup: ScheduleManager = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
     sd.findByKey(key).map(s => sd.delete(s.id))
     val schedule = sd.save(new Schedule(key = key, name = name))
     loadConferences(schedule, conferenceReaders.head)
@@ -66,10 +67,11 @@ case class ScheduleManager(key: String,
     //    loadAliases(aliasReaders.head)
     //    verifyAliases(aliasReaders.tail)
 
-
+    copy(status = Running)
   }
 
-  def warmStartup {
+  def warmStartup: ScheduleManager = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
     val schedule = sd.findByKey(key) match {
       case Some(s) => s
       case None => sd.save(new Schedule(key = key, name = name))
@@ -78,14 +80,18 @@ case class ScheduleManager(key: String,
       loadConferences(schedule, conferenceReaders.head)
     }
     conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
+
+    copy(status = Running)
   }
 
 
-  def hotStartup {
+  def hotStartup: ScheduleManager = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
     val schedule = sd.findByKey(key) match {
       case Some(s) => s
       case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
     }
+    copy(status = Running)
   }
 
   def periodicCheck {

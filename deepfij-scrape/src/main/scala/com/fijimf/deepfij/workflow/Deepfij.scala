@@ -2,10 +2,23 @@ package com.fijimf.deepfij.workflow
 
 import xml.{Node, XML}
 import com.fijimf.deepfij.modelx._
+import java.util
+import util.concurrent._
 
 case class Deepfij(managers: List[ScheduleManager]) {
+  val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(4)
 
+  def coldStartup: Deepfij = {
+    copy(managers = managers.map(_.coldStartup))
+  }
 
+  def hotStartup: Deepfij = {
+    copy(managers = managers.map(_.hotStartup))
+  }
+
+  def warmStartup: Deepfij = {
+    copy(managers = managers.map(_.warmStartup))
+  }
 }
 
 object Deepfij {
