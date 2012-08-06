@@ -1,7 +1,8 @@
 package com.fijimf.deepfij.data.kenpom
 
 import java.text.SimpleDateFormat
-import com.fijimf.deepfij.data.generic.{GameReader, HttpScraper}
+import com.fijimf.deepfij.util.HttpScraper
+import com.fijimf.deepfij.data.generic.GameReader
 import java.util.Date
 import org.apache.commons.lang.time.DateUtils
 import java.io.InputStream

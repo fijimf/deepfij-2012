@@ -4,7 +4,8 @@ import xml.{NodeSeq, Node}
 import collection.immutable.{Map, List}
 import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader, HttpScraper}
+import com.fijimf.deepfij.util.HttpScraper
+import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader}
 import collection.parallel.ForkJoinTasks
 import com.fijimf.deepfij.util.Timing._
 
