@@ -53,11 +53,10 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
   private[this] lazy val allNcaaTeams: Map[String, String] = {
     logger.info("Loading canonical team names")
     val pairs: Seq[(String, String)] = "abcdefghijklmnopqrstuvwxyz".par.map((c: Char) => {
-      val pageUrl: String = "http://www.ncaa.com/schools/" + c + "/"
       val (ms, pageXml) = timed[Node] {
-        loadPage(pageUrl)
+        loadPage("http://www.ncaa.com/schools/" + c + "/")
       }
-      logger.info("Loaded '" + c + "' => " + pageUrl + " in " + ms + " ms.")
+      logger.info("Loaded '" + c + "' => " + ("http://www.ncaa.com/schools/" + c + "/") + " in " + ms + " ms.")
       scrapeAlphaTeamsPage(pageXml)
     }).flatten.seq
     pairs.toMap
@@ -73,7 +72,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     pageData
   }
 
-  private[this] lazy val shortNames: Map[String, String] = {
+  lazy val shortNames: Map[String, String] = {
     logger.info("Loading short names")
     List("p1", "p2", "p3", "p4", "p5", "p6", "p7").par.map(t => loadPage("http://www.ncaa.com/stats/basketball-men/d1/current/team/145/" + t)).map((page: Node) => {
       (page \\ "a").filter((node: Node) => (node \ "@href").text.startsWith("/schools/")).map((node: Node) => {
@@ -82,7 +81,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     }).flatten.seq.toMap
   }
 
-  private[this] def teamDetail(key: String, name: String, longName: String): Option[TeamRecord] = {
+  def teamDetail(key: String, name: String, longName: String): Option[TeamRecord] = {
     val page: Node = loadPage("http://www.ncaa.com/schools/" + key)
     val conference: Option[String] = parseConference(page)
     if (conference.isDefined) {
@@ -93,7 +92,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     }
   }
 
-  private[this] def parseConference(page: Node): Option[String] = {
+  def parseConference(page: Node): Option[String] = {
     val tableRow: NodeSeq = (page \\ "tr").filter((node: Node) => {
       val seq: NodeSeq = node \ "td"
       if (seq.size == 3) {
