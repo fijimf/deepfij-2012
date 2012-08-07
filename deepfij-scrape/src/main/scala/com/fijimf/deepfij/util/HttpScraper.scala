@@ -7,25 +7,15 @@ import org.xml.sax.InputSource
 import java.io.{Reader, StringReader}
 
 
-trait HttpScraper {
+trait HttpScraper extends Scraper[Node] {
 
-  def loadTextPage(url: String): List[String] = {
-    try {
-      Source.fromURL(new URL(url)).getLines().toList
-    }
-    catch {
-      case t: Throwable => List.empty[String]
-    }
-  }
-
-  def loadPage(url: String): Node = {
+  def loadURL(url: String): Node = {
     loadPage(new org.xml.sax.InputSource(url))
   }
 
-  def loadString(s:String):Node = {
+  def loadString(s: String): Node = {
     loadReader(new StringReader(s))
   }
-
 
   def loadReader(reader: Reader): Node = {
     loadPage(new InputSource(reader))
@@ -39,7 +29,9 @@ trait HttpScraper {
       adapter.loadXML(source, parser)
     }
     catch {
-      case t: Throwable => <exception>{t.getMessage}</exception>
+      case t: Throwable => <exception>
+        {t.getMessage}
+      </exception>
     }
   }
 }

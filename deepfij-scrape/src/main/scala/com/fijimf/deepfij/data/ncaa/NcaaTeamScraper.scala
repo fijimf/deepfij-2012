@@ -54,7 +54,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     logger.info("Loading canonical team names")
     val pairs: Seq[(String, String)] = "abcdefghijklmnopqrstuvwxyz".par.map((c: Char) => {
       val (ms, pageXml) = timed[Node] {
-        loadPage("http://www.ncaa.com/schools/" + c + "/")
+        loadURL("http://www.ncaa.com/schools/" + c + "/")
       }
       logger.info("Loaded '" + c + "' => " + ("http://www.ncaa.com/schools/" + c + "/") + " in " + ms + " ms.")
       scrapeAlphaTeamsPage(pageXml)
@@ -74,7 +74,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
 
   lazy val shortNames: Map[String, String] = {
     logger.info("Loading short names")
-    List("p1", "p2", "p3", "p4", "p5", "p6", "p7").par.map(t => loadPage("http://www.ncaa.com/stats/basketball-men/d1/current/team/145/" + t)).map((page: Node) => {
+    List("p1", "p2", "p3", "p4", "p5", "p6", "p7").par.map(t => loadURL("http://www.ncaa.com/stats/basketball-men/d1/current/team/145/" + t)).map((page: Node) => {
       (page \\ "a").filter((node: Node) => (node \ "@href").text.startsWith("/schools/")).map((node: Node) => {
         ((node \ "@href").text.replace("/schools/", "") -> node.text)
       })
@@ -82,7 +82,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
   }
 
   def teamDetail(key: String, name: String, longName: String): Option[TeamRecord] = {
-    val page: Node = loadPage("http://www.ncaa.com/schools/" + key)
+    val page: Node = loadURL("http://www.ncaa.com/schools/" + key)
     val conference: Option[String] = parseConference(page)
     if (conference.isDefined) {
       logger.info("Found " + key)
