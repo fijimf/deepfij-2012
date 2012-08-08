@@ -22,7 +22,24 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
                   |<deepfij>
                   |    <schedule name="NCAA 2011-2012" key="ncaa2012">
                   |        <conferences>
-                  |            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
+                  |        </conferences>
+                  |        <aliases>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>
+                  |        </aliases>
+                  |        <teams>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+                  |        </teams>
+                  |        <games>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+                  |        </games>
+                  |        <results>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+                  |        </results>
+                  |    </schedule>
+                  |    <schedule name="NCAA 2012-2013" key="ncaa2013">
+                  |        <conferences>
+                  |            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
                   |        </conferences>
                   |        <aliases>
                   |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>
@@ -39,14 +56,23 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
                   |    </schedule>
                   |</deepfij>
                 """.stripMargin
-  describe("A Deeepfij object from xml ") {
-    val df = Deepfij(baseXml)
-    it("can be read ") {
+  describe("A Deeepfij object ") {
+
+    it("can be read and intialized from XML") {
+      val df = Deepfij(baseXml)
       df should not be (null)
-      df.managers.size should be(1)
-      val mgr = df.managers.head
-      mgr.name should be("NCAA 2011-2012")
-      mgr.key should be("ncaa2012")
+    }
+    it("can support multiple schedules") {
+      val df = Deepfij(baseXml)
+      df.managers.size should be(2)
+
+      val s2012 = df.managers(0)
+      s2012.name should be("NCAA 2011-2012")
+      s2012.key should be("ncaa2012")
+
+      val s2013 = df.managers(1)
+      s2013.name should be("NCAA 2012-2013")
+      s2013.key should be("ncaa2013")
     }
   }
 

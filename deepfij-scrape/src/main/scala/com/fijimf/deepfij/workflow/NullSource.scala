@@ -15,6 +15,8 @@ class NullSource[T <: KeyedObject] extends DataSource[T] {
   def verify(t: T, u: T) = false
 }
 
+class NullConferenceSource extends NullSource[Conference]
+
 class NullAliasSource extends NullSource[Alias]
 
 class NullTeamSource extends NullSource[Team]
