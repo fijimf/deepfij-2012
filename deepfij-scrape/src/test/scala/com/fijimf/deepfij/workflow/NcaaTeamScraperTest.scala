@@ -6,13 +6,13 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 import java.io.InputStreamReader
-import com.fijimf.deepfij.util.HttpScraper
+import com.fijimf.deepfij.util.{HtmlLoader, HttpScraper}
 
 @RunWith(classOf[JUnitRunner])
 class NcaaTeamScraperTest extends FunSuite {
   test("Strip names out of a teams by alpha page") {
     val stream = classOf[Deepfij].getClassLoader.getResourceAsStream("html/ncaa/schools_b.html")
-    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HttpScraper() {}.loadReader(new InputStreamReader(stream)))
+    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HtmlLoader() {}.load(new InputStreamReader(stream)))
 
     assertEquals(teams, List(
       ("babson", "Babson College"),

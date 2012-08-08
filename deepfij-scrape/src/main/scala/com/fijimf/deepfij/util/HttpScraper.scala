@@ -4,32 +4,24 @@ import xml.Node
 import io.Source
 import java.net.URL
 import org.xml.sax.InputSource
-import java.io.{Reader, StringReader}
+import java.io.StringReader
 
+trait Loader[T] {
+  def loadFromUrl(u: String): T
 
-trait HttpScraper {
+  def loadFromString(s: String): T
+}
 
-  def loadTextPage(url: String): List[String] = {
-    try {
-      Source.fromURL(new URL(url)).getLines().toList
-    }
-    catch {
-      case t: Throwable => List.empty[String]
-    }
-  }
+trait TextLoader extends Loader[List[String]] {
+  def loadFromUrl(u: String) = Source.fromURL(new URL(u)).getLines().toList
 
-  def loadPage(url: String): Node = {
-    loadPage(new org.xml.sax.InputSource(url))
-  }
+  def loadFromString(s: String) = s.split("\n").toList
+}
 
-  def loadString(s:String):Node = {
-    loadReader(new StringReader(s))
-  }
+trait HtmlLoader extends Loader[Node] {
+  def loadFromUrl(u: String) = loadPage(new org.xml.sax.InputSource(u))
 
-
-  def loadReader(reader: Reader): Node = {
-    loadPage(new InputSource(reader))
-  }
+  def loadFromString(s: String) = loadPage(new InputSource(new StringReader(s)))
 
   def loadPage(source: InputSource): Node = {
     try {
@@ -39,7 +31,9 @@ trait HttpScraper {
       adapter.loadXML(source, parser)
     }
     catch {
-      case t: Throwable => <exception>{t.getMessage}</exception>
+      case t: Throwable => <exception>
+        {t.getMessage}
+      </exception>
     }
   }
 }

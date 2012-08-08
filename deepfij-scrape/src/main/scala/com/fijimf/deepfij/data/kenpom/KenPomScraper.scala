@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.data.kenpom
 
 import java.text.SimpleDateFormat
-import com.fijimf.deepfij.util.HttpScraper
+import com.fijimf.deepfij.util.TextLoader
 import com.fijimf.deepfij.data.generic.GameReader
 import java.util.Date
 import org.apache.commons.lang.time.DateUtils
@@ -9,9 +9,9 @@ import java.io.InputStream
 import io.{BufferedSource, Source}
 
 //"http://kenpom.com/cbbga12.txt"
-case class KenPomScraper(url: String, aliasResource: String) extends HttpScraper with GameReader {
+case class KenPomScraper(url: String, aliasResource: String) extends TextLoader with GameReader {
   val dfmt = new SimpleDateFormat("MM/dd/yyyy")
-  lazy val gameData = loadTextPage(url).map(s => {
+  lazy val gameData = loadFromUrl(url).map(s => {
     val d = dfmt.parse(s.substring(0, 10))
     val at = s.substring(11, 33).trim()
     val as = s.substring(34, 37).trim().toInt
