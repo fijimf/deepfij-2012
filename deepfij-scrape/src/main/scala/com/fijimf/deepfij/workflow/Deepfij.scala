@@ -5,7 +5,7 @@ import com.fijimf.deepfij.modelx._
 import java.util
 import util.concurrent._
 
-case class Deepfij(managers: List[ScheduleManager]) {
+case class Deepfij(managers: List[ScheduleRunner]) {
   val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(4)
 
   def coldStartup: Deepfij = {
@@ -36,14 +36,14 @@ object Deepfij {
     new Deepfij(parse(xml))
   }
 
-  def parse(n: Node): List[ScheduleManager] = {
+  def parse(n: Node): List[ScheduleRunner] = {
     (n \ "schedule").map(parseMgr(_)).toList
   }
 
-  def parseMgr(n: Node): ScheduleManager = {
+  def parseMgr(n: Node): ScheduleRunner = {
     val key = n.attribute("key").map(_.text).getOrElse("")
     val name = n.attribute("name").map(_.text).getOrElse("")
-    ScheduleManager(
+    ScheduleRunner(
       key = key,
       name = name,
       status = NotInitialized,

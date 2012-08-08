@@ -25,7 +25,12 @@ object ZZZZZ {
 
     val yy = classOf[Deepfij].getClassLoader.getResourceAsStream("html/ncaa/schools_b.html")
 
+
   }
+}
+
+class Ncaa3 {
+
 }
 
 class NewNcaa {
@@ -36,7 +41,7 @@ class NewNcaa {
   })
 
   val shortNameScraper = new HttpScraper {}.map(p =>
-    (page \\ "a").filter((node: Node) => (node \ "@href").text.startsWith("/schools/")).map((node: Node) => {
+    (p \\ "a").filter((node: Node) => (node \ "@href").text.startsWith("/schools/")).map((node: Node) => {
       ((node \ "@href").text.replace("/schools/", "") -> node.text)
     })
 
@@ -47,7 +52,7 @@ class NewNcaa {
 class NcaaTeamScraperTest extends FunSuite {
   test("Strip names out of a teams by alpha page") {
     val stream = classOf[Deepfij].getClassLoader.getResourceAsStream("html/ncaa/schools_b.html")
-    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HttpScraper() {}.load(new InputStreamReader(stream)))
+    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HttpScraper() {}.loadReader(new InputStreamReader(stream)))
 
     assertEquals(teams, List(
       ("babson", "Babson College"),

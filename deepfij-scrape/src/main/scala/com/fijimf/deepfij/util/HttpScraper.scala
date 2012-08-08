@@ -1,11 +1,32 @@
 package com.fijimf.deepfij.util
 
 import xml.Node
-import io.Source
-import java.net.URL
 import org.xml.sax.InputSource
 import java.io.{Reader, StringReader}
+import scala.util.control.Exception._
+import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
+import xml.parsing.NoBindingFactoryAdapter
 
+
+object HtmlHelper {
+  def loadHtml(url: String): Option[Node] = {
+    catching(classOf[Exception]).opt {
+      val adapter = new NoBindingFactoryAdapter()
+      adapter.loadXML(new InputSource(url), new SAXFactoryImpl().newSAXParser())
+    }
+  }
+
+  def loadHtmlFromReader(r: Reader): Option[Node] = {
+    catching(classOf[Exception]).opt {
+      val adapter = new NoBindingFactoryAdapter()
+      adapter.loadXML(new InputSource(r), new SAXFactoryImpl().newSAXParser())
+    }
+  }
+
+  def loadHtmlFromString(s: String): Option[Node] = {
+    loadHtmlFromReader(new StringReader(s))
+  }
+}
 
 trait HttpScraper extends Scraper[Node] {
 

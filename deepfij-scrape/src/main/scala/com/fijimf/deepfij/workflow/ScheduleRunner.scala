@@ -13,14 +13,14 @@ import org.apache.log4j.Logger
  * periodic update <-
  */
 
-case class ScheduleManager(key: String,
-                           name: String,
-                           status: ManagerStatus,
-                           conferenceReaders: List[DataSource[Conference]],
-                           teamReaders: List[DataSource[Team]],
-                           aliasReaders: List[DataSource[Alias]],
-                           gameReaders: List[DataSource[Game]],
-                           resultReaders: List[DataSource[Result]]) {
+case class ScheduleRunner(key: String,
+                          name: String,
+                          status: ManagerStatus,
+                          conferenceReaders: List[DataSource[Conference]],
+                          teamReaders: List[DataSource[Team]],
+                          aliasReaders: List[DataSource[Alias]],
+                          gameReaders: List[DataSource[Game]],
+                          resultReaders: List[DataSource[Result]]) {
   require(StringUtils.isNotBlank(name) && StringUtils.isNotBlank(key))
   require(!conferenceReaders.isEmpty && !teamReaders.isEmpty && !aliasReaders.isEmpty && !gameReaders.isEmpty && !resultReaders.isEmpty)
   val log = Logger.getLogger(this.getClass)
@@ -58,8 +58,8 @@ case class ScheduleManager(key: String,
   }
 
 
-  def coldStartup: ScheduleManager = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
+  def coldStartup: ScheduleRunner = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
     sd.findByKey(key).map(s => sd.delete(s.id))
     val schedule = sd.save(new Schedule(key = key, name = name))
     loadConferences(schedule, conferenceReaders.head)
@@ -70,8 +70,8 @@ case class ScheduleManager(key: String,
     copy(status = Running)
   }
 
-  def warmStartup: ScheduleManager = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
+  def warmStartup: ScheduleRunner = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
     val schedule = sd.findByKey(key) match {
       case Some(s) => s
       case None => sd.save(new Schedule(key = key, name = name))
@@ -85,8 +85,8 @@ case class ScheduleManager(key: String,
   }
 
 
-  def hotStartup: ScheduleManager = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleManager")
+  def hotStartup: ScheduleRunner = {
+    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
     val schedule = sd.findByKey(key) match {
       case Some(s) => s
       case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");

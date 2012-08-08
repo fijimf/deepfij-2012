@@ -4,7 +4,7 @@ import xml.{NodeSeq, Node}
 import collection.immutable.{Map, List}
 import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.util.{HttpScraper, HtmlLoader}
+import com.fijimf.deepfij.util.{HttpScraper}
 import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader}
 import collection.parallel.ForkJoinTasks
 import com.fijimf.deepfij.util.Timing._
@@ -85,7 +85,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
   }
 
   def teamDetail(key: String, name: String, longName: String): Option[TeamRecord] = {
-    val page: Node = loadFromUrl("http://www.ncaa.com/schools/" + key)
+    val page: Node = loadURL("http://www.ncaa.com/schools/" + key)
     val conference: Option[String] = parseConference(page)
     if (conference.isDefined) {
       logger.info("Found " + key)
