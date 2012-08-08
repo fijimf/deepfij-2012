@@ -62,6 +62,7 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       val df = Deepfij(baseXml)
       df should not be (null)
     }
+
     it("can support multiple schedules") {
       val df = Deepfij(baseXml)
       df.managers.size should be(2)
@@ -73,6 +74,21 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       val s2013 = df.managers(1)
       s2013.name should be("NCAA 2012-2013")
       s2013.key should be("ncaa2013")
+    }
+
+    it("can support cold startup use case") {
+      val df = Deepfij(baseXml)
+      df.coldStartup
+    }
+    it("can support warm startup use case") {
+      val df = Deepfij(baseXml)
+      df.warmStartup
+    }
+    it("will not support hot startup since schedule is missing") {
+      val df = Deepfij(baseXml)
+      intercept[IllegalStateException] {
+        df.hotStartup
+      }
     }
   }
 

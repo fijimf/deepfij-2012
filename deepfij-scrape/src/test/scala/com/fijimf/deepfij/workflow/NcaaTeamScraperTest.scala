@@ -29,10 +29,6 @@ object ZZZZZ {
   }
 }
 
-class Ncaa3 {
-
-}
-
 class NewNcaa {
   val alphaTeamScraper = new HttpScraper {}.map(p => {
     nodesByTagClass(p, "span", "field-content").flatMap(n => (n \ "a").map(m => {
