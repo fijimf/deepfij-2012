@@ -47,7 +47,7 @@ class NewNcaa {
 class NcaaTeamScraperTest extends FunSuite {
   test("Strip names out of a teams by alpha page") {
     val stream = classOf[Deepfij].getClassLoader.getResourceAsStream("html/ncaa/schools_b.html")
-    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HttpScraper() {}.loadReader(new InputStreamReader(stream)))
+    val teams: Seq[(String, String)] = NcaaTeamScraper.scrapeAlphaTeamsPage(new HttpScraper() {}.load(new InputStreamReader(stream)))
 
     assertEquals(teams, List(
       ("babson", "Babson College"),
