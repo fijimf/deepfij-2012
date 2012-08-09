@@ -59,7 +59,10 @@ case class ScheduleRunner(key: String,
 
 
   def coldStartup: ScheduleRunner = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
+    if (status != NotInitialized) {
+      log.warn("ScheduleRunnner")
+      throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
+    }
     sd.findByKey(key).map(s => sd.delete(s.id))
     val schedule = sd.save(new Schedule(key = key, name = name))
     loadConferences(schedule, conferenceReaders.head)

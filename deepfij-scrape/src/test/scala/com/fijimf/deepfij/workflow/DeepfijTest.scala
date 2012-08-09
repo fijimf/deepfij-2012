@@ -4,7 +4,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSpec}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers._
-import com.fijimf.deepfij.modelx.PersistenceSource
+import com.fijimf.deepfij.modelx.{Schedule, ScheduleDao, PersistenceSource}
 
 
 @RunWith(classOf[JUnitRunner])
@@ -12,9 +12,13 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
 
   System.setProperty("deepfij.persistenceUnitName", "deepfij-test")
 
+  val scheduleDao = new ScheduleDao()
+
   override def beforeEach() {
     PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
+    scheduleDao.save(new Schedule(name = "NCAA 2011-2012", key = "ncaa2012"))
+
 
   }
 
@@ -84,11 +88,10 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       val df = Deepfij(baseXml)
       df.warmStartup
     }
-    it("will not support hot startup since schedule is missing") {
+    it("will drop schedule managers on an exception in startup") {
       val df = Deepfij(baseXml)
-      intercept[IllegalStateException] {
-        df.hotStartup
-      }
+      val df1 = df.hotStartup
+      df1.managers.size should be(1)
     }
   }
 

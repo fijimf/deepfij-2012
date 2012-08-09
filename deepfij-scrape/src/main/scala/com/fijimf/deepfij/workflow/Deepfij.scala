@@ -2,22 +2,29 @@ package com.fijimf.deepfij.workflow
 
 import xml.{Node, XML}
 import com.fijimf.deepfij.modelx._
-import java.util
-import util.concurrent._
+import scala.util.control.Exception._
+import java.util.concurrent.{ScheduledExecutorService, Executors}
+
 
 case class Deepfij(managers: List[ScheduleRunner]) {
   val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(4)
 
   def coldStartup: Deepfij = {
-    copy(managers = managers.map(_.coldStartup))
+    copy(managers = managers.flatMap(r=>catching(classOf[IllegalStateException]).opt {
+      r.coldStartup
+    }))
   }
 
   def hotStartup: Deepfij = {
-    copy(managers = managers.map(_.hotStartup))
+    copy(managers = managers.flatMap(r=>catching(classOf[IllegalStateException]).opt {
+      r.hotStartup
+    }))
   }
 
   def warmStartup: Deepfij = {
-    copy(managers = managers.map(_.warmStartup))
+    copy(managers = managers.flatMap(r=>catching(classOf[IllegalStateException]).opt {
+      r.warmStartup
+    }))
   }
 }
 
