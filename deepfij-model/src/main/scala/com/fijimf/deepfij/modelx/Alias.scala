@@ -5,6 +5,7 @@ import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
 import org.apache.commons.lang.StringUtils
+import com.fijimf.deepfij.util.Validation._
 
 @Entity
 @Table(
@@ -34,7 +35,7 @@ import org.apache.commons.lang.StringUtils
                var updatedAt: Date = new Date
                ) extends KeyedObject {
 
-  require(StringUtils.isBlank(alias) || alias.matches("[a-zA-Z\\-\\.\\'\\&\\,\\(\\) ]+"), "Only a-z A-Z - . ' & , ( ) allowed in team alias.")
+  require(StringUtils.isBlank(alias) || validName(alias), "Only a-z A-Z - . ' & , ( ) allowed in team alias.")
 
   // require((schedule == null && team == null) || (team.schedule.id == schedule.id), "Schedule id and conference schedule id do not match.")
 

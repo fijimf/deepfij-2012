@@ -5,6 +5,7 @@ import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
 import org.apache.commons.lang.StringUtils
+import com.fijimf.deepfij.util.Validation._
 
 @Entity
 @Table(name = "schedule")
@@ -39,8 +40,8 @@ class Schedule(
                 @(Column@field)(name = "updatedAt")
                 val updatedAt: Date = new Date
                 ) {
-  require(StringUtils.isBlank(key) || key.matches("[0-9a-z\\-]+"), "Only 0-9, a-z and - allowed in team keys.")
-  require(StringUtils.isBlank(name) || name.matches("[0-9a-zA-Z\\-\\.\\'\\&\\,\\(\\) ]+"), "Only a-z A-Z - . ' & , ( ) allowed in team names.")
+  require(StringUtils.isBlank(key) || validKey(key), "Only 0-9, a-z and - allowed in schedule keys.")
+  require(StringUtils.isBlank(name) || validName(name), "Only a-z A-Z - . ' & , ( ) allowed in schedule names.")
   require(StringUtils.isBlank(key) == StringUtils.isBlank(name), "Key can be blank if and only if name is blank")
 
   @transient lazy val conferenceList: List[Conference] = conferences.toList

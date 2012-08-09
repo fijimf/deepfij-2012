@@ -5,6 +5,9 @@ import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
 import com.fijimf.deepfij.util.FromStringMap
+import org.apache.commons.lang.StringUtils
+import com.fijimf.deepfij.util.Validation._
+import scala.Some
 
 @Entity
 @Table(name = "conference",
@@ -35,6 +38,10 @@ class Conference(
                   @(Column@field)(name = "updatedAt")
                   var updatedAt: Date = new Date
                   ) extends KeyedObject {
+  require(StringUtils.isBlank(key) || validKey(key), "Only a-z and - allowed in conference keys.")
+  require(StringUtils.isBlank(name) || validName(name), "Only a-z A-Z - . ' & , ( ) allowed in conference names.")
+  require(StringUtils.isBlank(key) == StringUtils.isBlank(name), "Key can be blank if and only if name is blank")
+
   def this() = {
     this(0L, null, "", "", java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], new Date())
   }

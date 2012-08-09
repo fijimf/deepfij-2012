@@ -5,6 +5,7 @@ import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
 import org.apache.commons.lang.StringUtils
+import com.fijimf.deepfij.util.Validation._
 
 @Entity
 @Table(
@@ -65,8 +66,8 @@ import org.apache.commons.lang.StringUtils
               ) extends KeyedObject {
   def this() = this(0L)
 
-  require(StringUtils.isBlank(key) || key.matches("[a-z\\-]+"), "Only a-z and - allowed in team keys.")
-  require(StringUtils.isBlank(name) || name.matches("[a-zA-Z\\-\\.\\'\\&\\,\\(\\) ]+"), "Only a-z A-Z - . ' & , ( ) allowed in team names.")
+  require(StringUtils.isBlank(key) || validKey(key), "Only a-z and - allowed in team keys.")
+  require(StringUtils.isBlank(name) || validName(name), "Only a-z A-Z - . ' & , ( ) allowed in team names.")
   require(StringUtils.isBlank(key) == StringUtils.isBlank(name), "Key can be blank if and only if name is blank")
   require((schedule == null && conference == null) || (conference.schedule.id == schedule.id), "Schedule id and conference schedule id do not match.")
 

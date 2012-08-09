@@ -3,6 +3,7 @@ package com.fijimf.deepfij.workflow
 import com.fijimf.deepfij.modelx._
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
+import com.fijimf.deepfij.util.Validation._
 
 /**
  * Use cases:
@@ -21,7 +22,8 @@ case class ScheduleRunner(key: String,
                           aliasReaders: List[DataSource[Alias]],
                           gameReaders: List[DataSource[Game]],
                           resultReaders: List[DataSource[Result]]) {
-  require(StringUtils.isNotBlank(name) && StringUtils.isNotBlank(key))
+  require(StringUtils.isNotBlank(name) && validName(name))
+  require(StringUtils.isNotBlank(key) && validKey(key))
   require(!conferenceReaders.isEmpty && !teamReaders.isEmpty && !aliasReaders.isEmpty && !gameReaders.isEmpty && !resultReaders.isEmpty)
   val log = Logger.getLogger(this.getClass)
   val sd = new ScheduleDao
