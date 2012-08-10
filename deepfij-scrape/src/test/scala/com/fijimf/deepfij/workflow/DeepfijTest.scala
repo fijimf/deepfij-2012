@@ -93,6 +93,54 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       val df1 = df.hotStartup
       df1.managers.size should be(1)
     }
+
+    it("can parse Readers with no initial parameters") {
+      val node =
+        <schedule name="NCAA 2011-2012" key="ncaa2012">
+          <conferences>
+            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
+          </conferences>
+        </schedule>
+
+      Deepfij.parseReaders(node, "conferences").size should be(1)
+
+    }
+
+    it("can parse Readers with Map[String,String] parameters") {
+      val node =
+        <schedule name="NCAA 2011-2012" key="ncaa2012">
+          <teams>
+            <reader class="com.fijimf.deepfij.workflow.KenPomTeamSource">
+              <parameter key="location" value="http://www.kenpom.com/ncaab2012"/>
+            </reader>
+          </teams>
+        </schedule>
+
+      Deepfij.parseReaders(node, "teams").size should be(1)
+
+    }
+
+    it("can parse multiple readers") {
+      val node =
+        <schedule name="NCAA 2011-2012" key="ncaa2012">
+          <conferences>
+            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
+            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
+          </conferences>
+          <teams>
+            <reader class="com.fijimf.deepfij.workflow.KenPomTeamSource">
+              <parameter key="location" value="http://www.kenpom.com/ncaab2012"/>
+            </reader>
+            <reader class="com.fijimf.deepfij.workflow.KenPomTeamSource">
+              <parameter key="location" value="http://www.kenpom.com/ncaab2011"/>
+            </reader>
+            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+          </teams>
+        </schedule>
+      Deepfij.parseReaders(node, "teams").size should be(3)
+      Deepfij.parseReaders(node, "conferences").size should be(2)
+
+    }
   }
 
 }
