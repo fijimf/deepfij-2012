@@ -69,8 +69,14 @@ case class ScheduleRunner(key: String,
     val schedule = sd.save(new Schedule(key = key, name = name))
     loadConferences(schedule, conferenceReaders.head)
     conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
-    //    loadAliases(aliasReaders.head)
-    //    verifyAliases(aliasReaders.tail)
+    loadAliases(aliasReaders.head)
+    verifyAliases(aliasReaders.tail)
+    loadTeams(teamsReaders.head)
+    verifyTeam(teamsReaders.tail)
+    loadGames(gamesReaders.head)
+    verifyGames(gamesReaders.tail)
+    loadResults(resultsReaders.head)
+    verifyResults(resultsReaders.tail)
 
     copy(status = Running)
   }
