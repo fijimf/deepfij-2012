@@ -28,19 +28,16 @@ case class ScheduleRunner(key: String,
   val log = Logger.getLogger(this.getClass)
   val sd = new ScheduleDao
   val cd = new ConferenceDao
+  val td = new TeamDao
+  val ad = new AliasDao
 
 
-  def loadAliases(ds: DataSource[Alias]) {
+  def verifyTeams(schedule: Schedule, ds: DataSource[Team]) {
+
+  }
+  def verifyAliases(schedule: Schedule, ds: DataSource[Alias]) {
   }
 
-  def verifyAliases(dss: List[DataSource[Alias]]) {
-  }
-
-  def loadConferences(schedule: Schedule, ds: DataSource[Conference]) {
-    for (data <- ds.load; c <- ds.build(schedule, data)) {
-      cd.save(c)
-    }
-  }
 
   def verifyConferences(schedule: Schedule, ds: DataSource[Conference]) {
     val cs1: Map[String, Conference] = schedule.conferenceList.map(c => c.key -> c).toMap
@@ -59,24 +56,34 @@ case class ScheduleRunner(key: String,
 
   }
 
+  def load[T<:KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+    for (data <- ds.load; t <- ds.build(schedule, data)) {
+      dao.save(t)
+    }
+    sd.findByKey(schedule.key).getOrElse(schedule)
+  }
+
 
   def coldStartup: ScheduleRunner = {
+    log.info(" ***** COLD STARTUP ******")
     if (status != NotInitialized) {
-      log.warn("ScheduleRunnner")
+      log.warn("Cannot call startup on an itialized ScheduleRunner")
       throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
     }
-    sd.findByKey(key).map(s => sd.delete(s.id))
-    val schedule = sd.save(new Schedule(key = key, name = name))
-    loadConferences(schedule, conferenceReaders.head)
+    sd.findByKey(key).map(s => {
+      log.info("Dropping existing schedule with key %s".format(key))
+      sd.delete(s.id)
+    })
+    log.info("Creating schedule with key %s".format(key))
+    val schedule =
+      (sd.save _).
+        andThen(load[Conference](_, conferenceReaders.head, cd)).
+        andThen(load[Team](_, teamReaders.head, td)).
+        andThen(load[Alias](_, aliasReaders.head, ad)).
+        apply(new Schedule(key = key, name = name))
     conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
-    loadAliases(aliasReaders.head)
-    verifyAliases(aliasReaders.tail)
-    loadTeams(teamsReaders.head)
-    verifyTeam(teamsReaders.tail)
-    loadGames(gamesReaders.head)
-    verifyGames(gamesReaders.tail)
-    loadResults(resultsReaders.head)
-    verifyResults(resultsReaders.tail)
+    teamReaders.tail.map(tr => verifyTeams(schedule, tr))
+    aliasReaders.tail.map(ar => verifyAliases(schedule, ar))
 
     copy(status = Running)
   }
@@ -88,7 +95,7 @@ case class ScheduleRunner(key: String,
       case None => sd.save(new Schedule(key = key, name = name))
     }
     if (schedule.conferenceList.isEmpty) {
-      loadConferences(schedule, conferenceReaders.head)
+      load[Conference](schedule, conferenceReaders.head, cd)
     }
     conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
 
