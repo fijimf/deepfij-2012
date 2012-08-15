@@ -5,8 +5,7 @@ import java.util.Date
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
 
-class NcaaComConferenceSource() extends DataSource[Conference] {
-  val conferenceDao = new ConferenceDao
+class NcaaComConferenceSource extends DataSource[Conference] {
 
   def load: List[Map[String, String]] = {
     val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet

@@ -45,9 +45,14 @@ class Schedule(
   require(StringUtils.isBlank(key) == StringUtils.isBlank(name), "Key can be blank if and only if name is blank")
 
   @transient lazy val conferenceList: List[Conference] = conferences.toList
+  @transient lazy val conferenceByKey: Map[String, Conference] = conferenceList.map(c => c.key -> c).toMap
+  @transient lazy val conferenceByName: Map[String, Conference] = conferenceList.map(c => c.name -> c).toMap
   @transient lazy val teamList: List[Team] = teams.toList
+  @transient lazy val teamByKey: Map[String, Team] = teamList.map(t => t.key -> t).toMap
   @transient lazy val gameList: List[Game] = games.toList
+  @transient lazy val gameByKey: Map[String, Game] = gameList.map(g => g.key -> g).toMap
   @transient lazy val aliasList: List[Alias] = aliases.toList
+  @transient lazy val aliasByKey: Map[String, Alias] = aliasList.map(a => a.key -> a).toMap
 
   def this() = {
     this(0L, "", "", false, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Alias]], new Date())
