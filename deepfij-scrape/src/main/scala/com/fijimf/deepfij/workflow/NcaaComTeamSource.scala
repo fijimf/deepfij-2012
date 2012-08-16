@@ -52,7 +52,7 @@ class NcaaComTeamSource() extends DataSource[Team] {
     }
   }
 
-  def update(c: Conference, data: Map[String, String]): Conference = {
+  def update(c: Team, data: Map[String, String]): Team = {
     for (n <- data.get("name")) yield {
       c.name = n
     }
@@ -61,7 +61,7 @@ class NcaaComTeamSource() extends DataSource[Team] {
 
   def loadAsOf(date: Date) = load
 
-  def verify(t: Conference, u: Conference) = t.key == u.key && t.name == u.name
+  def verify(t: Team, u: Team) = t.key == u.key && t.name == u.name
 }
 
 
