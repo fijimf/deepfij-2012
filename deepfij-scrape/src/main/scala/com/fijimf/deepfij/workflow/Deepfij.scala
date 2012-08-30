@@ -70,22 +70,35 @@ object Deepfij {
       tn <- rn.attribute("class")) yield {
       (rn \ "parameter") match {
         case NodeSeq.Empty => {
-          catching(classOf[Exception]).opt (Class.forName(tn.text).newInstance().asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(tn.text).newInstance().asInstanceOf[DataSource[T]])
         }
         case s: NodeSeq => {
           val parameters = (for (
             ss <- s;
             k <- ss.attribute("key");
             v <- ss.attribute("value")) yield {
-              k.text -> v.text
-            }).toMap
+            k.text -> v.text
+          }).toMap
           println(parameters)
-          catching(classOf[Exception]).opt (Class.forName(tn.text).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(tn.text).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
         }
       }
     }
     value.toList.flatten
   }
 
+  def main(args: Array[String]) {
+    args.toList match {
+      case config :: Nil => Deepfij(config).coldStartup
+      case config :: parm :: theRest => {
+        parm match {
+          case "HOT" => Deepfij(config).hotStartup
+          case "WARM" => Deepfij(config).warmStartup
+          case _ => Deepfij(config).coldStartup
+        }
+      }
+      case Nil => throw new IllegalArgumentException("Config is required")
+    }
+  }
 
 }

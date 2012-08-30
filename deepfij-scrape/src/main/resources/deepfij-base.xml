@@ -1,0 +1,21 @@
+<deepfij>
+    <schedule name="NCAA 2011-2012" key="ncaa2012">
+        <conferences>
+            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
+        </conferences>
+        <aliases>
+            <reader class="com.fijimf.deepfij.workflow.TextFileConferenceSource">
+                <parameter key="resource" value="kenpom.alias.txt"/>
+            </reader>
+        </aliases>
+        <teams>
+            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+        </teams>
+        <games>
+            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+        </games>
+        <results>
+            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+        </results>
+    </schedule>
+</deepfij>

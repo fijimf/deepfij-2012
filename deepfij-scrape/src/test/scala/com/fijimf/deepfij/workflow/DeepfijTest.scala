@@ -84,10 +84,12 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       val df = Deepfij(baseXml)
       df.coldStartup
     }
+
     it("can support warm startup use case") {
       val df = Deepfij(baseXml)
       df.warmStartup
     }
+
     it("will drop schedule managers on an exception in startup") {
       val df = Deepfij(baseXml)
       val df1 = df.hotStartup
