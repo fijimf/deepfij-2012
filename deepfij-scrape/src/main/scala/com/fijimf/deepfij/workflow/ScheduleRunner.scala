@@ -6,12 +6,19 @@ import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
 
 /**
- * Use cases:
- * cold startup <- if exists P(drop/create) SS(verify); if not exists P(create) SS(verify)
- * warm startup <- if exists ALL(verify); if not exists P(create) SS(verify)
- * hot startup  <- ALL(skip)
- * periodic check <-
- * periodic update <-
+ * So heres the deal abstracting out to the general case.
+ *
+ * We want to instantiate Schedule (or some aggregate type composed of other aggregate types) on startup
+ * and (potentially) keep itself current.  The resources we have are (1) persistance we own, viz. a database; (2) One or
+ * more primary sources; (3) Knowledge that the components of our Schedule aggregate can in every case be identified by
+ * a unique, domain specific key; (4) An ability to construct any of the component objects given the primary source and
+ * (possibly partially constructed) aggregate Schedule
+ *
+ * Given those parameters we have three main use cases
+ *
+ * cold startup <- Rebuild everything; drop any existing data in the database
+ * warm startup <- Static data is good; reload dynamic data
+ * hot startup  <- Quick restart all data in the database is good and we can just start updater tasks
  */
 
 case class ScheduleRunner(key: String,
@@ -35,6 +42,7 @@ case class ScheduleRunner(key: String,
   def verifyTeams(schedule: Schedule, ds: DataSource[Team]) {
 
   }
+
   def verifyAliases(schedule: Schedule, ds: DataSource[Alias]) {
   }
 
@@ -56,7 +64,7 @@ case class ScheduleRunner(key: String,
 
   }
 
-  def load[T<:KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+  def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     for (data <- ds.load; t <- ds.build(schedule, data)) {
       dao.save(t)
     }
