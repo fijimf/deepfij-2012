@@ -8,17 +8,19 @@ import com.fijimf.deepfij.util.Validation._
 /**
  * So heres the deal abstracting out to the general case.
  *
- * We want to instantiate Schedule (or some aggregate type composed of other aggregate types) on startup
- * and (potentially) keep itself current.  The resources we have are (1) persistance we own, viz. a database; (2) One or
- * more primary sources; (3) Knowledge that the components of our Schedule aggregate can in every case be identified by
- * a unique, domain specific key; (4) An ability to construct any of the component objects given the primary source and
- * (possibly partially constructed) aggregate Schedule
+ * We want to instantiate some aggregate type composed of other related components on startup
+ * and (potentially) keep itself current.  The resources we have are
+ * (1) Persistence we own, viz. a database;
+ * (2) One or more primary sources which we don't own;
+ * (3) Knowledge that the components of our Schedule aggregate can be identified by a unique, domain specific key;
+ * (4) Ability to construct component objects given the primary source and (possibly partially constructed) aggregate;
+ *
  *
  * Given those parameters we have three main use cases
  *
- * cold startup <- Rebuild everything; drop any existing data in the database
- * warm startup <- Static data is good; reload dynamic data
- * hot startup  <- Quick restart all data in the database is good and we can just start updater tasks
+ * (1) Cold startup <- Rebuild everything; drop any existing data in the database
+ * (2) Warm startup <- Static data is good; reload dynamic data
+ * (3) Hot startup  <- Quick restart all data in the database is good and we can just start updater tasks
  */
 
 case class ScheduleRunner(key: String,
