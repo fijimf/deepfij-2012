@@ -48,7 +48,9 @@ import com.fijimf.deepfij.util.Validation._
   def key = alias
 }
 
-class AliasDao extends BaseDao[Alias, Long] {
+class AliasDao extends BaseDao[Alias, Long] with KeyedObjectDao[Alias] {
   def findAll(): List[Alias] = entityManager.createQuery("SELECT q FROM Alias q").getResultList.toList.asInstanceOf[List[Alias]]
+
+  def findByKey(k: String) = entityManager.createQuery("SELECT q FROM Alias q where q.alias = :key").setParameter("key", k).getResultList.toList.asInstanceOf[List[Alias]].headOption
 }
 

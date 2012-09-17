@@ -31,6 +31,9 @@ import com.fijimf.deepfij.util.Validation._
  * 1. Persist them to the database
  * (2) Warm startup <- Static data is good; reload dynamic data
  * (3) Hot startup  <- Quick restart all data in the database is good and we can just start updater tasks
+ *
+ * TODO implement verify steps -- that is if we have multiple sources we need a method of creating insert/update/delete
+ * from the primary source and saving or applying them
  */
 
 case class ScheduleRunner(key: String,
@@ -49,32 +52,6 @@ case class ScheduleRunner(key: String,
   val cd = new ConferenceDao
   val td = new TeamDao
   val ad = new AliasDao
-
-
-  def verifyTeams(schedule: Schedule, ds: DataSource[Team]) {
-
-  }
-
-  def verifyAliases(schedule: Schedule, ds: DataSource[Alias]) {
-  }
-
-
-  def verifyConferences(schedule: Schedule, ds: DataSource[Conference]) {
-    val cs1: Map[String, Conference] = schedule.conferenceList.map(c => c.key -> c).toMap
-    val cs2: Map[String, Conference] = (for (data <- ds.load; c <- ds.build(schedule, data)) yield {
-      c.key -> c
-    }).toMap
-    val keys: Set[String] = cs1.keySet ++ cs2.keySet
-    keys.map(k => {
-      (cs1.get(k), cs2.get(k)) match {
-        case (Some(c1), Some(c2)) => if (!ds.verify(c1, c2)) (Some(c1), Some(c2))
-        case (_, Some(c2)) => (None, Some(c2))
-        case (Some(c1), _) => (Some(c1), None)
-        case (None, None) => throw new IllegalStateException()
-      }
-    })
-
-  }
 
   def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     for (data <- ds.load; t <- ds.build(schedule, data)) {
@@ -101,10 +78,6 @@ case class ScheduleRunner(key: String,
         andThen(load[Team](_, teamReaders.head, td)).
         andThen(load[Alias](_, aliasReaders.head, ad)).
         apply(new Schedule(key = key, name = name))
-    conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
-    teamReaders.tail.map(tr => verifyTeams(schedule, tr))
-    aliasReaders.tail.map(ar => verifyAliases(schedule, ar))
-
     copy(status = Running)
   }
 
@@ -117,8 +90,6 @@ case class ScheduleRunner(key: String,
     if (schedule.conferenceList.isEmpty) {
       load[Conference](schedule, conferenceReaders.head, cd)
     }
-    conferenceReaders.tail.map(cr => verifyConferences(schedule, cr))
-
     copy(status = Running)
   }
 

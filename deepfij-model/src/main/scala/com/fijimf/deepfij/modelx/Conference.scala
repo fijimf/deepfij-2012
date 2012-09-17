@@ -62,7 +62,7 @@ class Conference(
   }
 }
 
-class ConferenceDao extends BaseDao[Conference, Long] {
+class ConferenceDao extends BaseDao[Conference, Long] with KeyedObjectDao[Conference] {
 
   import scala.collection.JavaConversions._
 
