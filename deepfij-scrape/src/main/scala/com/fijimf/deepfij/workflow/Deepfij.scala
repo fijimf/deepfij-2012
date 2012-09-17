@@ -4,6 +4,7 @@ import xml.{NodeSeq, Node, XML}
 import com.fijimf.deepfij.modelx._
 import scala.util.control.Exception._
 import java.util.concurrent.{ScheduledExecutorService, Executors}
+import org.apache.log4j.Logger
 
 
 case class Deepfij(managers: List[ScheduleRunner]) {
@@ -29,6 +30,7 @@ case class Deepfij(managers: List[ScheduleRunner]) {
 }
 
 object Deepfij {
+  val log = Logger.getLogger(this.getClass)
 
   def apply(config: String): Deepfij = {
     if (config.trim.startsWith("<deepfij>")) {
@@ -88,17 +90,20 @@ object Deepfij {
   }
 
   def main(args: Array[String]) {
-    args.toList match {
-      case config :: Nil => Deepfij(config).coldStartup
-      case config :: parm :: theRest => {
+    val (deepfij, mode) = args.toList match {
+      case config :: Nil => (Deepfij(config), ColdStartup)
+      case config :: parm :: _ => {
         parm match {
-          case "HOT" => Deepfij(config).hotStartup
-          case "WARM" => Deepfij(config).warmStartup
-          case _ => Deepfij(config).coldStartup
+          case "HOT" => (Deepfij(config), HotStartup)
+          case "WARM" => (Deepfij(config), WarmStartup)
+          case _ => (Deepfij(config), ColdStartup)
         }
       }
       case Nil => throw new IllegalArgumentException("Config is required")
     }
+
+    log.info("Loaded config info")
+    log.info("Start up mode is " + mode.toString)
   }
 
 }
