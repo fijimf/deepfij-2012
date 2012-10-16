@@ -104,6 +104,11 @@ object Deepfij {
 
     log.info("Loaded config info")
     log.info("Start up mode is " + mode.toString)
+    mode match {
+      case ColdStartup => deepfij.coldStartup
+      case WarmStartup => deepfij.warmStartup
+      case HotStartup => deepfij.hotStartup
+    }
   }
 
 }
