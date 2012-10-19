@@ -1,5 +1,6 @@
 package com.fijimf.deepfij.workflow
 
+import datasource.DataSource
 import xml.{NodeSeq, Node, XML}
 import com.fijimf.deepfij.modelx._
 import scala.util.control.Exception._
@@ -9,24 +10,6 @@ import org.apache.log4j.Logger
 
 case class Deepfij(managers: List[ScheduleRunner]) {
   val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(4)
-
-  def coldStartup: Deepfij = {
-    copy(managers = managers.flatMap(r => catching(classOf[IllegalStateException]).opt {
-      r.coldStartup
-    }))
-  }
-
-  def hotStartup: Deepfij = {
-    copy(managers = managers.flatMap(r => catching(classOf[IllegalStateException]).opt {
-      r.hotStartup
-    }))
-  }
-
-  def warmStartup: Deepfij = {
-    copy(managers = managers.flatMap(r => catching(classOf[IllegalStateException]).opt {
-      r.warmStartup
-    }))
-  }
 }
 
 object Deepfij {
@@ -90,25 +73,23 @@ object Deepfij {
   }
 
   def main(args: Array[String]) {
-    val (deepfij, mode) = args.toList match {
-      case config :: Nil => (Deepfij(config), ColdStartup)
+    val (deepfij, f, mode) = args.toList match {
+      case config :: Nil => (Deepfij(config), (r: ScheduleRunner) => r.warmStartup, "warm")
       case config :: parm :: _ => {
         parm match {
-          case "HOT" => (Deepfij(config), HotStartup)
-          case "WARM" => (Deepfij(config), WarmStartup)
-          case _ => (Deepfij(config), ColdStartup)
+          case "--hot-startup" => (Deepfij(config), (r: ScheduleRunner) => r.hotStartup, "hot")
+          case "--cold-startup" => (Deepfij(config), (r: ScheduleRunner) => r.coldStartup, "cold")
+          case _ => (Deepfij(config), (r: ScheduleRunner) => r.warmStartup, "warm")
         }
       }
       case Nil => throw new IllegalArgumentException("Config is required")
     }
-
-    log.info("Loaded config info")
-    log.info("Start up mode is " + mode.toString)
-    mode match {
-      case ColdStartup => deepfij.coldStartup
-      case WarmStartup => deepfij.warmStartup
-      case HotStartup => deepfij.hotStartup
-    }
+    log.info("Loaded configuration from " + args(0))
+    log.info("Start up mode is " + mode)
+    deepfij.managers.flatMap(r => catching(classOf[IllegalStateException]).opt {
+      log.info("Starting " + r.name + "(" + r.key + ")")
+      f(r)
+    })
   }
 
 }

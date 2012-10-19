@@ -1,10 +1,12 @@
 package com.fijimf.deepfij.workflow
 
+import datasource._
 import org.scalatest.{BeforeAndAfterEach, FunSpec}
 import org.scalatest.matchers.ShouldMatchers._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import com.fijimf.deepfij.modelx.{Schedule, ScheduleDao, PersistenceSource}
+import com.fijimf.deepfij.workflow.ScheduleRunner
 
 
 @RunWith(classOf[JUnitRunner])

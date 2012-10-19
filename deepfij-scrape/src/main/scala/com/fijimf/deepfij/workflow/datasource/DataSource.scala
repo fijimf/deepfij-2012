@@ -1,4 +1,4 @@
-package com.fijimf.deepfij.workflow
+package com.fijimf.deepfij.workflow.datasource
 
 import com.fijimf.deepfij.modelx.{Schedule, KeyedObject}
 import java.util.Date

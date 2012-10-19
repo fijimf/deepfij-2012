@@ -1,11 +1,11 @@
-package com.fijimf.deepfij.workflow
+package com.fijimf.deepfij.workflow.datasource
 
 import java.io.InputStream
 import io.{Source, BufferedSource}
 import com.fijimf.deepfij.modelx.{Schedule, Alias}
 import java.util.Date
 
-class TextFileConferenceSource(parms: Map[String, String]) extends DataSource[Alias] {
+class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] {
   lazy val aliasList: List[(String, String)] = {
     val is: InputStream = getClass.getClassLoader.getResourceAsStream(parms("resource"))
     val src: BufferedSource = Source.fromInputStream(is)

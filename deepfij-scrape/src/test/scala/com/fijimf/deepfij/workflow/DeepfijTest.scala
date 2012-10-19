@@ -82,17 +82,17 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
 
     it("can support cold startup use case") {
       val df = Deepfij(baseXml)
-      df.coldStartup
+      df.managers.map(_.coldStartup)
     }
 
     it("can support warm startup use case") {
       val df = Deepfij(baseXml)
-      df.warmStartup
+      df.managers.map(_.warmStartup)
     }
 
     it("will drop schedule managers on an exception in startup") {
       val df = Deepfij(baseXml)
-      val df1 = df.hotStartup
+      val df1 = df.copy(managers = df.managers.map(_.hotStartup))
       df1.managers.size should be(1)
     }
 

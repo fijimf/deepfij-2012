@@ -4,21 +4,20 @@ import xml.{NodeSeq, Node}
 import collection.immutable.{Map, List}
 import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.util.{HttpScraper}
-import com.fijimf.deepfij.data.generic.{TeamReader, ConferenceReader}
+import com.fijimf.deepfij.util.HttpScraper
 import collection.parallel.ForkJoinTasks
 import com.fijimf.deepfij.util.Timing._
 
-object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader {
+object NcaaTeamScraper extends HttpScraper {
   val logger = Logger.getLogger(NcaaTeamScraper.getClass)
-  ForkJoinTasks.defaultForkJoinPool.setParallelism(24)
+  ForkJoinTasks.defaultForkJoinPool.setParallelism(36)
 
-  override lazy val teamData: List[Map[String, String]] = {
-    logger.info("Loading Team data")
+  lazy val teamData: List[Map[String, String]] = {
+    logger.info("Scraping NCAA.com for teams and conferences.")
     val teamKeys: Map[String, String] = allNcaaTeams.map {
       case (k: String, n: String) => (k.replaceAll("--", "-"), n) // Fix for stupid NCAA.com data
     }
-    val parKeys = teamKeys.keys.par
+    val parKeys = teamKeys.keys.toSet.par
     logger.info(shortNames.size + " short names")
     val teamsRaw = parKeys.map(k => {
       teamDetail(k, shortNames.getOrElse(k, teamKeys(k)), teamKeys(k))
@@ -47,8 +46,7 @@ object NcaaTeamScraper extends HttpScraper with ConferenceReader with TeamReader
     }).toList
   }
 
-  override lazy val conferenceMap = teamData.map(_(TeamData.ConferenceName)).map(c => (c.replaceFirst(" Conference$", "").replaceFirst(" League$", "").replaceFirst("^The ", "").replaceAll("\\.", "").toLowerCase.replace(' ', '-') -> c)).toMap
-
+  lazy val conferenceMap = teamData.map(_(TeamData.ConferenceName)).map(c => (c.replaceFirst(" Conference$", "").replaceFirst(" League$", "").replaceFirst("^The ", "").replaceAll("\\.", "").toLowerCase.replace(' ', '-') -> c)).toMap
 
   private[this] lazy val allNcaaTeams: Map[String, String] = {
     logger.info("Loading canonical team names")

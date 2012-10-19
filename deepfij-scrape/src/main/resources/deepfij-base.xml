@@ -1,21 +1,59 @@
 <deepfij>
     <schedule name="NCAA 2011-2012" key="ncaa2012">
         <conferences>
-            <reader class="com.fijimf.deepfij.workflow.NcaaComConferenceSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
         </conferences>
         <aliases>
-            <reader class="com.fijimf.deepfij.workflow.TextFileConferenceSource">
+            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
                 <parameter key="resource" value="kenpom.alias.txt"/>
             </reader>
         </aliases>
         <teams>
-            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
         </teams>
         <games>
-            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource"/>
+        </results>
+    </schedule>
+    <schedule name="NCAA 2010-2011" key="ncaa2011">
+        <conferences>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
+        </conferences>
+        <aliases>
+            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+                <parameter key="resource" value="kenpom.alias.txt"/>
+            </reader>
+        </aliases>
+        <teams>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
+        </teams>
+        <games>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
+        </games>
+        <results>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource"/>
+        </results>
+    </schedule>
+    <schedule name="NCAA 2009-2010" key="ncaa2010">
+        <conferences>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
+        </conferences>
+        <aliases>
+            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+                <parameter key="resource" value="kenpom.alias.txt"/>
+            </reader>
+        </aliases>
+        <teams>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
+        </teams>
+        <games>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
+        </games>
+        <results>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource"/>
         </results>
     </schedule>
 </deepfij>
