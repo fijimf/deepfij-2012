@@ -55,12 +55,25 @@ case class ScheduleRunner(key: String,
   val cd = new ConferenceDao
   val td = new TeamDao
   val ad = new AliasDao
+  val gd = new GameDao
+  val rd = new ResultDao
 
   def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     for (data <- ds.load; t <- ds.build(schedule, data)) {
       dao.save(t)
     }
     sd.findByKey(schedule.key).getOrElse(schedule)
+  }
+
+  def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+    if (emptyTest(schedule)) {
+      for (data <- ds.load; t <- ds.build(schedule, data)) {
+        dao.save(t)
+      }
+      sd.findByKey(schedule.key).getOrElse(schedule)
+    } else {
+      schedule
+    }
   }
 
 
@@ -80,7 +93,9 @@ case class ScheduleRunner(key: String,
         andThen(load[Conference](_, conferenceReaders.head, cd)).
         andThen(load[Team](_, teamReaders.head, td)).
         andThen(load[Alias](_, aliasReaders.head, ad)).
+        andThen(load[Game](_, gameReaders.head, gd)).
         apply(new Schedule(key = key, name = name))
+    log.info("Initialization is complete.  Starting game/result monitor")
     copy(status = Running)
   }
 
@@ -90,9 +105,13 @@ case class ScheduleRunner(key: String,
       case Some(s) => s
       case None => sd.save(new Schedule(key = key, name = name))
     }
-    if (schedule.conferenceList.isEmpty) {
-      load[Conference](schedule, conferenceReaders.head, cd)
-    }
+    (sd.save _).
+    andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
+    andThen(loadIfEmpty[Team](_, _.teamList.isEmpty,teamReaders.head, td)).
+    andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty,aliasReaders.head, ad)).
+    andThen(loadIfEmpty[Game](_, _.gameList.isEmpty,gameReaders.head, gd)).
+    apply(schedule)
+    log.info("Initialization is complete.  Starting game/result monitor")
     copy(status = Running)
   }
 
@@ -103,6 +122,10 @@ case class ScheduleRunner(key: String,
       case Some(s) => s
       case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
     }
+    require(!schedule.conferenceList.isEmpty, "Hot startup failed.  No conferences are known.")
+    require(!schedule.teamList.isEmpty, "Hot startup failed.  No teams are known.")
+    log.info("Hot startup succeeded.  Starting game/result monitor")
+
     copy(status = Running)
   }
 

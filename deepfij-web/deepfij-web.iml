@@ -9,10 +9,6 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/scala" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
     <facet type="scala" name="Scala">
@@ -34,8 +30,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.1" level="project" />
     <orderEntry type="library" name="Maven: se.scalablesolutions.akka:akka-actor:1.3.1" level="project" />
     <orderEntry type="library" name="Maven: se.scalablesolutions.akka:akka-slf4j:1.3.1" level="project" />
@@ -118,8 +112,8 @@
     <orderEntry type="library" name="Maven: net.databinder:dispatch-futures_2.9.1:0.8.5" level="project" />
     <orderEntry type="library" name="Maven: org.ccil.cowan.tagsoup:tagsoup:1.2" level="project" />
     <orderEntry type="library" name="Maven: com.codahale:jerkson_2.9.1:0.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.10" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.10" level="project" />
     <orderEntry type="library" name="Maven: org.apache.shiro:shiro-core:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.shiro:shiro-web:1.2.0" level="project" />
