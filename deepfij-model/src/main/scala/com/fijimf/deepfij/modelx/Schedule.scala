@@ -62,7 +62,8 @@ class Schedule(
 class ScheduleDao extends BaseDao[Schedule, Long] {
 
   def findByKey(key: String): Option[Schedule] = {
-    entityManager.createQuery("SELECT s FROM Schedule s WHERE s.key = :key").setParameter("key", key).getResultList.toList.asInstanceOf[List[Schedule]].headOption
+    val s: Option[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s WHERE s.key = :key").setParameter("key", key).getResultList.toList.asInstanceOf[List[Schedule]].headOption
+    s.map(sch=>{sch.conferenceList; sch.teamList; sch.gameList; sch.aliasList; sch})
   }
 
   def findAll(): List[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s").getResultList.toList.asInstanceOf[List[Schedule]]
