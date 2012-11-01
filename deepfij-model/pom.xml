@@ -34,11 +34,7 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.squeryl</groupId>
-            <artifactId>squeryl_${scala.version}</artifactId>
-            <version>0.9.4</version>
-        </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

@@ -25,16 +25,16 @@ class Schedule(
                 @(Column@field)(name = "isPrimary")
                 var isPrimary: Boolean = false,
 
-                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Conference])
+                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.EAGER, targetEntity = classOf[Conference])
                 val conferences: java.util.Set[Conference] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]],
 
-                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Team])
+                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.EAGER, targetEntity = classOf[Team])
                 val teams: java.util.Set[Team] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]],
 
-                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Game])
+                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.EAGER, targetEntity = classOf[Game])
                 val games: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]],
 
-                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[Alias])
+                @(OneToMany@field)(mappedBy = "schedule", cascade = Array(CascadeType.REMOVE), fetch = FetchType.EAGER, targetEntity = classOf[Alias])
                 val aliases: java.util.Set[Alias] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Alias]],
 
                 @(Column@field)(name = "updatedAt")

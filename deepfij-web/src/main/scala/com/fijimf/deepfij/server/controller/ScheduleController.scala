@@ -1,7 +1,6 @@
 package com.fijimf.deepfij.server.controller
 
-import com.fijimf.deepfij.workflow.{UpdateGamesAndResults, FullRebuild}
-import com.fijimf.deepfij.server.Util._
+import com.fijimf.deepfij.workflow.FullRebuild
 import com.fijimf.deepfij.view.schedule.{ScheduleEditPanel, ScheduleShowPanel, ScheduleCreatePanel}
 import com.fijimf.deepfij.repo.StatisticRepository
 import com.fijimf.deepfij.statx.models.{PointsModel, WonLostModel}
@@ -73,7 +72,7 @@ trait ScheduleController {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
     val cfg = FullRebuild(key, name, fromDate, toDate)
-    scraper.scrape(cfg)
+  //  scraper.scrape(cfg)
   }
 
   private def rebuild(key: String, from: String, to: String) {
@@ -95,7 +94,7 @@ trait ScheduleController {
   private def results(key: String, from: String, to: String) {
     val fromDate = yyyymmdd.parse(from)
     val toDate = yyyymmdd.parse(to)
-    scraper.scrape(UpdateGamesAndResults(key, fromDate, toDate))
+   // scraper.scrape(UpdateGamesAndResults(key, fromDate, toDate))
   }
 
   private def rename(key: String, name: String) {

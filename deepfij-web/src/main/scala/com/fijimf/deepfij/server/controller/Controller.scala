@@ -1,18 +1,9 @@
-/*
- * Created by IntelliJ IDEA.
- * User: fijimf
- * Date: 5/16/12
- * Time: 2:32 AM
- */
 package com.fijimf.deepfij.server.controller
 
 import api.StatsController
 import org.scalatra.ScalatraFilter
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
-import com.fijimf.deepfij.workflow.Scraper
-import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
-import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.text.SimpleDateFormat
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
@@ -28,7 +19,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ScheduleControl
   val sd = new ScheduleDao()
   val std = new TeamStatDao()
 
-  val scraper = Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
+  val scraper =null// Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
 
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
