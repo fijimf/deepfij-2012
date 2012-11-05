@@ -72,6 +72,7 @@ object Deepfij {
     value.toList.flatten
   }
 
+  //TODO -- Allow individual schedules to be run as hot warm etc...
   def main(args: Array[String]) {
     val (deepfij, f, mode) = args.toList match {
       case config :: Nil => (Deepfij(config), (r: ScheduleRunner) => r.warmStartup, "warm")
