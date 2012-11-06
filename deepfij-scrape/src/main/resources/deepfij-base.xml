@@ -17,7 +17,9 @@
             </reader>
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
+                <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
+            </reader>
         </results>
     </schedule>
     <schedule name="NCAA 2010-2011" key="ncaa2011">
