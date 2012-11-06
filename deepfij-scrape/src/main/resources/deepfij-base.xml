@@ -12,7 +12,9 @@
             <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
         </teams>
         <games>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
+                <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
+            </reader>
         </games>
         <results>
             <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource"/>
