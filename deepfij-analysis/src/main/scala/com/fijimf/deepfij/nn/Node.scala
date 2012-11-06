@@ -11,11 +11,11 @@ class Node {
 
 case class Layer(theta: DenseMatrix[Double]) {
 
-  def numInputs: Int = theta.numCols
+  def numInputs: Int = theta.cols
 
-  def numOutputs: Int = theta.numRows
+  def numOutputs: Int = theta.rows
 
-  def calc(inputs:DenseVector[Double]) :Double = {
+  def calc(inputs: DenseVector[Double]): Double = {
     0.0
   }
 }
