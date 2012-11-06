@@ -31,7 +31,7 @@ class Result(
 
   def homeLoss = homeScore < awayScore
 
-  def key = game.key
+  def key = game.key + ":" + homeScore + ":" + awayScore
 }
 
 

@@ -22,7 +22,7 @@ class KenPomResultSource(parms: Map[String, String]) extends DataSource[Result] 
     for (homeTeamName <- data.get("homeTeam");
          awayTeamName <- data.get("awayTeam");
          homeScore <- data.get("homeScore").map(_.toInt);
-         awayScore <- data.get("awayTeam").map(_.toInt);
+         awayScore <- data.get("awayScore").map(_.toInt);
          date <- (data.get("date").map(dfmt.parse(_)));
          homeTeam <- schedule.teamByKey.get(homeTeamName).orElse(teamsByName.get(homeTeamName)).orElse(schedule.aliasByKey.get(homeTeamName).map(_.team));
          awayTeam <- schedule.teamByKey.get(awayTeamName).orElse(teamsByName.get(awayTeamName)).orElse(schedule.aliasByKey.get(awayTeamName).map(_.team));
