@@ -1,6 +1,5 @@
 package com.fijimf.deepfij.workflow.datasource
 
-import com.fijimf.deepfij.util.Util._
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
@@ -12,23 +11,11 @@ class NcaaComTeamSource() extends DataSource[Team] {
   }
 
   def update(date: Date): List[Map[String, String]] = {
-    val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
-    toSet.map(n => (Map[String, String]("key" -> nameToKey(n), "name" -> n))).toList
+    List.empty
   }
 
   def build(schedule: Schedule, data: Map[String, String]): Option[Team] = {
-
-    val Key = "key"
-    val Name = "name"
-    val ConferenceName = "conference"
-    val LongName = "longName"
-    val Nickname = "nickname"
-    val PrimaryColor = "primaryColor"
-    val SecondaryColor = "secondaryColor"
-    val OfficialUrl = "officialUrl"
-    val LogoUrl = "logo"
-
-    for (
+   for (
       key <- data.get("key");
       name <- data.get("name");
       conferenceName <- data.get("conference");
@@ -37,16 +24,15 @@ class NcaaComTeamSource() extends DataSource[Team] {
     ) yield {
       new Team(id = 0L,
         schedule = schedule,
-
         conference = conference,
         key = key,
         name = name,
         longName = longName,
-        nickname = data("nickname"),
-        primaryColor = data("primaryColor"),
-        secondaryColor = data("secondaryColor"),
-        officialUrl = data("officialUrl"),
-        logo = data("logo"),
+        nickname = data.get("nickname").orNull,
+        primaryColor = data.get("primaryColor").orNull,
+        secondaryColor = data.get("secondaryColor").orNull,
+        officialUrl = data.get("officialUrl").orNull,
+        logo = data.get("logo").orNull,
         updatedAt = new Date()
       )
     }

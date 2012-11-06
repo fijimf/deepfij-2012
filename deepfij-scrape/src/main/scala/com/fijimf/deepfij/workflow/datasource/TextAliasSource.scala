@@ -15,7 +15,7 @@ class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] {
     val is: InputStream = getClass.getClassLoader.getResourceAsStream(resource)
     val src: BufferedSource = Source.fromInputStream(is)
     val lst: List[(String, String)] = src.getLines().map(_.split(",")).map(arr => (arr(0), arr(1))).toList
-    log.info(lst.size + " aliases loaded.")
+    log.info(lst.size + " potential aliases loaded.")
     lst
   }
 
@@ -24,16 +24,20 @@ class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] {
   def loadAsOf(date: Date) = aliasList.map(tup => Map("key" -> tup._2, "alias" -> tup._1))
 
   def build(schedule: Schedule, data: Map[String, String]) = {
-    println(data)
-    println(schedule.teamByKey.get(data("key")))
-    for (k <- data.get("key");
-         t <- schedule.teamByKey.get(k);
-         a <- data.get("alias")) yield {
-      println("K==> " + k)
-      println("T==> " + t.name)
-      println("A==> " + a)
-      val alias: Alias = new Alias(schedule = schedule, team = t, alias = a)
-      alias
+    val key = data("key")
+    val alias = data("alias")
+    require(Option(key).isDefined && Option(alias).isDefined)
+    val teamOption = schedule.teamByKey.get(key)
+    if (teamOption.isDefined){
+      if (teamOption.get.name==alias){
+        log.info("Skipping "+alias+" -> "+alias+" because the alias is the same as the team name")
+        None
+      } else {
+        Some(new Alias(schedule = schedule, team = teamOption.get, alias = alias))
+      }
+    } else {
+      log.info("No team found for key "+key)
+       None
     }
   }
 

@@ -59,7 +59,10 @@ case class ScheduleRunner(key: String,
   val rd = new ResultDao
 
   def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
-    for (data <- ds.load; t <- ds.build(schedule, data)) {
+    val list: List[Map[String, String]] = ds.load
+    log.info("Loaded "+list.size+" observations.")
+    for (data <- list; t <- ds.build(schedule, data)) {
+      log.info("Saving "+t.key)
       dao.save(t)
     }
     sd.findByKey(schedule.key).getOrElse(schedule)

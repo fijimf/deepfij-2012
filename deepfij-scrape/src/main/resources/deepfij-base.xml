@@ -9,7 +9,7 @@
             </reader>
         </aliases>
         <teams>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
+            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
         </teams>
         <games>
             <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
