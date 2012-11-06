@@ -94,6 +94,7 @@ case class ScheduleRunner(key: String,
         andThen(load[Team](_, teamReaders.head, td)).
         andThen(load[Alias](_, aliasReaders.head, ad)).
         andThen(load[Game](_, gameReaders.head, gd)).
+        andThen(load[Result](_, resultReaders.head, rd)).
         apply(new Schedule(key = key, name = name))
     log.info("Initialization is complete.  Starting game/result monitor")
     copy(status = Running)
@@ -106,11 +107,11 @@ case class ScheduleRunner(key: String,
       case None => sd.save(new Schedule(key = key, name = name))
     }
     (sd.save _).
-    andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
-    andThen(loadIfEmpty[Team](_, _.teamList.isEmpty,teamReaders.head, td)).
-    andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty,aliasReaders.head, ad)).
-    andThen(loadIfEmpty[Game](_, _.gameList.isEmpty,gameReaders.head, gd)).
-    apply(schedule)
+      andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
+      andThen(loadIfEmpty[Team](_, _.teamList.isEmpty, teamReaders.head, td)).
+      andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty, aliasReaders.head, ad)).
+      andThen(loadIfEmpty[Game](_, _.gameList.isEmpty, gameReaders.head, gd)).
+      apply(schedule)
     log.info("Initialization is complete.  Starting game/result monitor")
     copy(status = Running)
   }

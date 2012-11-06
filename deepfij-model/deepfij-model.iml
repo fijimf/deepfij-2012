@@ -22,6 +22,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scalatest:scalatest_2.9.2:1.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.2.147" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.15" level="project" />
     <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.2" level="project" />
