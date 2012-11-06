@@ -12,7 +12,7 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
         Option(entityManager.find(classManifest[T].erasure, id).asInstanceOf[T])
       }
       catch {
-        case x:EntityNotFoundException => None
+        case x: EntityNotFoundException => None
       }
     }
   }
@@ -20,6 +20,14 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
   def save(data: T): T = {
     val t = transactional {
       entityManager.merge(data)
+    }
+    entityManager.clear() //Flush 1st level cache
+    t
+  }
+
+  def saveAll(list: List[T]): List[T] = {
+    val t = transactional {
+      list.map(entityManager.merge(_))
     }
     entityManager.clear() //Flush 1st level cache
     t

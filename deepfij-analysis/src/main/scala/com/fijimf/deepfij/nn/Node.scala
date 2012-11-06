@@ -6,7 +6,6 @@ class Node {
   def propagate() = {
 
   }
-
 }
 
 case class Layer(theta: DenseMatrix[Double]) {
