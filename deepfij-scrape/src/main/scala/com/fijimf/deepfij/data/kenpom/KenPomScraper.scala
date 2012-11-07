@@ -14,7 +14,6 @@ import io.{BufferedSource, Source}
 case class KenPomScraper(url: String) extends TextScraper {
 
   lazy val gameData: List[(String, String, String, String, String)] = loadURL(url).map(s => {
-
     val d = s.substring(0, 10)
     val at = s.substring(11, 33).trim()
     val as = s.substring(34, 37).trim()

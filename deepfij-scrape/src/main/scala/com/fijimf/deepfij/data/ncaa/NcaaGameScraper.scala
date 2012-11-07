@@ -11,6 +11,7 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
 
 
   val names = teams.values.toList
+
   override def aliasList = teams.toList
 
   def loadDateGames(d: Date): Option[GameResponse] = {
@@ -22,7 +23,7 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
 
     val h = new Http()
     def parseGameResponse(s: String): Option[GameResponse] = {
-      val j = s.replaceFirst("""^callbackWrapper\(\{""", "{").replaceFirst("""\}\)$""", "}").replaceAll(""",\s+,""", ",")
+      val j = s.replaceFirst( """^callbackWrapper\(\{""", "{").replaceFirst( """\}\)$""", "}").replaceAll( """,\s+,""", ",")
       try {
         Some(parse[GameResponse](j))
       } catch {
@@ -49,7 +50,6 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
   def dirtyTeamList = teams.values.map((_, 1.0)).toList
 
 
-
   def gameList(date: Date): List[(String, Option[Int], String, Option[Int])] = {
     (for (gr <- loadDateGames(date).toList;
           sb <- gr.scoreboard;
@@ -60,12 +60,21 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
     }).toList
   }
 
-  def teamData(t: Team):(String,  Option[Int]) ={
+  def teamData(t: Team): (String, Option[Int]) = {
     val name = teams.getOrElse(t.key, t.name)
     val score = t.scoreBreakdown match {
       case Nil => None
       case xs => Some(xs.map(_.toInt).sum)
     }
     (name, score)
+  }
+}
+
+object Junk {
+  def main(args: Array[String]) {
+    val scraper: NcaaGameScraper = new NcaaGameScraper(Map.empty)
+    val games: Option[GameResponse] = scraper.loadDateGames(new SimpleDateFormat("yyyyMMdd").parse("20121109"))
+    println(games.get)
+
   }
 }
