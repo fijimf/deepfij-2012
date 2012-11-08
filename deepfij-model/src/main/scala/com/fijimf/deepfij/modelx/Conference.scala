@@ -83,7 +83,7 @@ class ConferenceDao extends BaseDao[Conference, Long] with KeyedObjectDao[Confer
   def findByKey(sk: String, k: String): Option[Conference] = {
     try {
       val c: Conference = entityManager.createQuery("SELECT q FROM Conference q where q.schedule.key=:scheduleKey AND key=:key").setParameter("scheduleKey", sk).setParameter("key", k).getSingleResult.asInstanceOf[Conference]
-      println(c.name + " " + c.teams.size)
+      // println(c.name + " " + c.teams.size)
       Some(c)
     }
     catch {

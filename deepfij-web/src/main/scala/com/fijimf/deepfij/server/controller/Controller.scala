@@ -19,7 +19,9 @@ class Controller extends ScalatraFilter with ScalateSupport with ScheduleControl
   val sd = new ScheduleDao()
   val std = new TeamStatDao()
 
-  val scraper =null// Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
+  lazy val schedule = sd.findPrimary().get
+
+  val scraper = null // Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
 
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 

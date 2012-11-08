@@ -109,11 +109,11 @@ class TeamDao extends BaseDao[Team, Long] {
   def findByKey(k: String): Option[Team] = {
     try {
       val t: Team = entityManager.createQuery("SELECT q FROM Team q WHERE q.schedule.isPrimary=true AND key=:key").setParameter("key", k).getSingleResult.asInstanceOf[Team]
-      println(t.name + " " +
-        t.conference.name + " " +
-        t.conferenceGames.size + " " +
-        t.wins.size + " " +
-        t.losses.size + " ")
+      //      println(t.name + " " +
+      //        t.conference.name + " " +
+      //        t.conferenceGames.size + " " +
+      //        t.wins.size + " " +
+      //        t.losses.size + " ")
       Some(t)
     }
     catch {
@@ -125,11 +125,11 @@ class TeamDao extends BaseDao[Team, Long] {
   def findByKey(sk: String, k: String): Option[Team] = {
     try {
       val t: Team = entityManager.createQuery("SELECT q FROM Team q WHERE q.schedule.key=:scheduleKey AND q.key=:key").setParameter("key", k).setParameter("scheduleKey", sk).getSingleResult.asInstanceOf[Team]
-      println(t.name + " " +
-        t.conference.name + " " +
-        t.conferenceGames.size + " " +
-        t.wins.size + " " +
-        t.losses.size + " ")
+      //      println(t.name + " " +
+      //        t.conference.name + " " +
+      //        t.conferenceGames.size + " " +
+      //        t.wins.size + " " +
+      //        t.losses.size + " ")
       Some(t)
     }
     catch {

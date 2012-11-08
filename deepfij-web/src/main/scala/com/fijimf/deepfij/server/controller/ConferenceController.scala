@@ -7,7 +7,7 @@ trait ConferenceController {
 
   get("/conference/:key") {
     contentType = "text/html"
-    cd.findByKey(params("key")) match {
+    schedule.conferenceByKey.get(params("key")) match {
       case Some(c) => BasePage(title = c.name, content = Some(ConferencePanel(c))).toHtml5()
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
     }
