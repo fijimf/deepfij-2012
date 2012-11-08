@@ -4,7 +4,6 @@ import javax.persistence._
 import java.util.Date
 import annotation.target.field
 import scala.collection.JavaConversions._
-import com.fijimf.deepfij.util.FromStringMap
 import org.apache.commons.lang.StringUtils
 import com.fijimf.deepfij.util.Validation._
 import scala.Some

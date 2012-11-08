@@ -137,7 +137,6 @@ object NcaaTeamScraper extends HttpScraper {
         </td> => Some((colorsKey -> colors.text))
       case _ => None
     }).flatten.toMap
-
     val optColors = detailMap.get(colorsKey)
     if (optColors.isDefined) {
       val carr: Array[String] = optColors.get.trim.split('&')

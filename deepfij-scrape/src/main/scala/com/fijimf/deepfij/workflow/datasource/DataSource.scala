@@ -3,7 +3,7 @@ package com.fijimf.deepfij.workflow.datasource
 import com.fijimf.deepfij.modelx.{Schedule, KeyedObject}
 import java.util.Date
 
-trait DataSource[T <: KeyedObject] {
+trait DataSource[T <: KeyedObject] extends Builder[T] {
 
   def load: List[Map[String, String]]
 
