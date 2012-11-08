@@ -3,17 +3,10 @@ package com.fijimf.deepfij.data.ncaa
 import java.util.Date
 import java.text.SimpleDateFormat
 import dispatch.{url, Http}
-import com.fijimf.deepfij.data.generic.GameReader
 import json.{Team, GameResponse}
 import com.codahale.jerkson.Json._
 
-class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
-
-
-  val names = teams.values.toList
-
-  override def aliasList = teams.toList
-
+class NcaaGameScraper(teams: Map[String, String]) {
   def loadDateGames(d: Date): Option[GameResponse] = {
     val year = new SimpleDateFormat("yyyy").format(d)
     val month = new SimpleDateFormat("MM").format(d)
@@ -47,8 +40,6 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
     }
   }
 
-  def dirtyTeamList = teams.values.map((_, 1.0)).toList
-
 
   def gameList(date: Date): List[(String, Option[Int], String, Option[Int])] = {
     (for (gr <- loadDateGames(date).toList;
@@ -67,14 +58,5 @@ class NcaaGameScraper(teams: Map[String, String]) extends GameReader {
       case xs => Some(xs.map(_.toInt).sum)
     }
     (name, score)
-  }
-}
-
-object Junk {
-  def main(args: Array[String]) {
-    val scraper: NcaaGameScraper = new NcaaGameScraper(Map.empty)
-    val games: Option[GameResponse] = scraper.loadDateGames(new SimpleDateFormat("yyyyMMdd").parse("20121109"))
-    println(games.get)
-
   }
 }
