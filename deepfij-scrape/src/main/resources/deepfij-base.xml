@@ -18,8 +18,9 @@
             </reader>
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource">
-
+            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComResultSource">
+                <parameter key="startDate" value="20121109"/>
+                <parameter key="endDate" value="20130415"/>
             </reader>
         </results>
     </schedule>
