@@ -5,8 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSpec}
 import org.scalatest.matchers.ShouldMatchers._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import com.fijimf.deepfij.modelx.{Schedule, ScheduleDao, PersistenceSource}
-import com.fijimf.deepfij.workflow.ScheduleRunner
+import com.fijimf.deepfij.modelx._
 
 
 @RunWith(classOf[JUnitRunner])
@@ -15,6 +14,8 @@ class ScheduleRunnerTest extends FunSpec with BeforeAndAfterEach {
   System.setProperty("deepfij.persistenceUnitName", "deepfij-test")
 
   val scheduleDao = new ScheduleDao()
+  val teamDao = new TeamDao()
+  val conferenceDao = new ConferenceDao()
   val baseRunner = ScheduleRunner(
     "key",
     "Name",
@@ -29,9 +30,9 @@ class ScheduleRunnerTest extends FunSpec with BeforeAndAfterEach {
   override def beforeEach() {
     PersistenceSource.buildDatabase()
     PersistenceSource.entityManager.clear()
-    scheduleDao.save(new Schedule(name = "NCAA 2011-2012", key = "ncaa2012"))
-
-
+    val s = scheduleDao.save(new Schedule(name = "NCAA 2011-2012", key = "ncaa2012"))
+    val c = conferenceDao.save(new Conference(schedule = s, key = "test", name = "Test"))
+    val t = teamDao.save(new Team(schedule = s, conference = c, key = "test", name = "Test", longName = "Test"))
   }
 
   describe("A schedule runner ") {
@@ -61,7 +62,7 @@ class ScheduleRunnerTest extends FunSpec with BeforeAndAfterEach {
       baseRunner.warmStartup.status should be(Running)
 
       baseRunner.status should be(NotInitialized)
-      baseRunner.hotStartup.status should be(Running)
+      intercept[IllegalArgumentException](baseRunner.hotStartup)
 
     }
 
@@ -72,9 +73,6 @@ class ScheduleRunnerTest extends FunSpec with BeforeAndAfterEach {
       intercept[IllegalStateException](baseRunner.warmStartup.coldStartup)
       intercept[IllegalStateException](baseRunner.warmStartup.warmStartup)
       intercept[IllegalStateException](baseRunner.warmStartup.hotStartup)
-      intercept[IllegalStateException](baseRunner.hotStartup.coldStartup)
-      intercept[IllegalStateException](baseRunner.hotStartup.warmStartup)
-      intercept[IllegalStateException](baseRunner.hotStartup.hotStartup)
     }
   }
 

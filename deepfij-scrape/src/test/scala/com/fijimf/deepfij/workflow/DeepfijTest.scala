@@ -24,42 +24,47 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
 
   val baseXml = """
                   |<deepfij>
-                  |    <schedule name="NCAA 2011-2012" key="ncaa2012">
+                  |    <schedule name="NCAA 2012-2013" key="ncaa2013" status="active">
                   |        <conferences>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullConferenceSource"/>
                   |        </conferences>
                   |        <aliases>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+                  |                <parameter key="resource" value="kenpom.alias.txt"/>
+                  |            </reader>
                   |        </aliases>
                   |        <teams>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
                   |        </teams>
                   |        <games>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
                   |        </games>
                   |        <results>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource" />
                   |        </results>
                   |    </schedule>
-                  |    <schedule name="NCAA 2012-2013" key="ncaa2013">
+                  |    <schedule name="NCAA 2011-2012" key="ncaa2012" status="inactive">
                   |        <conferences>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullConferenceSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullConferenceSource"/>
                   |        </conferences>
                   |        <aliases>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullAliasSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+                  |                <parameter key="resource" value="kenpom.alias.txt"/>
+                  |            </reader>
                   |        </aliases>
                   |        <teams>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullTeamSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullTeamSource"/>
                   |        </teams>
                   |        <games>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullGameSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullGameSource"/>
                   |        </games>
                   |        <results>
-                  |            <reader class="com.fijimf.deepfij.workflow.NullResultSource"/>
+                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullResultSource">
+                  |            </reader>
                   |        </results>
                   |    </schedule>
                   |</deepfij>
-                """.stripMargin
+                  |""".stripMargin
   describe("A Deeepfij object ") {
 
     it("can be read and intialized from XML") {
@@ -72,12 +77,12 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
       df.managers.size should be(2)
 
       val s2012 = df.managers(0)
-      s2012.name should be("NCAA 2011-2012")
-      s2012.key should be("ncaa2012")
+      s2012.name should be("NCAA 2012-2013")
+      s2012.key should be("ncaa2013")
 
       val s2013 = df.managers(1)
-      s2013.name should be("NCAA 2012-2013")
-      s2013.key should be("ncaa2013")
+      s2013.name should be("NCAA 2011-2012")
+      s2013.key should be("ncaa2012")
     }
 
     it("can support cold startup use case") {
