@@ -1,11 +1,13 @@
 package com.fijimf.deepfij.data.exporter
 
-import com.fijimf.deepfij.modelx.{Schedule, Team}
-import java.util.Date
-import com.fijimf.deepfij.workflow.datasource.Exporter
+import com.fijimf.deepfij.modelx.Team
+import com.fijimf.deepfij.workflow.datasource.{TeamBuilder, Exporter}
+import java.io.FileInputStream
+import com.fijimf.deepfij.util.Logging
 
-class TeamExporter extends Exporter[Team] {
+class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Logging {
 
+  lazy val inputStream = new FileInputStream(parms("fileName"))
 
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
@@ -18,36 +20,22 @@ class TeamExporter extends Exporter[Team] {
           andThen(addNotBlank(_, "secondaryColor", secondaryColor)).
           apply(Map("key" -> key, "name" -> name, "conference" -> conference, "longName" -> longName))
       }
+      case _ => Map.empty[String, String]
     }
   }
-
 
   def toString(t: Team): String = {
     t.key + "|" + t.name + "|" + t.conference.key + "|" + t.longName + "|" + t.logoOpt.getOrElse("") + "|" + t.nicknameOpt.getOrElse("") + "|" + t.officialUrlOpt.getOrElse("") + "|" + t.primaryColorOpt.getOrElse("") + "|" + t.secondaryColorOpt.getOrElse("")
   }
 
-  def build(schedule: Schedule, data: Map[String, String]): Option[Team] = {
-    for (
-      key <- data.get("key");
-      name <- data.get("name");
-      conferenceName <- data.get("conference");
-      conference <- schedule.conferenceByName.get(conferenceName);
-      longName <- data.get("longName")
-    ) yield {
-      new Team(id = 0L,
-        schedule = schedule,
-        conference = conference,
-        key = key,
-        name = name,
-        longName = longName,
-        nickname = data.get("nickname").orNull,
-        primaryColor = data.get("primaryColor").orNull,
-        secondaryColor = data.get("secondaryColor").orNull,
-        officialUrl = data.get("officialUrl").orNull,
-        logo = data.get("logo").orNull,
-        updatedAt = new Date()
-      )
-    }
-  }
+  def update(t: Team, data: Map[String, String]) = null
 
+  def verify(t: Team, u: Team) = false
+}
+
+object Junk {
+  def main(args: Array[String]) {
+    new TeamExporter(Map("fileName"->"ncaa2013-teamm.dfj")).export("ncaa2013-teamm.dfj","ncaa2013",_.teamList)
+
+  }
 }

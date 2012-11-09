@@ -1,6 +1,6 @@
 package com.fijimf.deepfij.workflow.datasource
 
-import com.fijimf.deepfij.modelx.{Schedule, Game}
+import com.fijimf.deepfij.modelx.Game
 import java.util.Date
 import org.apache.log4j.Logger
 import java.text.SimpleDateFormat

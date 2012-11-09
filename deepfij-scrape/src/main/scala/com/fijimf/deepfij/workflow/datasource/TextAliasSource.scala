@@ -2,12 +2,11 @@ package com.fijimf.deepfij.workflow.datasource
 
 import java.io.InputStream
 import io.{Source, BufferedSource}
-import com.fijimf.deepfij.modelx.{Schedule, Alias}
+import com.fijimf.deepfij.modelx.Alias
 import java.util.Date
-import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Logging
 
-class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] with Logging {
+class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] with AliasBuilder with Logging {
 
   lazy val aliasList: List[(String, String)] = {
     val resource: String = parms("resource")
@@ -19,9 +18,9 @@ class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] with
     lst
   }
 
-  def load = aliasList.map(tup => Map("key" -> tup._2, "alias" -> tup._1))
+  def load = aliasList.map(tup => Map("team" -> tup._2, "alias" -> tup._1))
 
-  def loadAsOf(date: Date) = aliasList.map(tup => Map("key" -> tup._2, "alias" -> tup._1))
+  def loadAsOf(date: Date) = aliasList.map(tup => Map("team" -> tup._2, "alias" -> tup._1))
 
   def update(t: Alias, data: Map[String, String]) = null
 

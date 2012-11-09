@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.workflow.datasource
 
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.modelx.{Schedule, Game}
+import com.fijimf.deepfij.modelx.Game
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.util.Date
 import java.text.SimpleDateFormat
@@ -14,7 +14,7 @@ class KenPomGameSource(parms: Map[String, String]) extends DataSource[Game] with
 
   def loadAsOf(date: Date) = scraper.gameData.filter(tup => dfmt.parse(tup._1).before(date)).map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "date" -> tup._1))
 
-  val dfmt = new SimpleDateFormat("MM/dd/yyyy")
+  val dfmt = new SimpleDateFormat("yyyyMMdd")
 
   def update(t: Game, data: Map[String, String]) = null
 

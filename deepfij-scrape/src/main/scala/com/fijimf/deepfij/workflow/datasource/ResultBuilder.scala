@@ -2,8 +2,11 @@ package com.fijimf.deepfij.workflow.datasource
 
 import com.fijimf.deepfij.modelx.{Result, Schedule}
 import java.util.Date
+import java.text.SimpleDateFormat
 
 class ResultBuilder extends Builder[Result] {
+  val fmt = new SimpleDateFormat("yyyyMMdd")
+
   def build(schedule: Schedule, data: Map[String, String]) = {
     val teamsByName = schedule.teamList.map(t => (t.name -> t)).toMap
     for (homeTeamName <- data.get("homeTeam");

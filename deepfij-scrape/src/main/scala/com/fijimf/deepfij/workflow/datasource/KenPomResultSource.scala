@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.workflow.datasource
 
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.modelx.{Result, Schedule, Game}
+import com.fijimf.deepfij.modelx.{Result, Schedule}
 import com.fijimf.deepfij.data.kenpom.KenPomScraper
 import java.util.Date
 import java.text.SimpleDateFormat

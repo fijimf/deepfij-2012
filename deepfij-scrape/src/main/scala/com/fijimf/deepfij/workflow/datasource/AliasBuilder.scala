@@ -6,7 +6,7 @@ import com.fijimf.deepfij.util.Logging
 trait AliasBuilder {
   self: Logging =>
   def build(schedule: Schedule, data: Map[String, String]) = {
-    val key = data("key")
+    val key = data("team")
     val alias = data("alias")
     require(Option(key).isDefined && Option(alias).isDefined)
     val teamOption = schedule.teamByKey.get(key)
