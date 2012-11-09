@@ -12,9 +12,8 @@ class KenPomResultSource(parms: Map[String, String]) extends DataSource[Result] 
 
   def load = scraper.gameData.map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "homeScore" -> tup._3, "awayScore" -> tup._5, "date" -> tup._1))
 
-  def loadAsOf(date: Date) = scraper.gameData.filter(tup => dfmt.parse(tup._1).before(date)).map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "homeScore" -> tup._3, "awayScore" -> tup._5, "date" -> tup._1))
+  def loadAsOf(date: Date) = scraper.gameData.filter(tup => fmt.parse(tup._1).before(date)).map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "homeScore" -> tup._3, "awayScore" -> tup._5, "date" -> tup._1))
 
-  val dfmt = new SimpleDateFormat("MM/dd/yyyy")
   val fmt = new SimpleDateFormat("yyyyMMdd")
 
   def build(schedule: Schedule, data: Map[String, String]) = {
@@ -23,7 +22,7 @@ class KenPomResultSource(parms: Map[String, String]) extends DataSource[Result] 
          awayTeamName <- data.get("awayTeam");
          homeScore <- data.get("homeScore").map(_.toInt);
          awayScore <- data.get("awayScore").map(_.toInt);
-         date <- (data.get("date").map(dfmt.parse(_)));
+         date <- (data.get("date").map(fmt.parse(_)));
          homeTeam <- schedule.teamByKey.get(homeTeamName).orElse(teamsByName.get(homeTeamName)).orElse(schedule.aliasByKey.get(homeTeamName).map(_.team));
          awayTeam <- schedule.teamByKey.get(awayTeamName).orElse(teamsByName.get(awayTeamName)).orElse(schedule.aliasByKey.get(awayTeamName).map(_.team));
          game <- schedule.gameByKey.get(fmt.format(date) + ":" + homeTeam.key + ":" + awayTeam.key))
