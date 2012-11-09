@@ -4,7 +4,7 @@ import com.fijimf.deepfij.modelx.{Result, Schedule}
 import java.util.Date
 import java.text.SimpleDateFormat
 
-class ResultBuilder extends Builder[Result] {
+trait ResultBuilder extends Builder[Result] {
   val fmt = new SimpleDateFormat("yyyyMMdd")
 
   def build(schedule: Schedule, data: Map[String, String]) = {
