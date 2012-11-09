@@ -60,112 +60,112 @@
     </schedule>
     <schedule name="NCAA 2011-2012" key="ncaa2012" status="historical" primary="false" startup="cold">
         <conferences>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2012-conference-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </conferences>
         <aliases>
-            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
                 <parameter key="resource" value="kenpom.alias.txt"/>
-            </reader>
+            </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2012-alias-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </aliases>
         <teams>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2012-alias-data.txt"/>
                 <execution schedule="0 0/10 * * * ?"/>
             </data>
         </teams>
         <games>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
                 <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
                 <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </results>
     </schedule>
     <schedule name="NCAA 2010-2011" key="ncaa2011" status="historical" primary="false" startup="cold">
         <conferences>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2011-conference-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </conferences>
         <aliases>
-            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
                 <parameter key="resource" value="kenpom.alias.txt"/>
-            </reader>
+            </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </aliases>
         <teams>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
                 <execution schedule="0 0/10 * * * ?"/>
             </data>
         </teams>
         <games>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
                 <parameter key="url" value="http://kenpom.com/cbbga11.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
                 <parameter key="url" value="http://kenpom.com/cbbga11.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </results>
     </schedule>
     <schedule name="NCAA 2009-2010" key="ncaa2010" status="historical" primary="false" startup="cold">
         <conferences>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2010-conference-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </conferences>
         <aliases>
-            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
                 <parameter key="resource" value="kenpom.alias.txt"/>
-            </reader>
+            </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
                 <execution schedule="0 0 2 * * ?"/>
             </data>
         </aliases>
         <teams>
-            <reader class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
                 <execution schedule="0 0/10 * * * ?"/>
             </data>
         </teams>
         <games>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomGameSource">
                 <parameter key="url" value="http://kenpom.com/cbbga10.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </games>
         <results>
-            <reader class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
+            <data role="initializer" class="com.fijimf.deepfij.workflow.datasource.KenPomResultSource">
                 <parameter key="url" value="http://kenpom.com/cbbga10.txt"/>
-            </reader>
+            </data>
             <!--TODO add exporter for games & results -->
         </results>
     </schedule>
