@@ -32,10 +32,3 @@ class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
 
   def verify(t: Team, u: Team) = false
 }
-
-object Junk {
-  def main(args: Array[String]) {
-    new TeamExporter(Map("fileName"->"ncaa2013-teamm.dfj")).export("ncaa2013-teamm.dfj","ncaa2013",_.teamList)
-
-  }
-}
