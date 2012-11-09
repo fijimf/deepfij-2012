@@ -5,13 +5,11 @@ import datasource.DataSource
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
-import org.quartz.impl.StdSchedulerFactory
+import impl.{JobDetailImpl, StdSchedulerFactory}
 import org.quartz._
-import com.fijimf.deepfij.workflow.RichScheduleRunner
+import impl.StdSchedulerFactory
 import impl.triggers.CronTriggerImpl
 import scala.Some
-import com.fijimf.deepfij.workflow.DataManager
-import java.util.Date
 
 /**
  * Solves the following problem.
@@ -48,18 +46,14 @@ import java.util.Date
  *
  */
 
-object Quartz {
-  val scheduler = StdSchedulerFactory.getDefaultScheduler();
+object Cron {
+  val scheduler = new SChed
   scheduler.start()
 
   def scheduleJob(name: String, group: String, cron: String, f: () => Unit) {
 
-    JobBuilder.newJob().
-    val job: JobDetail = new Job {
-      def execute(jec: JobExecutionContext) {
-        f()
-      }
-    }
+    JobBuilder.newJob().ofType(classOf[JobHack]).
+
 
     // Trigger the job to run now, and then repeat every 40 seconds
     val trigger: Trigger = new CronTriggerImpl(name, group, cron)
@@ -80,6 +74,18 @@ object Quartz {
   }
 }
 
+class JobHack() extends Job {
+  var f: () => Unit
+
+  def setF(tf: () => Unit) {
+    f = tf
+  }
+
+  def execute(p1: JobExecutionContext) {
+    f()
+  }
+}
+
 case class DataManager[T <: KeyedObject](initializer: Option[DataSource], updater: Option[DataSource], exporter: Option[DataSource], verfifer: Option[DataSource]) {
 
 }
@@ -87,10 +93,10 @@ case class DataManager[T <: KeyedObject](initializer: Option[DataSource], update
 case class RichScheduleRunner(key: String,
                               name: String,
                               conferenceMgr: DataManager[Conference],
-                              teamMgr: List[DataSource[Team]],
-                              aliasMgr: List[DataSource[Alias]],
-                              gameMgr: List[DataSource[Game]],
-                              resultMgr: List[DataSource[Result]]) {
+                              teamMgr: DataManager[Team],
+                              aliasMgr: DataManager[Alias],
+                              gameMgr: DataManager[Game],
+                              resultMgr: DataManager[Result]) {
 
   val log = Logger.getLogger(this.getClass)
   require(StringUtils.isNotBlank(name) && validName(name))
