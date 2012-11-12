@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.modelx._
-import datasource.DataSource
+import datasource.{Exporter, DataSource}
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
@@ -63,7 +63,7 @@ object Cron {
   }
 }
 
-case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[DataSource[T]], verfier: Option[DataSource[T]]) {
+case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[Exporter[T]], verfier: Option[DataSource[T]]) {
 
 }
 
@@ -75,7 +75,7 @@ object RichScheduleRunner {
       case Some("active") => ActiveSchedule
       case _ => HistoricalSchedule
     }
-    val primary = n.attribute("primary").map(_.text).map(_.toBoolean).getOrElse(false)
+    val isPrimary = n.attribute("primary").map(_.text).map(_.toBoolean).getOrElse(false)
     val startup = n.attribute("startup").map(_.text) match {
       case Some("hot") => HotStartup
       case Some("cold") => ColdStartup
@@ -86,7 +86,7 @@ object RichScheduleRunner {
       key = key,
       name = name,
       status = status,
-      primary = primary,
+      isPrimary = isPrimary,
       startup = startup,
       conferenceMgr = parseManager[Conference](n, "conferences"),
       aliasMgr = parseManager[Alias](n, "aliases"),
@@ -140,7 +140,7 @@ case object HistoricalSchedule extends ScheduleStatus
 case class RichScheduleRunner(key: String,
                               name: String,
                               status: ScheduleStatus,
-                              primary: Boolean,
+                              isPrimary: Boolean,
                               startup: StartupMode,
                               conferenceMgr: DataManager[Conference],
                               teamMgr: DataManager[Team],
@@ -152,10 +152,13 @@ case class RichScheduleRunner(key: String,
   require(StringUtils.isNotBlank(name) && validName(name))
   require(StringUtils.isNotBlank(key) && validKey(key))
 
-  log.info("Initializing ")
+  log.info("Initializing schedule %s(%s)".format(name, key))
+  if (isPrimary) log.info("%s is the primary schedule of this instance")
+
 
   startup match {
     case ColdStartup => {
+      log.info("COLD startup everything will be initialized.")
       val sd = new ScheduleDao
       sd.findByKey(key).map(s => {
         log.info("Dropping existing schedule with key %s".format(key))
@@ -168,11 +171,12 @@ case class RichScheduleRunner(key: String,
         andThen(s => aliasMgr.initializer.map(i => load[Alias](s, i, new AliasDao())).getOrElse(s)).
         andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
         andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
-        apply(new Schedule(key = key, name = name))
-      log.info("Initialization is complete.  Starting game/result monitor")
+        apply(new Schedule(key = key, name = name, isPrimary = isPrimary))
+      log.info("Initialization is complete.")
     }
 
     case WarmStartup => {
+      log.info("WARM startup initialization as needed.")
       val sd = new ScheduleDao
       val schedule = sd.findByKey(key) match {
         case Some(s) => s
@@ -189,10 +193,18 @@ case class RichScheduleRunner(key: String,
 
     }
     case HotStartup => {
-
+      log.info("HOT startup no initialization, just start update jobs")
     }
-
   }
+
+  List(
+    (conferenceMgr.exporter, key + "-conferences.txt", (s: Schedule) => s.conferenceList),
+    (teamMgr.exporter, key + "-teams.txt", (s: Schedule) => s.teamList),
+    (aliasMgr.exporter, key + "-aliases.txt", (s: Schedule) => s.aliasList),
+    (gameMgr.exporter, key + "-games.txt", (s: Schedule) => s.gameList),
+    (resultMgr.exporter, key + "-results.txt", (s: Schedule) => s.gameList.map(_.result).flatten)
+  ).filter(_._1.isDefined).foreach(tup => tup._1.get.export(tup._2, key, tup._3))
+
 
   private def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     val list: List[Map[String, String]] = ds.load
