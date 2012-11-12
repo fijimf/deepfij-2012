@@ -9,6 +9,7 @@ import it.sauronsoftware.cron4j.Scheduler
 import xml.{NodeSeq, Node}
 import util.control.Exception._
 import scala.Some
+import collection.immutable.Seq
 
 /**
  * Solves the following problem.
@@ -62,7 +63,7 @@ object Cron {
   }
 }
 
-case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[DataSource[T]], verfifer: Option[DataSource[T]]) {
+case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[DataSource[T]], verfier: Option[DataSource[T]]) {
 
 }
 
@@ -70,12 +71,15 @@ object RichScheduleRunner {
   def fromNode(n: Node): RichScheduleRunner = {
     val key = n.attribute("key").map(_.text).getOrElse("")
     val name = n.attribute("name").map(_.text).getOrElse("")
-    val status = n.attribute("status").map(_.text).getOrElse("")
+    val status = n.attribute("status").map(_.text) match {
+      case Some("active") => ActiveSchedule
+      case _ => HistoricalSchedule
+    }
     val primary = n.attribute("primary").map(_.text).map(_.toBoolean).getOrElse(false)
     val startup = n.attribute("startup").map(_.text) match {
       case Some("hot") => HotStartup
       case Some("cold") => ColdStartup
-      case _ => WarmStartop
+      case _ => WarmStartup
     }
 
     RichScheduleRunner(
@@ -84,23 +88,19 @@ object RichScheduleRunner {
       status = status,
       primary = primary,
       startup = startup,
-      conferenceManager = parseManager[Conference](n, "conferences"),
-      aliasManager = parseManager[Alias](n, "aliases"),
-      teamManager = parseManager[Team](n, "teams"),
-      gameManager = parseManager[Game](n, "games"),
-      resultManager = parseManager[Result](n, "results")
+      conferenceMgr = parseManager[Conference](n, "conferences"),
+      aliasMgr = parseManager[Alias](n, "aliases"),
+      teamMgr = parseManager[Team](n, "teams"),
+      gameMgr = parseManager[Game](n, "games"),
+      resultMgr = parseManager[Result](n, "results")
     )
   }
 
-  def parseManager[T <: KeyedObject](n: Node, t: String): Option[DataManager[T]] = {
-    val value = for (
-      cn <- (n \ t);
-      dn <- (cn \ "data");
-      rn <- dn.attribute("role");
-      tn <- dn.attribute("class")) yield {
-      (dn \ "parameter") match {
+  def parseManager[T <: KeyedObject](n: Node, t: String): DataManager[T] = {
+    def getConstructor(dn: Node): Option[(String) => DataSource[T]] = {
+      dn \ "parameter" match {
         case NodeSeq.Empty => {
-          catching(classOf[Exception]).opt(Class.forName(tn.text).newInstance().asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(_).newInstance().asInstanceOf[DataSource[T]])
         }
         case s: NodeSeq => {
           val parameters = (for (
@@ -109,13 +109,23 @@ object RichScheduleRunner {
             v <- ss.attribute("value")) yield {
             k.text -> v.text
           }).toMap
-          println(parameters)
-          catching(classOf[Exception]).opt(Class.forName(tn.text).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
         }
       }
-
     }
-    value.toList.flatten
+    val functions: Seq[(DataManager[T]) => DataManager[T]] = for (
+      cn <- (n \ t);
+      dn <- (cn \ "data");
+      rn <- dn.attribute("role");
+      tn <- dn.attribute("class")) yield {
+      rn.text match {
+        case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dn).map(_.apply(tn.text)))
+        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(_.apply(tn.text)))
+        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(_.apply(tn.text)))
+        case "verifier" => (d: DataManager[T]) => d.copy(verfier = getConstructor(dn).map(_.apply(tn.text)))
+      }
+    }
+    functions.foldLeft(DataManager[T](None, None, None, None))((dm, f) => f(dm))
   }
 
 }
@@ -144,12 +154,6 @@ case class RichScheduleRunner(key: String,
 
   log.info("Initializing ")
 
-  val cd = new ConferenceDao
-  val td = new TeamDao
-  val ad = new AliasDao
-  val gd = new GameDao
-  val rd = new ResultDao
-
   startup match {
     case ColdStartup => {
       val sd = new ScheduleDao
@@ -159,11 +163,11 @@ case class RichScheduleRunner(key: String,
       })
       log.info("Creating schedule with key %s".format(key))
       (sd.save _).
-        andThen(s => conferenceMgr.initializer.foreach(i => load[Conference](s, i, new ConferenceDao()))).
-        andThen(s => teamMgr.initializer.foreach(i => load[Team](s, i, new TeamDao()))).
-        andThen(s => aliasMgr.initializer.foreach(i => load[Alias](s, i, new AliasDao()))).
-        andThen(s => gameMgr.initializer.foreach(i => load[Game](s, i, new GameDao()))).
-        andThen(s => resultMgr.initializer.foreach(i => load[Result](s, i, new ResultDao()))).
+        andThen(s => conferenceMgr.initializer.map(i => load[Conference](s, i, new ConferenceDao())).getOrElse(s)).
+        andThen(s => teamMgr.initializer.map(i => load[Team](s, i, new TeamDao())).getOrElse(s)).
+        andThen(s => aliasMgr.initializer.map(i => load[Alias](s, i, new AliasDao())).getOrElse(s)).
+        andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
+        andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
         apply(new Schedule(key = key, name = name))
       log.info("Initialization is complete.  Starting game/result monitor")
     }
@@ -175,13 +179,13 @@ case class RichScheduleRunner(key: String,
         case None => sd.save(new Schedule(key = key, name = name))
       }
       (sd.save _).
-        andThen(s => conferenceMgr.initializer.foreach(i => loadIfEmpty[Conference](s, s.conferenceList.isEmpty, i, new ConferenceDao()))).
-        andThen(s => teamMgr.initializer.foreach(i => loadIfEmpty[Team](s, s.teamList.isEmpty, i, new TeamDao()))).
-        andThen(s => aliasMgr.initializer.foreach(i => loadIfEmpty[Alias](s, s.aliasList.isEmpty, i, new AliasDao()))).
-        andThen(s => gameMgr.initializer.foreach(i => loadIfEmpty[Game](s, s.gameList.isEmpty, i, new GameDao()))).
-        andThen(s => resultMgr.initializer.foreach(i => loadIfEmpty[Game](s, s.resultList.isEmpty, i, new ResultDao()))).
+        andThen(s => conferenceMgr.initializer.map(i => loadIfEmpty[Conference](s, _.conferenceList.isEmpty, i, new ConferenceDao())).getOrElse(s)).
+        andThen(s => teamMgr.initializer.map(i => loadIfEmpty[Team](s, _.teamList.isEmpty, i, new TeamDao())).getOrElse(s)).
+        andThen(s => aliasMgr.initializer.map(i => loadIfEmpty[Alias](s, _.aliasList.isEmpty, i, new AliasDao())).getOrElse(s)).
+        andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
+        andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
         apply(schedule)
-        log.info("Initialization is complete.  Starting game/result monitor")
+      log.info("Initialization is complete.  Starting game/result monitor")
 
     }
     case HotStartup => {
@@ -197,7 +201,7 @@ case class RichScheduleRunner(key: String,
       log.info("Saving " + t.key)
       t
     })
-    sd.findByKey(schedule.key).getOrElse(schedule)
+    new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
   }
 
   private def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
@@ -205,7 +209,7 @@ case class RichScheduleRunner(key: String,
       for (data <- ds.load; t <- ds.build(schedule, data)) {
         dao.save(t)
       }
-      sd.findByKey(schedule.key).getOrElse(schedule)
+      new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
     } else {
       schedule
     }
