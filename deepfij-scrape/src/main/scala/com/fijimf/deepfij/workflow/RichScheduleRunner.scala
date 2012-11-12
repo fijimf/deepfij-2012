@@ -5,10 +5,9 @@ import datasource.DataSource
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
-import impl.{JobDetailImpl, StdSchedulerFactory}
-import org.quartz._
-import impl.StdSchedulerFactory
-import impl.triggers.CronTriggerImpl
+import it.sauronsoftware.cron4j.Scheduler
+import xml.{NodeSeq, Node}
+import util.control.Exception._
 import scala.Some
 
 /**
@@ -47,51 +46,92 @@ import scala.Some
  */
 
 object Cron {
-  val scheduler = new SChed
+  val scheduler = new Scheduler
   scheduler.start()
 
-  def scheduleJob(name: String, group: String, cron: String, f: () => Unit) {
-
-    JobBuilder.newJob().ofType(classOf[JobHack]).
-
-
-    // Trigger the job to run now, and then repeat every 40 seconds
-    val trigger: Trigger = new CronTriggerImpl(name, group, cron)
-      .withIdentity("trigger1", "group1")
-      .startNow()
-      .withSchedule(simpleSchedule()
-      .withIntervalInSeconds(40)
-      .repeatForever())
-      .build();
-
-    // Tell quartz to schedule the job using our trigger
-    scheduler.scheduleJob(job, trigger);
-
+  def scheduleJob(cron: String, f: () => Unit): String = {
+    scheduler.schedule(cron, new Runnable() {
+      def run() {
+        f()
+      }
+    })
   }
 
   def shutdown() {
-    scheduler.shutdown();
+    scheduler.stop;
   }
 }
 
-class JobHack() extends Job {
-  var f: () => Unit
-
-  def setF(tf: () => Unit) {
-    f = tf
-  }
-
-  def execute(p1: JobExecutionContext) {
-    f()
-  }
-}
-
-case class DataManager[T <: KeyedObject](initializer: Option[DataSource], updater: Option[DataSource], exporter: Option[DataSource], verfifer: Option[DataSource]) {
+case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[DataSource[T]], verfifer: Option[DataSource[T]]) {
 
 }
+
+object RichScheduleRunner {
+  def fromNode(n: Node): RichScheduleRunner = {
+    val key = n.attribute("key").map(_.text).getOrElse("")
+    val name = n.attribute("name").map(_.text).getOrElse("")
+    val status = n.attribute("status").map(_.text).getOrElse("")
+    val primary = n.attribute("primary").map(_.text).map(_.toBoolean).getOrElse(false)
+    val startup = n.attribute("startup").map(_.text) match {
+      case Some("hot") => HotStartup
+      case Some("cold") => ColdStartup
+      case _ => WarmStartop
+    }
+
+    RichScheduleRunner(
+      key = key,
+      name = name,
+      status = status,
+      primary = primary,
+      startup = startup,
+      conferenceManager = parseManager[Conference](n, "conferences"),
+      aliasManager = parseManager[Alias](n, "aliases"),
+      teamManager = parseManager[Team](n, "teams"),
+      gameManager = parseManager[Game](n, "games"),
+      resultManager = parseManager[Result](n, "results")
+    )
+  }
+
+  def parseManager[T <: KeyedObject](n: Node, t: String): Option[DataManager[T]] = {
+    val value = for (
+      cn <- (n \ t);
+      dn <- (cn \ "data");
+      rn <- dn.attribute("role");
+      tn <- dn.attribute("class")) yield {
+      (dn \ "parameter") match {
+        case NodeSeq.Empty => {
+          catching(classOf[Exception]).opt(Class.forName(tn.text).newInstance().asInstanceOf[DataSource[T]])
+        }
+        case s: NodeSeq => {
+          val parameters = (for (
+            ss <- s;
+            k <- ss.attribute("key");
+            v <- ss.attribute("value")) yield {
+            k.text -> v.text
+          }).toMap
+          println(parameters)
+          catching(classOf[Exception]).opt(Class.forName(tn.text).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
+        }
+      }
+
+    }
+    value.toList.flatten
+  }
+
+}
+
+sealed trait ScheduleStatus
+
+case object ActiveSchedule extends ScheduleStatus
+
+case object HistoricalSchedule extends ScheduleStatus
+
 
 case class RichScheduleRunner(key: String,
                               name: String,
+                              status: ScheduleStatus,
+                              primary: Boolean,
+                              startup: StartupMode,
                               conferenceMgr: DataManager[Conference],
                               teamMgr: DataManager[Team],
                               aliasMgr: DataManager[Alias],
@@ -104,14 +144,53 @@ case class RichScheduleRunner(key: String,
 
   log.info("Initializing ")
 
-  val sd = new ScheduleDao
   val cd = new ConferenceDao
   val td = new TeamDao
   val ad = new AliasDao
   val gd = new GameDao
   val rd = new ResultDao
 
-  def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+  startup match {
+    case ColdStartup => {
+      val sd = new ScheduleDao
+      sd.findByKey(key).map(s => {
+        log.info("Dropping existing schedule with key %s".format(key))
+        sd.delete(s.id)
+      })
+      log.info("Creating schedule with key %s".format(key))
+      (sd.save _).
+        andThen(s => conferenceMgr.initializer.foreach(i => load[Conference](s, i, new ConferenceDao()))).
+        andThen(s => teamMgr.initializer.foreach(i => load[Team](s, i, new TeamDao()))).
+        andThen(s => aliasMgr.initializer.foreach(i => load[Alias](s, i, new AliasDao()))).
+        andThen(s => gameMgr.initializer.foreach(i => load[Game](s, i, new GameDao()))).
+        andThen(s => resultMgr.initializer.foreach(i => load[Result](s, i, new ResultDao()))).
+        apply(new Schedule(key = key, name = name))
+      log.info("Initialization is complete.  Starting game/result monitor")
+    }
+
+    case WarmStartup => {
+      val sd = new ScheduleDao
+      val schedule = sd.findByKey(key) match {
+        case Some(s) => s
+        case None => sd.save(new Schedule(key = key, name = name))
+      }
+      (sd.save _).
+        andThen(s => conferenceMgr.initializer.foreach(i => loadIfEmpty[Conference](s, s.conferenceList.isEmpty, i, new ConferenceDao()))).
+        andThen(s => teamMgr.initializer.foreach(i => loadIfEmpty[Team](s, s.teamList.isEmpty, i, new TeamDao()))).
+        andThen(s => aliasMgr.initializer.foreach(i => loadIfEmpty[Alias](s, s.aliasList.isEmpty, i, new AliasDao()))).
+        andThen(s => gameMgr.initializer.foreach(i => loadIfEmpty[Game](s, s.gameList.isEmpty, i, new GameDao()))).
+        andThen(s => resultMgr.initializer.foreach(i => loadIfEmpty[Game](s, s.resultList.isEmpty, i, new ResultDao()))).
+        apply(schedule)
+        log.info("Initialization is complete.  Starting game/result monitor")
+
+    }
+    case HotStartup => {
+
+    }
+
+  }
+
+  private def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     val list: List[Map[String, String]] = ds.load
     log.info("Loaded " + list.size + " observations.")
     dao.saveAll(for (data <- list; t <- ds.build(schedule, data)) yield {
@@ -121,7 +200,7 @@ case class RichScheduleRunner(key: String,
     sd.findByKey(schedule.key).getOrElse(schedule)
   }
 
-  def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+  private def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
     if (emptyTest(schedule)) {
       for (data <- ds.load; t <- ds.build(schedule, data)) {
         dao.save(t)
@@ -133,64 +212,41 @@ case class RichScheduleRunner(key: String,
   }
 
 
-  def coldStartup: RichScheduleRunner = {
-    log.info("Cold startup")
-    if (status != NotInitialized) {
-      log.warn("Cannot call startup on an itialized ScheduleRunner")
-      throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
-    }
-    sd.findByKey(key).map(s => {
-      log.info("Dropping existing schedule with key %s".format(key))
-      sd.delete(s.id)
-    })
-    log.info("Creating schedule with key %s".format(key))
-    val schedule =
-      (sd.save _).
-        andThen(load[Conference](_, conferenceReaders.head, cd)).
-        andThen(load[Team](_, teamReaders.head, td)).
-        andThen(load[Alias](_, aliasReaders.head, ad)).
-        andThen(load[Game](_, gameReaders.head, gd)).
-        andThen(load[Result](_, resultReaders.head, rd)).
-        apply(new Schedule(key = key, name = name))
-    log.info("Initialization is complete.  Starting game/result monitor")
-    copy(status = Running)
-  }
-
-  def warmStartup: RichScheduleRunner = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
-    val schedule = sd.findByKey(key) match {
-      case Some(s) => s
-      case None => sd.save(new Schedule(key = key, name = name))
-    }
-    (sd.save _).
-      andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
-      andThen(loadIfEmpty[Team](_, _.teamList.isEmpty, teamReaders.head, td)).
-      andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty, aliasReaders.head, ad)).
-      andThen(loadIfEmpty[Game](_, _.gameList.isEmpty, gameReaders.head, gd)).
-      apply(schedule)
-    log.info("Initialization is complete.  Starting game/result monitor")
-    copy(status = Running)
-  }
-
-
-  def hotStartup: RichScheduleRunner = {
-    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
-    val schedule = sd.findByKey(key) match {
-      case Some(s) => s
-      case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
-    }
-    require(!schedule.conferenceList.isEmpty, "Hot startup failed.  No conferences are known.")
-    require(!schedule.teamList.isEmpty, "Hot startup failed.  No teams are known.")
-    log.info("Hot startup succeeded.  Starting game/result monitor")
-
-    copy(status = Running)
-  }
-
-  def periodicCheck {
-  }
-
-  def periodicUpdate {
-  }
+  //  def warmStartup: RichScheduleRunner = {
+  //    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
+  //    val schedule = sd.findByKey(key) match {
+  //      case Some(s) => s
+  //      case None => sd.save(new Schedule(key = key, name = name))
+  //    }
+  //    (sd.save _).
+  //      andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
+  //      andThen(loadIfEmpty[Team](_, _.teamList.isEmpty, teamReaders.head, td)).
+  //      andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty, aliasReaders.head, ad)).
+  //      andThen(loadIfEmpty[Game](_, _.gameList.isEmpty, gameReaders.head, gd)).
+  //      apply(schedule)
+  //    log.info("Initialization is complete.  Starting game/result monitor")
+  //    copy(status = Running)
+  //  }
+  //
+  //
+  //  def hotStartup: RichScheduleRunner = {
+  //    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
+  //    val schedule = sd.findByKey(key) match {
+  //      case Some(s) => s
+  //      case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
+  //    }
+  //    require(!schedule.conferenceList.isEmpty, "Hot startup failed.  No conferences are known.")
+  //    require(!schedule.teamList.isEmpty, "Hot startup failed.  No teams are known.")
+  //    log.info("Hot startup succeeded.  Starting game/result monitor")
+  //
+  //    copy(status = Running)
+  //  }
+  //
+  //  def periodicCheck {
+  //  }
+  //
+  //  def periodicUpdate {
+  //  }
 
 
 }

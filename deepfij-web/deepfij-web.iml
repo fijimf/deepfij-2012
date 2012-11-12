@@ -102,6 +102,17 @@
     <orderEntry type="library" name="Maven: joda-time:joda-time:1.6.2" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time-hibernate:1.2" level="project" />
     <orderEntry type="module" module-name="deepfij-scrape" />
+    <orderEntry type="library" name="Maven: net.databinder:dispatch-http_2.9.1:0.8.5" level="project" />
+    <orderEntry type="library" name="Maven: net.databinder:dispatch-core_2.9.1:0.8.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.4" level="project" />
+    <orderEntry type="library" name="Maven: net.databinder:dispatch-futures_2.9.1:0.8.5" level="project" />
+    <orderEntry type="library" name="Maven: org.ccil.cowan.tagsoup:tagsoup:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.clojars.gmazelier:cron4j:2.2.5" level="project" />
+    <orderEntry type="library" name="Maven: com.codahale:jerkson_2.9.1:0.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.11" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.shiro:shiro-core:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.shiro:shiro-web:1.2.0" level="project" />
