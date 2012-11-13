@@ -10,7 +10,7 @@ import com.fijimf.deepfij.util.Timing._
 
 object NcaaTeamScraper extends HttpScraper {
   val logger = Logger.getLogger(NcaaTeamScraper.getClass)
-  ForkJoinTasks.defaultForkJoinPool.setParallelism(36)
+  ForkJoinTasks.defaultForkJoinPool.setParallelism(24)
 
   lazy val teamData: List[Map[String, String]] = {
     logger.info("Scraping NCAA.com for teams and conferences.")
