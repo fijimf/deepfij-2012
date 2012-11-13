@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.data.exporter
 
-import com.fijimf.deepfij.workflow.datasource.{AliasBuilder, Exporter}
+import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.datasource.AliasBuilder
 import com.fijimf.deepfij.modelx.Alias
 import com.fijimf.deepfij.util.Logging
 import java.io.FileInputStream

@@ -3,6 +3,7 @@ package com.fijimf.deepfij.workflow.datasource
 import com.fijimf.deepfij.modelx.{Schedule, Game}
 import java.util.Date
 import java.text.SimpleDateFormat
+import com.fijimf.deepfij.workflow.Builder
 
 trait GameBuilder extends Builder[Game] {
   val dateFormat = new SimpleDateFormat("yyyyMMdd")

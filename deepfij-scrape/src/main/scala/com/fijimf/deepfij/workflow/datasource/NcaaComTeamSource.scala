@@ -3,8 +3,9 @@ package com.fijimf.deepfij.workflow.datasource
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
+import com.fijimf.deepfij.workflow.{Verifier, Updater, Initializer}
 
-class NcaaComTeamSource() extends DataSource[Team] with TeamBuilder {
+class NcaaComTeamSource() extends Initializer[Team] with Updater[Team] with Verifier[Team] with TeamBuilder {
 
   def load: List[Map[String, String]] = {
     NcaaTeamScraper.teamData

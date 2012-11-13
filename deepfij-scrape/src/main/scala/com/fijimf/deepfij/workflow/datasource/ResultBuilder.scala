@@ -3,6 +3,7 @@ package com.fijimf.deepfij.workflow.datasource
 import com.fijimf.deepfij.modelx.{Result, Schedule}
 import java.util.Date
 import java.text.SimpleDateFormat
+import com.fijimf.deepfij.workflow.Builder
 
 trait ResultBuilder extends Builder[Result] {
   val fmt = new SimpleDateFormat("yyyyMMdd")

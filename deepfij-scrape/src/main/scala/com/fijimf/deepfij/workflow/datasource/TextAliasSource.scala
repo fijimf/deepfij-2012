@@ -5,8 +5,9 @@ import io.{Source, BufferedSource}
 import com.fijimf.deepfij.modelx.Alias
 import java.util.Date
 import com.fijimf.deepfij.util.Logging
+import com.fijimf.deepfij.workflow.{Verifier, Updater, Initializer}
 
-class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] with AliasBuilder with Logging {
+class TextAliasSource(parms: Map[String, String]) extends Initializer[Alias] with Updater[Alias] with Verifier[Alias] with AliasBuilder with Logging {
 
   lazy val aliasList: List[(String, String)] = {
     val resource: String = parms("resource")
@@ -21,8 +22,6 @@ class TextAliasSource(parms: Map[String, String]) extends DataSource[Alias] with
   def load = aliasList.map(tup => Map("team" -> tup._2, "alias" -> tup._1))
 
   def loadAsOf(date: Date) = aliasList.map(tup => Map("team" -> tup._2, "alias" -> tup._1))
-
-  def update(t: Alias, data: Map[String, String]) = null
 
   def verify(t: Alias, u: Alias) = false
 }

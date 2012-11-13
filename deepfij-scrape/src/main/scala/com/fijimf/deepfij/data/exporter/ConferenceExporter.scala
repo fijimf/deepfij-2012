@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.data.exporter
 
-import com.fijimf.deepfij.workflow.datasource.{ConferenceBuilder, Exporter}
+import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.datasource.ConferenceBuilder
 import com.fijimf.deepfij.modelx.Conference
 import com.fijimf.deepfij.util.Logging
 import java.io.FileInputStream

@@ -6,9 +6,10 @@ import org.apache.log4j.Logger
 import java.text.SimpleDateFormat
 import com.fijimf.deepfij.util.DateStream
 import com.fijimf.deepfij.data.ncaa.NcaaGameScraper
+import com.fijimf.deepfij.workflow.{Verifier, Updater, Initializer}
 
 
-class NcaaComGameSource(parms: Map[String, String]) extends DataSource[Game] with GameBuilder {
+class NcaaComGameSource(parms: Map[String, String])extends Initializer[Game] with Updater[Game] with Verifier[Game] with GameBuilder {
   val log = Logger.getLogger(this.getClass)
 
   val scraper = new NcaaGameScraper(Map.empty)
@@ -31,8 +32,6 @@ class NcaaComGameSource(parms: Map[String, String]) extends DataSource[Game] wit
                                   g <- sc.games) yield {
     Map("homeTeam" -> g.home.key, "awayTeam" -> g.away.key, "date" -> fmt.format(date))
   }
-
-  def update(t: Game, data: Map[String, String]) = null
 
   def verify(t: Game, u: Game) = false
 }

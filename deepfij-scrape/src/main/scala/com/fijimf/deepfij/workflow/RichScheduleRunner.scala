@@ -1,7 +1,6 @@
 package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.modelx._
-import datasource.{Exporter, DataSource}
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
@@ -26,7 +25,6 @@ import collection.immutable.Seq
  * To be explicit:
  * Schedule              <= aggregate
  * T <: KeyedObject, ... <= types
- * DataSource[T]         <= source
  * BaseDao[T,_]          <= persistence
  *
  * Given those parameters we have three main use cases
@@ -63,7 +61,11 @@ object Cron {
   }
 }
 
-case class DataManager[T <: KeyedObject](initializer: Option[DataSource[T]], updater: Option[DataSource[T]], exporter: Option[Exporter[T]], verfier: Option[DataSource[T]]) {
+case class DataManager[T <: KeyedObject]
+(initializer: Option[Initializer[T]],
+ updater: Option[Updater[T]],
+ exporter: Option[Exporter[T]],
+ verifier: Option[Verifier[T]]) {
 
 }
 
@@ -97,10 +99,10 @@ object RichScheduleRunner {
   }
 
   def parseManager[T <: KeyedObject](n: Node, t: String): DataManager[T] = {
-    def getConstructor(dn: Node): Option[(String) => DataSource[T]] = {
+    def getConstructor(dn: Node): Option[(String) => Any]= {
       dn \ "parameter" match {
         case NodeSeq.Empty => {
-          catching(classOf[Exception]).opt(Class.forName(_).newInstance().asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(_).newInstance())
         }
         case s: NodeSeq => {
           val parameters = (for (
@@ -109,7 +111,7 @@ object RichScheduleRunner {
             v <- ss.attribute("value")) yield {
             k.text -> v.text
           }).toMap
-          catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(parameters).asInstanceOf[DataSource[T]])
+          catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(parameters))
         }
       }
     }
@@ -119,10 +121,10 @@ object RichScheduleRunner {
       rn <- dn.attribute("role");
       tn <- dn.attribute("class")) yield {
       rn.text match {
-        case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dn).map(_.apply(tn.text)))
-        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(_.apply(tn.text)))
-        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(_.apply(tn.text)))
-        case "verifier" => (d: DataManager[T]) => d.copy(verfier = getConstructor(dn).map(_.apply(tn.text)))
+        case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Initializer[T]]))
+        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Updater[T]]))
+        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Exporter[T]]))
+        case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Verifier[T]]))
       }
     }
     functions.foldLeft(DataManager[T](None, None, None, None))((dm, f) => f(dm))
@@ -197,16 +199,7 @@ case class RichScheduleRunner(key: String,
     }
   }
 
-  List(
-    (conferenceMgr.exporter, key + "-conferences.txt", (s: Schedule) => s.conferenceList),
-    (teamMgr.exporter, key + "-teams.txt", (s: Schedule) => s.teamList),
-    (aliasMgr.exporter, key + "-aliases.txt", (s: Schedule) => s.aliasList),
-    (gameMgr.exporter, key + "-games.txt", (s: Schedule) => s.gameList),
-    (resultMgr.exporter, key + "-results.txt", (s: Schedule) => s.gameList.map(_.result).flatten)
-  ).filter(_._1.isDefined).foreach(tup => tup._1.get.export(tup._2, key, tup._3))
-
-
-  private def load[T <: KeyedObject](schedule: Schedule, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+  private def load[T <: KeyedObject](schedule: Schedule, ds: Initializer[T], dao: BaseDao[T, _]): Schedule = {
     val list: List[Map[String, String]] = ds.load
     log.info("Loaded " + list.size + " observations.")
     dao.saveAll(for (data <- list; t <- ds.build(schedule, data)) yield {
@@ -216,7 +209,7 @@ case class RichScheduleRunner(key: String,
     new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
   }
 
-  private def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: DataSource[T], dao: BaseDao[T, _]): Schedule = {
+  private def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: Initializer[T], dao: BaseDao[T, _]): Schedule = {
     if (emptyTest(schedule)) {
       for (data <- ds.load; t <- ds.build(schedule, data)) {
         dao.save(t)
@@ -226,43 +219,4 @@ case class RichScheduleRunner(key: String,
       schedule
     }
   }
-
-
-  //  def warmStartup: RichScheduleRunner = {
-  //    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
-  //    val schedule = sd.findByKey(key) match {
-  //      case Some(s) => s
-  //      case None => sd.save(new Schedule(key = key, name = name))
-  //    }
-  //    (sd.save _).
-  //      andThen(loadIfEmpty[Conference](_, _.conferenceList.isEmpty, conferenceReaders.head, cd)).
-  //      andThen(loadIfEmpty[Team](_, _.teamList.isEmpty, teamReaders.head, td)).
-  //      andThen(loadIfEmpty[Alias](_, _.aliasList.isEmpty, aliasReaders.head, ad)).
-  //      andThen(loadIfEmpty[Game](_, _.gameList.isEmpty, gameReaders.head, gd)).
-  //      apply(schedule)
-  //    log.info("Initialization is complete.  Starting game/result monitor")
-  //    copy(status = Running)
-  //  }
-  //
-  //
-  //  def hotStartup: RichScheduleRunner = {
-  //    if (status != NotInitialized) throw new IllegalStateException("Cannot call startup on an itialized ScheduleRunner")
-  //    val schedule = sd.findByKey(key) match {
-  //      case Some(s) => s
-  //      case None => throw new IllegalStateException("Unable to startup hot if schedule '%s' doesn't exist");
-  //    }
-  //    require(!schedule.conferenceList.isEmpty, "Hot startup failed.  No conferences are known.")
-  //    require(!schedule.teamList.isEmpty, "Hot startup failed.  No teams are known.")
-  //    log.info("Hot startup succeeded.  Starting game/result monitor")
-  //
-  //    copy(status = Running)
-  //  }
-  //
-  //  def periodicCheck {
-  //  }
-  //
-  //  def periodicUpdate {
-  //  }
-
-
 }

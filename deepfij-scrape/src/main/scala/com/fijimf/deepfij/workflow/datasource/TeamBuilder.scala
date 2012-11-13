@@ -2,6 +2,7 @@ package com.fijimf.deepfij.workflow.datasource
 
 import com.fijimf.deepfij.modelx.{Team, Schedule}
 import java.util.Date
+import com.fijimf.deepfij.workflow.Builder
 
 trait TeamBuilder extends Builder[Team] {
   def build(schedule: Schedule, data: Map[String, String]): Option[Team] = {

@@ -1,7 +1,8 @@
 package com.fijimf.deepfij.data.exporter
 
 import com.fijimf.deepfij.modelx.Team
-import com.fijimf.deepfij.workflow.datasource.{TeamBuilder, Exporter}
+import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.datasource.TeamBuilder
 import java.io.FileInputStream
 import com.fijimf.deepfij.util.Logging
 
