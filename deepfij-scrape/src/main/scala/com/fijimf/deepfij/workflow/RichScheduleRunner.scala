@@ -57,7 +57,7 @@ object Cron {
   }
 
   def shutdown() {
-    scheduler.stop;
+    scheduler.stop()
   }
 }
 

@@ -29,7 +29,7 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
   //                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullConferenceSource"/>
   //                  |        </conferences>
   //                  |        <aliases>
-  //                  |            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+  //                  |            <reader class="com.fijimf.deepfij.data.custom.TextAliasSource">
   //                  |                <parameter key="resource" value="kenpom.alias.txt"/>
   //                  |            </reader>
   //                  |        </aliases>
@@ -48,7 +48,7 @@ class DeepfijTest extends FunSpec with BeforeAndAfterEach {
   //                  |            <reader class="com.fijimf.deepfij.workflow.datasource.NullConferenceSource"/>
   //                  |        </conferences>
   //                  |        <aliases>
-  //                  |            <reader class="com.fijimf.deepfij.workflow.datasource.TextAliasSource">
+  //                  |            <reader class="com.fijimf.deepfij.data.custom.TextAliasSource">
   //                  |                <parameter key="resource" value="kenpom.alias.txt"/>
   //                  |            </reader>
   //                  |        </aliases>
