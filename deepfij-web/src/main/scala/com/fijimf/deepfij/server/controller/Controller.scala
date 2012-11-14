@@ -11,7 +11,7 @@ import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 import org.scalatra.scalate.ScalateSupport
 
-class Controller extends ScalatraFilter with ScalateSupport with ScheduleController with TeamController with ConferenceController with StatsController with QuoteController {
+class Controller extends ScalatraFilter with ScalateSupport with TeamController with ConferenceController with StatsController with QuoteController {
   val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
