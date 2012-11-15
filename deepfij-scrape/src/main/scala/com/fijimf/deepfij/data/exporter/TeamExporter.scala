@@ -6,6 +6,9 @@ import com.fijimf.deepfij.workflow.datasource.TeamBuilder
 import com.fijimf.deepfij.util.Logging
 
 class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Logging {
+
+  def fileName = parms("fileName")
+
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
     s.split('|').toList match {

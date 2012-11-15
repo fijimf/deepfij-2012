@@ -7,7 +7,7 @@ import com.fijimf.deepfij.util.Logging
 
 class GameExporter(parms: Map[String, String]) extends Exporter[Game] with GameBuilder with Logging {
 
-  def fileName = parms("fileNme")
+  def fileName = parms("fileName")
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {

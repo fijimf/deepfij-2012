@@ -6,6 +6,7 @@ import com.fijimf.deepfij.modelx.Alias
 import com.fijimf.deepfij.util.Logging
 
 class AliasExporter(parms: Map[String, String]) extends Exporter[Alias] with AliasBuilder with Logging {
+  def fileName = parms("fileName")
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {

@@ -5,11 +5,11 @@ import org.junit.Assert._
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import java.io.InputStreamReader
-import com.fijimf.deepfij.util.HttpScraper
 import io.Source
 import com.fijimf.deepfij.util.Util._
 import xml.Node
 import com.fijimf.deepfij.data.ncaa.NcaaTeamScraper
+import com.fijimf.deepfij.util.HttpScraper
 
 
 object ZZZZZ {
