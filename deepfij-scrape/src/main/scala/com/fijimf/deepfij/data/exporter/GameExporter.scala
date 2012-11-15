@@ -1,12 +1,13 @@
 package com.fijimf.deepfij.data.exporter
 
-import com.fijimf.deepfij.modelx.{Game, Team}
+import com.fijimf.deepfij.modelx.Game
 import com.fijimf.deepfij.workflow.Exporter
-import com.fijimf.deepfij.workflow.datasource.TeamBuilder
+import com.fijimf.deepfij.workflow.datasource.GameBuilder
 import com.fijimf.deepfij.util.Logging
 
-class GameExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Logging {
+class GameExporter(parms: Map[String, String]) extends Exporter[Game] with GameBuilder with Logging {
 
+  def fileName = parms("fileNme")
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {
@@ -18,6 +19,6 @@ class GameExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
   }
 
   def toString(g: Game): String = {
-    g.homeTeam.key + "|" + g.awayTeam.key + "|" + yyyymmdd.format(g.date) + "|" + g.isNeutralSite.getOrElse(false).toString + "|" + g.isConferenceTournament.getOrElse(false).toString + "|" + g.isNcaaTournament.getOrElse(false).toString
+    g.homeTeam.key + "|" + g.awayTeam.key + "|" + yyyymmdd.format(g.date) + "|" + g.isNeutralSite.toString + "|" + g.isConferenceTournament.toString + "|" + g.isNcaaTournament.toString
   }
 }

@@ -8,17 +8,19 @@ import org.apache.commons.lang.StringUtils
 trait Exporter[T <: KeyedObject] {
 
   lazy val data: List[Map[String, String]] = {
-    val inputStream = new FileInputStream(filename)
+    val inputStream = new FileInputStream(fileName)
     Source.fromInputStream(inputStream).getLines().map(s => {
       fromString(s)
     }).toList
   }
 
+  def fileName :String
+
   def fromString(s: String): Map[String, String]
 
   def toString(t: T): String
 
-  def export(fileName: String, key: String, f: Schedule => List[T]) {
+  def export( key: String, f: Schedule => List[T]) {
     new ScheduleDao().findByKey(key).map(s => {
       val w: PrintWriter = new PrintWriter(new FileOutputStream(fileName))
       f(s).sortBy(_.key).foreach(t => {

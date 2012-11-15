@@ -7,6 +7,8 @@ import com.fijimf.deepfij.util.Logging
 
 class ResultExporter(parms: Map[String, String]) extends Exporter[Result] with ResultBuilder with Logging {
 
+  def fileName = parms("fileNme")
+
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {
       case homeTeamName :: awayTeamName :: date :: homeTeamScore :: awayTeamScore :: tail => {
