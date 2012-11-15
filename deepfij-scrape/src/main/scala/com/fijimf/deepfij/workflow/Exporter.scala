@@ -2,12 +2,13 @@ package com.fijimf.deepfij.workflow
 
 import com.fijimf.deepfij.modelx.{KeyedObject, ScheduleDao, Schedule}
 import io.Source
-import java.io.{InputStream, FileOutputStream, PrintWriter}
+import java.io.{FileInputStream, FileOutputStream, PrintWriter}
 import org.apache.commons.lang.StringUtils
 
 trait Exporter[T <: KeyedObject] {
 
   lazy val data: List[Map[String, String]] = {
+    val inputStream = new FileInputStream(filename)
     Source.fromInputStream(inputStream).getLines().map(s => {
       fromString(s)
     }).toList
@@ -16,8 +17,6 @@ trait Exporter[T <: KeyedObject] {
   def fromString(s: String): Map[String, String]
 
   def toString(t: T): String
-
-  def inputStream: InputStream
 
   def export(fileName: String, key: String, f: Schedule => List[T]) {
     new ScheduleDao().findByKey(key).map(s => {

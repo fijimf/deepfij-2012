@@ -3,13 +3,9 @@ package com.fijimf.deepfij.data.exporter
 import com.fijimf.deepfij.modelx.Team
 import com.fijimf.deepfij.workflow.Exporter
 import com.fijimf.deepfij.workflow.datasource.TeamBuilder
-import java.io.FileInputStream
 import com.fijimf.deepfij.util.Logging
 
 class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Logging {
-
-  lazy val inputStream = new FileInputStream(parms("fileName"))
-
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
     s.split('|').toList match {
@@ -29,7 +25,4 @@ class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
     t.key + "|" + t.name + "|" + t.conference.key + "|" + t.longName + "|" + t.logoOpt.getOrElse("") + "|" + t.nicknameOpt.getOrElse("") + "|" + t.officialUrlOpt.getOrElse("") + "|" + t.primaryColorOpt.getOrElse("") + "|" + t.secondaryColorOpt.getOrElse("")
   }
 
-  def update(t: Team, data: Map[String, String]) = null
-
-  def verify(t: Team, u: Team) = false
 }

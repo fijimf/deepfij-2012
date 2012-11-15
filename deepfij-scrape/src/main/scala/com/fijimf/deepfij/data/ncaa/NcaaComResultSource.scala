@@ -11,8 +11,8 @@ class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result
   val log = Logger.getLogger(this.getClass)
 
   val scraper = new NcaaGameScraper(Map.empty)
-  val startDate = fmt.parse(parms("startDate"))
-  val endDate = fmt.parse(parms("endDate"))
+  val startDate = yyyymmdd.parse(parms("startDate"))
+  val endDate = yyyymmdd.parse(parms("endDate"))
 
   val dates: DateStream = DateStream(startDate, endDate)
 
@@ -23,9 +23,9 @@ class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result
     val hs = g.home.scoreBreakdown.map(_.toInt).sum.toString
     val as = g.away.scoreBreakdown.map(_.toInt).sum.toString
     if (g.gameState.equalsIgnoreCase("final")) {
-      Map("homeTeam" -> g.home.key, "homeScore" -> hs, "awayTeam" -> g.away.key, "awayScore" -> as, "date" -> fmt.format(d))
+      Map("homeTeam" -> g.home.key, "homeScore" -> hs, "awayTeam" -> g.away.key, "awayScore" -> as, "date" -> yyyymmdd.format(d))
     } else {
-      Map("homeTeam" -> g.home.key, "awayTeam" -> g.away.key, "date" -> fmt.format(d))
+      Map("homeTeam" -> g.home.key, "awayTeam" -> g.away.key, "date" -> yyyymmdd.format(d))
     }
   }
 
@@ -34,7 +34,7 @@ class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result
                                   g <- sc.games) yield {
     val hs = g.home.scoreBreakdown.map(_.toInt).sum.toString
     val as = g.away.scoreBreakdown.map(_.toInt).sum.toString
-    Map("homeTeam" -> g.home.key, "homeScore" -> hs, "awayTeam" -> g.away.key, "awayScore" -> as, "date" -> fmt.format(date))
+    Map("homeTeam" -> g.home.key, "homeScore" -> hs, "awayTeam" -> g.away.key, "awayScore" -> as, "date" -> yyyymmdd.format(date))
   }
 
   def verify(t: Result, u: Result) = false
