@@ -59,7 +59,7 @@
             </data>
         </results>
     </schedule>
-    <schedule name="NCAA 2011-2012" key="ncaa2012" status="historical" primary="true" startup="cold">
+    <schedule name="NCAA 2011-2012" key="ncaa2012" status="historical" primary="false" startup="cold">
         <conferences>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
