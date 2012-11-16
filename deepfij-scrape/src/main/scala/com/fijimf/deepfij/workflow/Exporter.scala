@@ -8,11 +8,13 @@ import org.apache.commons.lang.StringUtils
 trait Exporter[T <: KeyedObject] {
 
   lazy val data: List[Map[String, String]] = {
-    val inputStream = new FileInputStream(fileName)
+    val inputStream = new FileInputStream(dataDir + "/" + fileName)
     Source.fromInputStream(inputStream).getLines().map(s => {
       fromString(s)
     }).toList
   }
+
+  def dataDir: String
 
   def fileName: String
 
@@ -24,7 +26,7 @@ trait Exporter[T <: KeyedObject] {
     val sss: Option[Schedule] = new ScheduleDao().findByKey(key)
     sss.map(s => {
       println(sss)
-      val w: PrintWriter = new PrintWriter(new FileOutputStream(fileName))
+      val w: PrintWriter = new PrintWriter(new FileOutputStream(dataDir + "/" + fileName))
       f(s).sortBy(_.key).foreach(t => {
         w.println(toString(t))
       })

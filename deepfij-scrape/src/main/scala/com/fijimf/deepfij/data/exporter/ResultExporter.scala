@@ -9,10 +9,12 @@ class ResultExporter(parms: Map[String, String]) extends Exporter[Result] with R
 
   def fileName = parms("fileName")
 
+  def dataDir = parms("dataDir")
+
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {
       case homeTeamName :: awayTeamName :: date :: homeTeamScore :: awayTeamScore :: tail => {
-       Map("homeTeam"->homeTeamName,"awayTeam"->awayTeamName, "date"->date, "homeScore"->homeTeamScore, "awayScore"->awayTeamScore)
+        Map("homeTeam" -> homeTeamName, "awayTeam" -> awayTeamName, "date" -> date, "homeScore" -> homeTeamScore, "awayScore" -> awayTeamScore)
       }
       case _ => Map.empty[String, String]
     }

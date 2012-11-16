@@ -3,6 +3,7 @@
         <conferences>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2013-conference-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -12,6 +13,7 @@
                 <parameter key="resource" value="kenpom.alias.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2013-alias-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -19,6 +21,7 @@
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2013-alias-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -29,6 +32,7 @@
                 <parameter key="endDate" value="20130415"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.GameExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2013-game-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -44,6 +48,7 @@
                 <parameter key="endDate" value="20130415"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ResultExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2013-result-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -58,6 +63,7 @@
         <conferences>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2012-conference-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -67,6 +73,7 @@
                 <parameter key="resource" value="kenpom.alias.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2012-alias-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -74,6 +81,7 @@
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2012-team-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -83,6 +91,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.GameExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2012-game-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -92,6 +101,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga12.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ResultExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2012-result-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -101,6 +111,7 @@
         <conferences>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2011-conference-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -110,6 +121,7 @@
                 <parameter key="resource" value="kenpom.alias.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -117,6 +129,7 @@
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -126,6 +139,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga11.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.GameExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2011-game-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -135,6 +149,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga11.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ResultExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2011-result-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -144,6 +159,7 @@
         <conferences>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2010-conference-data.txt"/>
                 <execution schedule="*/10 * * * * "/>
             </data>
@@ -153,6 +169,7 @@
                 <parameter key="resource" value="kenpom.alias.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
                 <execution schedule="*/10 * * * * "/>
             </data>
@@ -160,6 +177,7 @@
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
                 <execution schedule="*/10 * * * * "/>
             </data>
@@ -169,6 +187,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga10.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.GameExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2010-game-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>
@@ -178,6 +197,7 @@
                 <parameter key="url" value="http://kenpom.com/cbbga10.txt"/>
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ResultExporter">
+                <parameter key="dataDir" value="/tmp"/>
                 <parameter key="fileName" value="ncaa2010-result-data.txt"/>
                 <execution schedule="0,30 * * * * "/>
             </data>

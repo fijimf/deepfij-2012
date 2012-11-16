@@ -9,6 +9,8 @@ class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
 
   def fileName = parms("fileName")
 
+  def dataDir = parms("dataDir")
+
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
     s.split('|').toList match {

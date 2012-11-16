@@ -9,6 +9,8 @@ class GameExporter(parms: Map[String, String]) extends Exporter[Game] with GameB
 
   def fileName = parms("fileName")
 
+  def dataDir = parms("dataDir")
+
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {
       case homeTeamName :: awayTeamName :: date :: isNeutralSite :: isConfTourn :: isNcaaTourn :: tail => {

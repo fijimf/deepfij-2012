@@ -8,6 +8,8 @@ import com.fijimf.deepfij.util.Logging
 class ConferenceExporter(parms: Map[String, String]) extends Exporter[Conference] with ConferenceBuilder with Logging {
   def fileName = parms("fileName")
 
+  def dataDir = parms("dataDir")
+
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {
