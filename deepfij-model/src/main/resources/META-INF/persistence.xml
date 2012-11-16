@@ -23,6 +23,7 @@
             <property name="hibernate.bytecode.use_reflection_optimizer" value="false"/>
             <property name="hibernate.order_inserts" value="true"/>
 
+            <property name="hibernate.current_session_context_class" value="thread"/>
 
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
@@ -75,6 +76,7 @@
             <property name="hibernate.bytecode.use_reflection_optimizer" value="false"/>
             <property name="hibernate.order_inserts" value="true"/>
 
+            <property name="hibernate.current_session_context_class" value="thread"/>
 
             <property name="hibernate.generateDdl" value="true"/>
             <property name="hibernate.show_sql" value="true"/>

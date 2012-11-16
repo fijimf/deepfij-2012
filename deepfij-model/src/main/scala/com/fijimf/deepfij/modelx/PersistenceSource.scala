@@ -8,9 +8,24 @@ import java.io.File
 
 
 object PersistenceSource {
+
+  private val delegate: ThreadLocal[EntityManager] = new ThreadLocal[EntityManager]()
+
   val persistenceUnitName = System.getProperty("deepfij.persistenceUnitName", "deepfij")
   val entityManagerFactory: EntityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName)
-  val entityManager: EntityManager = entityManagerFactory.createEntityManager()
+  // val delegate: EntityManager = entityManagerFactory.createEntityManager()
+
+  def entityManager: EntityManager = {
+    Option(delegate.get()) match {
+      case Some(em) => em
+      case None => {
+        val em = entityManagerFactory.createEntityManager()
+        delegate.set(em)
+        em
+      }
+    }
+  }
+
   entityManager.setFlushMode(FlushModeType.AUTO)
   val cfg = new Ejb3Configuration().configure(persistenceUnitName, null).getHibernateConfiguration
   val schemaExport = new SchemaExport(cfg)

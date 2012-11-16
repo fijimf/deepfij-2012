@@ -4,7 +4,7 @@ import javax.persistence.EntityNotFoundException
 
 
 abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
-  val entityManager = PersistenceSource.entityManager
+  def entityManager = PersistenceSource.entityManager
 
   def findBy(id: ID): Option[T] = {
     transactional {
@@ -39,9 +39,9 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
     }
   }
 
-  def deleteObjects(lst:List[T]) {
+  def deleteObjects(lst: List[T]) {
     transactional {
-       lst.foreach(t=>entityManager.remove(t))
+      lst.foreach(t => entityManager.remove(t))
     }
     entityManager.clear() //Flush 1st level cache
   }
