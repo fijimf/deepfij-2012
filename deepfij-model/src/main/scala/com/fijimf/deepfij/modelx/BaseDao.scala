@@ -39,4 +39,12 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
     }
   }
 
+  def deleteObjects(lst:List[T]) {
+    transactional {
+       lst.foreach(t=>entityManager.remove(t))
+    }
+    entityManager.clear() //Flush 1st level cache
+  }
+
+
 }

@@ -14,5 +14,8 @@ class KenPomGameSource(parms: Map[String, String]) extends Initializer[Game] wit
 
   def loadAsOf(date: Date) = scraper.gameData.filter(tup => yyyymmdd.parse(tup._1).before(date)).map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "date" -> tup._1))
 
-  def verify(t: Game, u: Game) = false
+  def isSame(t: Game, u: Game) =
+     t.isConferenceTournament == u.isConferenceTournament &&
+     t.isNcaaTournament == u.isNcaaTournament &&
+     t.isNeutralSite == u.isNeutralSite
 }

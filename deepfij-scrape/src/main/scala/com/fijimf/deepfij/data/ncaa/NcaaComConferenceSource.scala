@@ -15,7 +15,7 @@ class NcaaComConferenceSource extends Initializer[Conference] with Updater[Confe
 
   def loadAsOf(date: Date) = load
 
-  def verify(t: Conference, u: Conference) = t.key == u.key && t.name == u.name
+  def isSame(t: Conference, u: Conference) = true
 }
 
 

@@ -9,6 +9,8 @@ import xml.{NodeSeq, Node}
 import util.control.Exception._
 import scala.Some
 import collection.immutable.Seq
+import org.joda.time.DateMidnight
+import java.util.Date
 
 /**
  * Solves the following problem.
@@ -99,7 +101,7 @@ object RichScheduleRunner {
   }
 
   def parseManager[T <: KeyedObject](n: Node, t: String): DataManager[T] = {
-    def getConstructor(dn: Node): Option[(String) => Any]= {
+    def getConstructor(dn: Node): Option[(String) => Any] = {
       dn \ "parameter" match {
         case NodeSeq.Empty => {
           catching(classOf[Exception]).opt(Class.forName(_).newInstance())
@@ -218,5 +220,16 @@ case class RichScheduleRunner(key: String,
     } else {
       schedule
     }
+  }
+
+  private def update[T <: KeyedObject, ID](schedule: Schedule, ds: Updater[T], dao: BaseDao[T, ID], f: Schedule => List[T], asOf: Date = new DateMidnight().toDate): Schedule = {
+    val up: Map[String, T] = ds.loadAsOf(asOf).flatMap(d => ds.build(schedule, d)).map(x => x.key -> x).toMap
+    val have: Map[String, T] = f(schedule).map(x => x.key -> x).toMap
+    val updates = up.keySet.intersect(have.keySet).filter(k => !ds.isSame(up(k), have(k)))
+    val inserts = up.keySet.diff(have.keySet)
+    val deletes = have.keySet.diff(up.keySet)
+    dao.deleteObjects((deletes ++ updates).toList.map(have(_)))
+    dao.saveAll((updates ++ inserts).toList.map(up(_)))
+    new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
   }
 }

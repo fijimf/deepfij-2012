@@ -14,5 +14,5 @@ class KenPomResultSource(parms: Map[String, String]) extends Initializer[Result]
 
   def loadAsOf(date: Date) = scraper.gameData.filter(tup => yyyymmdd.parse(tup._1).before(date)).map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "homeScore" -> tup._3, "awayScore" -> tup._5, "date" -> tup._1))
 
-  def verify(t: Result, u: Result) = false
+  def isSame(t: Result, u: Result) = t.homeScore == u.homeScore && t.awayScore == u.awayScore
 }

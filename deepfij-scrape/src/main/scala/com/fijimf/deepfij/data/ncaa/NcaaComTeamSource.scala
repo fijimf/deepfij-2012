@@ -25,7 +25,11 @@ class NcaaComTeamSource() extends Initializer[Team] with Updater[Team] with Veri
 
   def loadAsOf(date: Date) = load
 
-  def verify(t: Team, u: Team) = t.key == u.key && t.name == u.name
+  def isSame(t: Team, u: Team) =
+    t.officialUrl == u.officialUrl && t.logo == u.logo &&
+      t.conference == u.conference && t.nickname == u.nickname &&
+      t.primaryColor == u.primaryColor && t.secondaryColor == u.secondaryColor &&
+      t.longName == u.longName
 }
 
 

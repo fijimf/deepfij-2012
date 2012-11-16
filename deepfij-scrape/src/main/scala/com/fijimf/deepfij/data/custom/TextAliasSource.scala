@@ -24,5 +24,5 @@ class TextAliasSource(parms: Map[String, String]) extends Initializer[Alias] wit
 
   def loadAsOf(date: Date) = aliasList.map(tup => Map("team" -> tup._2, "alias" -> tup._1))
 
-  def verify(t: Alias, u: Alias) = false
+  def isSame(t: Alias, u: Alias) = t.team == u.team
 }

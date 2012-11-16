@@ -37,5 +37,5 @@ class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result
     Map("homeTeam" -> g.home.key, "homeScore" -> hs, "awayTeam" -> g.away.key, "awayScore" -> as, "date" -> yyyymmdd.format(date))
   }
 
-  def verify(t: Result, u: Result) = false
+  def isSame(t: Result, u: Result) = t.homeScore == u.homeScore && t.awayScore == u.awayScore
 }
