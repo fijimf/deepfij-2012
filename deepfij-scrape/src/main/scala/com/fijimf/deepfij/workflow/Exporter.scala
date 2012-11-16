@@ -14,14 +14,16 @@ trait Exporter[T <: KeyedObject] {
     }).toList
   }
 
-  def fileName :String
+  def fileName: String
 
   def fromString(s: String): Map[String, String]
 
   def toString(t: T): String
 
-  def export( key: String, f: Schedule => List[T]) {
-    new ScheduleDao().findByKey(key).map(s => {
+  def export(key: String, f: Schedule => List[T]) {
+    val sss: Option[Schedule] = new ScheduleDao().findByKey(key)
+    sss.map(s => {
+      println(sss)
       val w: PrintWriter = new PrintWriter(new FileOutputStream(fileName))
       f(s).sortBy(_.key).foreach(t => {
         w.println(toString(t))
