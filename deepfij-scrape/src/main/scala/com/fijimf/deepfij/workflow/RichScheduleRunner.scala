@@ -65,9 +65,9 @@ object Cron {
 
 case class DataManager[T <: KeyedObject]
 (initializer: Option[Initializer[T]],
- updater: Option[Updater[T]],
- exporter: Option[Exporter[T]],
- verifier: Option[Verifier[T]]) {
+ updater: Option[(Updater[T], Option[String])],
+ exporter: Option[(Exporter[T], Option[String])],
+ verifier: Option[(Verifier[T], Option[String])]) {
 
 }
 
@@ -122,11 +122,12 @@ object RichScheduleRunner {
       dn <- (cn \ "data");
       rn <- dn.attribute("role");
       tn <- dn.attribute("class")) yield {
+      val ex = (dn \ "execution").headOption.flatMap(_.attribute("schedule")).flatMap(_.headOption).map(_.text)
       rn.text match {
         case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Initializer[T]]))
-        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Updater[T]]))
-        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Exporter[T]]))
-        case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Verifier[T]]))
+        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Updater[T]], ex)))
+        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Exporter[T]], ex)))
+        case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Verifier[T]], ex)))
       }
     }
     functions.foldLeft(DataManager[T](None, None, None, None))((dm, f) => f(dm))
@@ -199,6 +200,56 @@ case class RichScheduleRunner(key: String,
     case HotStartup => {
       log.info("HOT startup no initialization, just start update jobs")
     }
+  }
+
+  initializeExporter(conferenceMgr, _.conferenceList)
+  initializeExporter(aliasMgr, _.aliasList)
+  initializeExporter(teamMgr, _.teamList)
+  initializeExporter(gameMgr, _.gameList)
+  initializeExporter(resultMgr, _.gameList.flatMap(_.resultOpt))
+
+  if (status == ActiveSchedule) {
+    initializeUpdater(gameMgr, new GameDao, _.gameList)
+    initializeUpdater(resultMgr, new ResultDao, _.gameList.flatMap(_.resultOpt))
+  }
+
+
+  def initializeExporter[T<:KeyedObject](mgr: DataManager[T], f: (Schedule) => List[T]): Any = {
+    mgr.exporter.foreach(exp => {
+      val export = exp._1
+      exp._2 match {
+        case Some(sched) => {
+          log.info("Setting schedule '%s' for exporter.".format(sched))
+          Cron.scheduleJob(sched,()=> {
+            export.export(key, f)
+          })
+        }
+        case None => {
+          log.info("No schedule set for exporter.  Running once at startup")
+          export.export(key, f)
+        }
+      }
+    })
+  }
+
+  def initializeUpdater[T <: KeyedObject, ID](mgr: DataManager[T], dao: BaseDao[T, ID], f: (Schedule) => List[T]): Any = {
+    mgr.updater.foreach(up => {
+      val u = up._1
+      up._2 match {
+        case Some(sched) => {
+          log.info("Setting schedule '%s' for updater.".format(sched))
+          Cron.scheduleJob(sched, ()=>{
+            val sd = new ScheduleDao
+            sd.findByKey(key).map(s => {
+              update[T, ID](s, u, dao, f)
+            })
+          })
+        }
+        case None => {
+          log.info("No schedule set for updater.  Will not be called")
+        }
+      }
+    })
   }
 
   private def load[T <: KeyedObject](schedule: Schedule, ds: Initializer[T], dao: BaseDao[T, _]): Schedule = {

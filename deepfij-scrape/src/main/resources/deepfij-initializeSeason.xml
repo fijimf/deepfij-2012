@@ -4,7 +4,7 @@
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2013-conference-data.txt"/>
-                <execution schedule="0 0,30 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </conferences>
         <aliases>
@@ -13,14 +13,14 @@
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2013-alias-data.txt"/>
-                <execution schedule="0 0,30 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </aliases>
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2013-alias-data.txt"/>
-                <execution schedule="0 0/10 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </teams>
         <games>
@@ -31,7 +31,7 @@
             <data role="updater" class="com.fijimf.deepfij.data.ncaa.NcaaComGameSource">
                 <parameter key="startDate" value="20121109"/>
                 <parameter key="endDate" value="20130415"/>
-                <execution schedule="0 0 4,6 * * ?"/>
+                <execution schedule="0 0,4,6 * * *"/>
             </data>
         </games>
         <results>
@@ -42,7 +42,7 @@
             <data role="updater" class="com.fijimf.deepfij.data.ncaa.NcaaComResultSource">
                 <parameter key="startDate" value="20121109"/>
                 <parameter key="endDate" value="20130415"/>
-                <execution schedule="0 30 4,6 * * ?"/>
+                <execution schedule="30 0,4,6 * * *"/>
             </data>
         </results>
     </schedule>
@@ -51,7 +51,7 @@
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2012-conference-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </conferences>
         <aliases>
@@ -60,14 +60,14 @@
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2012-alias-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </aliases>
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2012-alias-data.txt"/>
-                <execution schedule="0 0/10 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </teams>
         <games>
@@ -88,7 +88,7 @@
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2011-conference-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </conferences>
         <aliases>
@@ -97,14 +97,14 @@
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </aliases>
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2011-alias-data.txt"/>
-                <execution schedule="0 0/10 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </teams>
         <games>
@@ -125,7 +125,7 @@
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComConferenceSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.ConferenceExporter">
                 <parameter key="fileName" value="ncaa2010-conference-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </conferences>
         <aliases>
@@ -134,14 +134,14 @@
             </data>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.AliasExporter">
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
-                <execution schedule="0 0 2 * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </aliases>
         <teams>
             <data role="initializer" class="com.fijimf.deepfij.data.ncaa.NcaaComTeamSource"/>
             <data role="exporter" class="com.fijimf.deepfij.data.exporter.TeamExporter">
                 <parameter key="fileName" value="ncaa2010-alias-data.txt"/>
-                <execution schedule="0 0/10 * * * ?"/>
+                <execution schedule="0,30 * * * * "/>
             </data>
         </teams>
         <games>
