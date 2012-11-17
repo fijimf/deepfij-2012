@@ -10,7 +10,11 @@
     <artifactId>deepfij-scrape</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
-
+    <scm>
+        <connection>scm:git:git://github.com/fijimf/deepfij-2012.git</connection>
+        <developerConnection>scm:git:https://fijimf@github.com/fijimf/deepfij-2012.git</developerConnection>
+        <url>https://github.com/fijimf/deepfij-2012</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>

@@ -20,7 +20,11 @@
         <logback.version>1.0.0</logback.version>
         <liftJson.version>2.4</liftJson.version>
     </properties>
-
+    <scm>
+        <connection>scm:git:git://github.com/fijimf/deepfij-2012.git</connection>
+        <developerConnection>scm:git:https://fijimf@github.com/fijimf/deepfij-2012.git</developerConnection>
+        <url>https://github.com/fijimf/deepfij-2012</url>
+    </scm>
     <modules>
         <module>deepfij-model</module>
         <module>deepfij-scrape</module>
