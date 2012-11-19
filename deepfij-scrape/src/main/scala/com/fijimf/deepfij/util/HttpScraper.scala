@@ -2,10 +2,11 @@ package com.fijimf.deepfij.util
 
 import xml.Node
 import org.xml.sax.InputSource
-import java.io.{Reader, StringReader}
+import java.io.{InputStream, Reader, StringReader}
 import scala.util.control.Exception._
 import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 import xml.parsing.NoBindingFactoryAdapter
+import java.net.URL
 
 
 object HtmlHelper {
@@ -30,8 +31,12 @@ object HtmlHelper {
 
 trait HttpScraper extends Scraper[Node] {
 
-  def loadURL(url: String): Node = {
-    loadPage(new org.xml.sax.InputSource(url))
+  def loadURL(u: String): Node = {
+
+    val url:URL = new URL(u);
+    val stream:InputStream = url.openStream();
+    val source: InputSource = new org.xml.sax.InputSource(stream)
+    loadPage(source)
   }
 
   def loadString(s: String): Node = {
