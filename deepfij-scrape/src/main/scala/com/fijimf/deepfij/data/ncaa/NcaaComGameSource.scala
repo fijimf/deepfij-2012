@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 import com.fijimf.deepfij.util.DateStream
 import com.fijimf.deepfij.workflow.{Verifier, Updater, Initializer}
 import com.fijimf.deepfij.workflow.datasource.GameBuilder
-import org.apache.commons.lang.time.DateUtils
 
 
 class NcaaComGameSource(parms: Map[String, String])extends Initializer[Game] with Updater[Game] with Verifier[Game] with GameBuilder {
@@ -27,13 +26,7 @@ class NcaaComGameSource(parms: Map[String, String])extends Initializer[Game] wit
     Map("homeTeam" -> g.home.key, "awayTeam" -> g.away.key, "date" -> fmt.format(d))
   }
 
-
-  def loadAsOf(date: Date) = for (d <- dates.toList.filter(_.before(DateUtils.addWeeks(date,1)));
-                    resp <- scraper.loadDateGames(d).toList;
-                    sc <- resp.scoreboard;
-                    g <- sc.games) yield {
-      Map("homeTeam" -> g.home.key, "awayTeam" -> g.away.key, "date" -> fmt.format(d))
-    }
+  def loadAsOf(date: Date) = load
 
   def isSame(t: Game, u: Game) =
        t.isConferenceTournament == u.isConferenceTournament &&
