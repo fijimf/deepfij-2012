@@ -47,16 +47,6 @@
             <version>${scala.version}</version>
         </dependency>
         <dependency>
-            <groupId>se.scalablesolutions.akka</groupId>
-            <artifactId>akka-actor</artifactId>
-            <version>${akka.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>se.scalablesolutions.akka</groupId>
-            <artifactId>akka-slf4j</artifactId>
-            <version>${akka.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-scala</artifactId>
             <version>1.0.2</version>
@@ -108,11 +98,6 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>ostrich_2.9.1</artifactId>
-            <version>4.10.6</version>
-        </dependency>
-        <dependency>
             <groupId>org.fusesource.scalate</groupId>
             <artifactId>scalate-core</artifactId>
             <version>1.5.3</version>
@@ -156,17 +141,6 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
             <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.6.ga</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
