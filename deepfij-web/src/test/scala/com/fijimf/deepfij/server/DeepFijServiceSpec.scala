@@ -62,35 +62,6 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
         body should be(validHtml5)
       }
 
-      get("/team/new") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
-
-      post("/team/new") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
-
-      get("/team/edit/xxxx") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
-
-      get("/team/edit/georgetown") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
-
-      post("/team/edit/georgetown") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
-
-      post("/team/delete") {
-        status should equal(200)
-        body should be(validHtml5)
-      }
 
       get("/conference/xxx") {
         status should equal(200)
@@ -103,21 +74,6 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
       }
     }
 
-    //    it ("should return OK status for known static resources") {
-    //      get("/style/deepfij.css") {
-    //        status should equal(200)
-    //      }
-    //
-    //      get("/scripts/quoteloader.js") {
-    //        status should equal(200)
-    //      }
-    //    }
-    //
-    //    it ("shoudl return a 404 for a missing resource"){
-    //      get("/scripts/abc.js") {
-    //        status should equal(404)
-    //      }
-    //    }
     it("should report a 404 and valid HTML for a bad request") {
       get("/I-am-a-bad/request") {
         status should equal(404)
