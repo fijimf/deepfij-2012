@@ -6,25 +6,22 @@ trait QuoteController {
   this: Controller =>
 
   get("/qotd") {
-    <p class="epigram">
+    qd.random().map(q=>{
+
+    val id = "quote-%d".format(q.id)
+      <p class="epigram" id={id} >
+        {q.url
+            {qd.random().map(q.quote).getOrElse("")}
+          </p>
+    })
+    <p class="epigram" id="quote-">
       {qd.random().map(_.quote).getOrElse("")}
     </p>
   }
 
-  get("/quote/list") {
-    contentType = "text/html"
-    templateEngine.layout("pages/quotelist.mustache", Map("quotes" -> qd.findAll().map(q => Map("id" -> q.id, "quote" -> q.quote, "source" -> q.source, "url" -> q.url))))
-  }
-
   post("/quote/new") {
     createQuote(params("quote"), params("source"), params("url"))
-    redirect("/quote/list")
-  }
-
-  post("/quote/edit") {
-    contentType = "text/html"
-    val id: String = params("id")
-    redirect("/quote/show/" + id)
+    redirect("/")
   }
 
   post("/quote/delete") {

@@ -30,10 +30,10 @@
 
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/deepfijdb"/>
-            <!--<property name="hibernate.connection.username" value="${deepfijdb.username}"/>-->
-            <property name="hibernate.connection.username" value="root"/>
-            <!--<property name="hibernate.connection.password" value="${deepfijdb.password}"/>-->
-            <property name="hibernate.connection.password" value="mutombo"/>
+            <property name="hibernate.connection.username" value="${deepfijdb.username}"/>
+            <!--<property name="hibernate.connection.username" value="root"/>-->
+            <property name="hibernate.connection.password" value="${deepfijdb.password}"/>
+            <!--<property name="hibernate.connection.password" value="mutombo"/>-->
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 
@@ -46,6 +46,9 @@
             <property name="hibernate.c3p0.idle_test_period" value="300"/>
             <property name="hibernate.c3p0.max_statements" value="0"/>
             <property name="hibernate.c3p0.timeout" value="100"/>
+            <property name="hibernate.c3p0.acquireRetryAttempts" value="20"/>
+            <property name="hibernate.c3p0.acquireRetryDelay" value="5"/>
+            <property name="hibernate.c3p0.breakAfterAcquireFailure" value="false"/>
             <!--<property name="hibernate.hbm2ddl.auto" value="validate"/>-->
         </properties>
     </persistence-unit>

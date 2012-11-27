@@ -21,8 +21,6 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   lazy val schedule = sd.findPrimary().get
 
-  val scraper = null // Scraper(NcaaTeamScraper, NcaaTeamScraper, KenPomScraper("http://kenpom.com/cbbga12.txt", "kenpom.alias.txt"))
-
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
   get("/") {
