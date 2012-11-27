@@ -6,15 +6,7 @@ trait QuoteController {
   this: Controller =>
 
   get("/qotd") {
-    qd.random().map(q=>{
-
-    val id = "quote-%d".format(q.id)
-      <p class="epigram" id={id} >
-        {q.url
-            {qd.random().map(q.quote).getOrElse("")}
-          </p>
-    })
-    <p class="epigram" id="quote-">
+    <p class="epigram">
       {qd.random().map(_.quote).getOrElse("")}
     </p>
   }
@@ -22,15 +14,6 @@ trait QuoteController {
   post("/quote/new") {
     createQuote(params("quote"), params("source"), params("url"))
     redirect("/")
-  }
-
-  post("/quote/delete") {
-    deleteQuote(params("id").toLong)
-    redirect("/admin#collapseQuotes")
-  }
-
-  def deleteQuote(id: Long) {
-
   }
 
   def createQuote(q: String, s: String, u: String) = {

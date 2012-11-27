@@ -41,25 +41,12 @@
         </repository>
     </repositories>
     <dependencies>
-<<<<<<< HEAD
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala.version}</version>
-        </dependency>
-=======
-
         <!--<dependency>-->
-            <!--<groupId>se.scalablesolutions.akka</groupId>-->
-            <!--<artifactId>akka-actor</artifactId>-->
-            <!--<version>${akka.version}</version>-->
+            <!--<groupId>org.parboiled</groupId>-->
+            <!--<artifactId>parboiled-scala</artifactId>-->
+            <!--<version>1.0.2</version>-->
+            <!--<scope>compile</scope>-->
         <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>se.scalablesolutions.akka</groupId>-->
-            <!--<artifactId>akka-slf4j</artifactId>-->
-            <!--<version>${akka.version}</version>-->
-        <!--</dependency>-->
->>>>>>> 775f4d193eb4dcd223e3edbefc903c0fde4679e2
         <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-scala</artifactId>
@@ -130,6 +117,12 @@
             <groupId>org.scalatra</groupId>
             <artifactId>scalatra-scalatest_2.9.1</artifactId>
             <version>2.0.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scalatest</groupId>
+                    <artifactId>scalatest_2.9.1</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fijimf.deepfij</groupId>
@@ -168,6 +161,17 @@
             </exclusions>
         </dependency>
         <!-- Test -->
+        <!--<dependency>-->
+        <!--<groupId>junit</groupId>-->
+        <!--<artifactId>junit</artifactId>-->
+        <!--<version>4.8.1</version>-->
+        <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.version}</artifactId>
+            <version>1.8</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
