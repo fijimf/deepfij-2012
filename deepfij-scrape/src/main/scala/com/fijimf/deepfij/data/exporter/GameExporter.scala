@@ -1,15 +1,17 @@
 package com.fijimf.deepfij.data.exporter
 
 import com.fijimf.deepfij.modelx.Game
-import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.{Initializer, Exporter}
 import com.fijimf.deepfij.workflow.datasource.GameBuilder
 import com.fijimf.deepfij.util.Logging
 
-class GameExporter(parms: Map[String, String]) extends Exporter[Game] with GameBuilder with Logging {
+class GameExporter(parms: Map[String, String]) extends Exporter[Game] with GameBuilder with Initializer[Game] with Logging {
 
   def fileName = parms("fileName")
 
   def dataDir = parms("dataDir")
+
+  def load = data
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {

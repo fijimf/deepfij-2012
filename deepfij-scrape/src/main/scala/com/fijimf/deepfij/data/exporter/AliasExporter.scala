@@ -1,14 +1,16 @@
 package com.fijimf.deepfij.data.exporter
 
-import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.{Initializer, Exporter}
 import com.fijimf.deepfij.workflow.datasource.AliasBuilder
 import com.fijimf.deepfij.modelx.Alias
 import com.fijimf.deepfij.util.Logging
 
-class AliasExporter(parms: Map[String, String]) extends Exporter[Alias] with AliasBuilder with Logging {
+class AliasExporter(parms: Map[String, String]) extends Exporter[Alias] with AliasBuilder with Initializer[Alias] with Logging {
   def fileName = parms("fileName")
 
   def dataDir = parms("dataDir")
+
+  def load = data
 
   def fromString(s: String): Map[String, String] = {
     s.split('|').toList match {

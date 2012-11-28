@@ -1,15 +1,17 @@
 package com.fijimf.deepfij.data.exporter
 
 import com.fijimf.deepfij.modelx.Team
-import com.fijimf.deepfij.workflow.Exporter
+import com.fijimf.deepfij.workflow.{Initializer, Exporter}
 import com.fijimf.deepfij.workflow.datasource.TeamBuilder
 import com.fijimf.deepfij.util.Logging
 
-class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Logging {
+class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamBuilder with Initializer[Team] with Logging {
 
   def fileName = parms("fileName")
 
   def dataDir = parms("dataDir")
+
+  def load = data
 
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
