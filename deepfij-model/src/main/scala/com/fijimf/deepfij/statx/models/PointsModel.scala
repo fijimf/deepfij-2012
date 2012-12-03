@@ -2,68 +2,64 @@ package com.fijimf.deepfij.statx.models
 
 import java.util.Date
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
-import com.fijimf.deepfij.statx.{TeamModel, ModelContext, SinglePassGameModel}
+import com.fijimf.deepfij.statx.{ModelValues, TeamModel, ModelContext, SinglePassGameModel}
 import com.fijimf.deepfij.modelx.{MetaStat, Game, Team}
 
 
 class PointsModel extends SinglePassGameModel[Team] with TeamModel {
-  val obsTypes = List(
-    ("Points For", "points-for", true),
-    ("Points Against", "points-against", false),
-    ("Margin", "score-margin", true),
-    ("Total Score", "score-total", true),
-    ("Log Scoring Ratio", "log-score-ratio", true)
+
+  case class ObservationType(description: String, key: String, higherIsBetter: Boolean, f: (PointsRunning) => List[Double])
+
+  val observationTypes = List(
+    ObservationType("Points For", "points-for", true, _.pointsFor),
+    ObservationType("Points Against", "points-against", false, _.pointsAgainst),
+    ObservationType("Margin", "score-margin", true, _.margin),
+    ObservationType("Total Score", "score-total", true, _.totalScore)
   )
 
-  val popStats = List(("Max", "max", "%4.0f"), ("Min", "min", "%4.0f"), ("Mean", "mean", "%8.3f"), ("Std Dev", "stdev", "%9.3f"), ("Sum", "sum", "%6.0f"))
+  case class PopulationMeasure(description: String, key: String, format: String, f: (DescriptiveStatistics) => Double)
 
-  case class PointsRunning(pointsFor: List[Double], pointsAgainst: List[Double], scoreMargin: List[Double], scoreTotal: List[Double], logScoreRatio: List[Double])
+  val populationMeasures = List(
+    PopulationMeasure("Max", "max", "%4.0f", _.getMax),
+    PopulationMeasure("Min", "min", "%4.0f", _.getMin),
+    PopulationMeasure("Mean", "mean", "%8.3f", _.getMean),
+    PopulationMeasure("Std Dev", "stdev", "%9.3f", _.getStandardDeviation),
+    PopulationMeasure("Sum", "sum", "%6.0f", _.getSum))
 
-  private[this] var runningTotals = Map.empty[Team, PointsRunning]
+  case class PointsRunning(pfpa: List[(Double, Double)] = List.empty[(Double, Double)]) {
+    def update(pf: Double, pa: Double): PointsRunning = copy(pfpa = (pf, pa) :: pfpa)
 
-  val statisticLookup = (
-    for ((n, k, hib) <- obsTypes; (pn, p, fmt) <- popStats)
-    yield (k, p) -> new MetaStat(name = pn + " " + n, statKey = k + "-" + p, format = fmt, higherIsBetter = hib)
-    ).toMap
+    lazy val pointsFor = pfpa.map(_._1)
+    lazy val pointsAgainst = pfpa.map(_._2)
+    lazy val margin = pfpa.map(tup => tup._1 - tup._2)
+    lazy val totalScore = pfpa.map(tup => tup._1 + tup._2)
+  }
 
-  val statistics = statisticLookup.values.toList
+  private[this] var runningTotals = Map.empty[Team, PointsRunning].withDefaultValue(PointsRunning())
+
+  val modelStatistic = (
+    for (o <- observationTypes; p <- populationMeasures) yield new MetaStat(
+      name = o.description + " " + p.description,
+      statKey = o.key + "-" + p.key,
+      format = p.format,
+      higherIsBetter = o.higherIsBetter)
+    )
+
+  val statistics = modelStatistic
 
   def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
-    gs.filter(g => (g.resultOpt.isDefined)).map(g => {
-      val r = g.resultOpt.get
-      val home = runningTotals.getOrElse(g.homeTeam, PointsRunning(List.empty[Double], List.empty[Double], List.empty[Double], List.empty[Double], List.empty[Double]))
-      runningTotals += (g.homeTeam -> PointsRunning(
-        r.homeScore :: home.pointsFor,
-        r.awayScore :: home.pointsAgainst,
-        (r.homeScore - r.awayScore) :: home.scoreMargin,
-        (r.homeScore + r.awayScore) :: home.scoreTotal,
-        scala.math.log(r.homeScore / r.awayScore) :: home.logScoreRatio
-      ))
-      val away = runningTotals.getOrElse(g.awayTeam, PointsRunning(List.empty[Double], List.empty[Double], List.empty[Double], List.empty[Double], List.empty[Double]))
-      runningTotals += (g.awayTeam -> PointsRunning(
-        r.awayScore :: away.pointsFor,
-        r.homeScore :: away.pointsAgainst,
-        (r.awayScore - r.homeScore) :: away.scoreMargin,
-        (r.awayScore + r.homeScore) :: away.scoreTotal,
-        scala.math.log(r.awayScore / r.homeScore) :: away.logScoreRatio
-      ))
-    })
-    runningTotals.keys.foldLeft(ctx) {
-      (ctx, team) => {
-        val tot = runningTotals(team)
-
-        //TRICKSY -- taking advantage of the fact that obsTypes is in the same order as PointsRunning
-        obsTypes.zip(tot.productIterator.toIterable).foldLeft(ctx) {
-          case (c: ModelContext[Team], ((n:String, k: String, hib: Boolean), xs: List[Double])) => {
-            val s = new DescriptiveStatistics(xs.toArray)
-            c.update(statisticLookup(k, "max"), d, team, s.getMax)
-              .update(statisticLookup(k, "min"), d, team, s.getMin)
-              .update(statisticLookup(k, "mean"), d, team, s.getMean)
-              .update(statisticLookup(k, "stdev"), d, team, s.getStandardDeviation)
-              .update(statisticLookup(k, "sum"), d, team, s.getSum)
-          }
-        }
-      }
+    for (g <- gs; r <- g.resultOpt) {
+      runningTotals += (g.homeTeam -> runningTotals(g.homeTeam).update(r.homeScore, r.awayScore))
+      runningTotals += (g.awayTeam -> runningTotals(g.awayTeam).update(r.homeScore, r.awayScore))
     }
+    val data: List[(MetaStat, ModelValues[Team])] = for (o <- observationTypes; p <- populationMeasures) yield {
+      val m = new MetaStat(
+        name = o.description + " " + p.description,
+        statKey = o.key + "-" + p.key,
+        format = p.format,
+        higherIsBetter = o.higherIsBetter)
+      m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).))).toMap))
+    }
+    data.foldLeft(ctx)((context: ModelContext[Team], tup: (MetaStat, ModelValues[Team])) => context.copy(stats = context.stats + (tup._1 -> tup._2)))
   }
 }
