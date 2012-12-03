@@ -53,9 +53,11 @@ class Conference(
 
   def standings = {
     teamList.sortBy(t => {
-      val w = t.conferenceWins.filter(g => (!g.isConferenceTournament && !g.isNcaaTournament)).size
-      val l = t.conferenceLosses.filter(g => (!g.isConferenceTournament && !g.isNcaaTournament)).size
-      ((w - l, w))
+      val w = t.wins.size
+      val cw = t.conferenceWins.filter(g => (!g.isConferenceTournament && !g.isNcaaTournament)).size
+      val l = t.losses.size
+      val cl = t.conferenceLosses.filter(g => (!g.isConferenceTournament && !g.isNcaaTournament)).size
+      ((cw - cl, cw, w - l, l))
     }).reverse
 
   }

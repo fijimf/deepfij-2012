@@ -101,6 +101,10 @@ import com.fijimf.deepfij.util.Validation._
   def conferenceWins = conferenceGames.filter(_.isWin(this))
 
   def conferenceLosses = conferenceGames.filter(_.isLoss(this))
+
+  def record = WonLostRecord(wins.size, losses.size)
+
+  def conferenceRecord = WonLostRecord(conferenceWins.size, conferenceLosses.size)
 }
 
 class TeamDao extends BaseDao[Team, Long] {
