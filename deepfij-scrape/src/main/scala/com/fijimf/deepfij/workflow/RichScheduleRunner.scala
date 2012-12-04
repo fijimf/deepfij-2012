@@ -4,7 +4,6 @@ import com.fijimf.deepfij.modelx._
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.Validation._
-import it.sauronsoftware.cron4j.Scheduler
 import xml.{NodeSeq, Node}
 import util.control.Exception._
 import scala.Some
@@ -12,64 +11,11 @@ import collection.immutable.Seq
 import org.joda.time.DateMidnight
 import java.util.Date
 
-/**
- * Solves the following problem.
- *
- * In the general case:
- *
- * We want to instantiate some aggregate type, composed of other related component types on startup
- * and (potentially) keep the aggregate type current.  The resources we have are
- * (1) Persistence we own, viz. a database;
- * (2) One or more primary sources which we don't own;
- * (3) Knowledge that the components of our Schedule aggregate can be identified by a unique, domain specific key;
- * (4) Ability to construct component objects given the primary source and (possibly partially constructed) aggregate;
- *
- * To be explicit:
- * Schedule              <= aggregate
- * T <: KeyedObject, ... <= types
- * BaseDao[T,_]          <= persistence
- *
- * Given those parameters we have three main use cases
- *
- * (1) Cold startup <- Rebuild everything; drop any existing data in the database
- * A. Drop/Create aggregate type from the database
- * B. In order, over the list of component types
- * 1. Persist them to the database
- * (2) Warm startup <- Static data is good; reload dynamic data
- * (3) Hot startup  <- Quick restart all data in the database is good and we can just start updater tasks
- *
- * we now have a number of different types of "DataSources"
- * 1) initializers
- * 2) updaters
- * 3) exporters
- * 4) verifiers
- *
- */
 
-object Cron {
-  val scheduler = new Scheduler
-  scheduler.start()
-
-  def scheduleJob(cron: String, f: () => Unit): String = {
-    scheduler.schedule(cron, new Runnable() {
-      def run() {
-        f()
-      }
-    })
-  }
-
-  def shutdown() {
-    scheduler.stop()
-  }
-}
-
-case class DataManager[T <: KeyedObject]
-(initializer: Option[Initializer[T]],
- updater: Option[(Updater[T], Option[String])],
- exporter: Option[(Exporter[T], Option[String])],
- verifier: Option[(Verifier[T], Option[String])]) {
-
-}
+case class DataManager[T <: KeyedObject](initializer: Option[Initializer[T]],
+                                         updater: Option[(Updater[T], Option[String])],
+                                         exporter: Option[(Exporter[T], Option[String])],
+                                         verifier: Option[(Verifier[T], Option[String])])
 
 object RichScheduleRunner {
   def fromNode(n: Node): RichScheduleRunner = {
@@ -83,7 +29,7 @@ object RichScheduleRunner {
     val startup = n.attribute("startup").map(_.text) match {
       case Some("hot") => HotStartup
       case Some("cold") => ColdStartup
-      case _ => WarmStartup
+      case _ => throw new IllegalArgumentException("Bad startup parameter")
     }
 
     RichScheduleRunner(
@@ -158,7 +104,7 @@ case class RichScheduleRunner(key: String,
   require(StringUtils.isNotBlank(key) && validKey(key))
 
   log.info("Initializing schedule %s(%s)".format(name, key))
-  if (isPrimary) log.info("%s is the primary schedule of this instance")
+  if (isPrimary) log.info("%s is the primary schedule of this instance".format(name))
 
 
   startup match {
@@ -180,23 +126,6 @@ case class RichScheduleRunner(key: String,
       log.info("Initialization is complete.")
     }
 
-    case WarmStartup => {
-      log.info("WARM startup initialization as needed.")
-      val sd = new ScheduleDao
-      val schedule = sd.findByKey(key) match {
-        case Some(s) => s
-        case None => sd.save(new Schedule(key = key, name = name))
-      }
-      (sd.save _).
-        andThen(s => conferenceMgr.initializer.map(i => loadIfEmpty[Conference](s, _.conferenceList.isEmpty, i, new ConferenceDao())).getOrElse(s)).
-        andThen(s => teamMgr.initializer.map(i => loadIfEmpty[Team](s, _.teamList.isEmpty, i, new TeamDao())).getOrElse(s)).
-        andThen(s => aliasMgr.initializer.map(i => loadIfEmpty[Alias](s, _.aliasList.isEmpty, i, new AliasDao())).getOrElse(s)).
-        andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
-        andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
-        apply(schedule)
-      log.info("Initialization is complete.  Starting game/result monitor")
-
-    }
     case HotStartup => {
       log.info("HOT startup no initialization, just start update jobs")
     }
@@ -214,13 +143,13 @@ case class RichScheduleRunner(key: String,
   }
 
 
-  def initializeExporter[T<:KeyedObject](mgr: DataManager[T], f: (Schedule) => List[T]): Any = {
+  def initializeExporter[T <: KeyedObject](mgr: DataManager[T], f: (Schedule) => List[T]): Any = {
     mgr.exporter.foreach(exp => {
       val export = exp._1
       exp._2 match {
         case Some(sched) => {
           log.info("Setting schedule '%s' for exporter.".format(sched))
-          Cron.scheduleJob(sched,()=> {
+          Cron.scheduleJob(sched, () => {
             export.export(key, f)
           })
         }
@@ -238,7 +167,7 @@ case class RichScheduleRunner(key: String,
       up._2 match {
         case Some(sched) => {
           log.info("Setting schedule '%s' for updater.".format(sched))
-          Cron.scheduleJob(sched, ()=>{
+          Cron.scheduleJob(sched, () => {
             val sd = new ScheduleDao
             sd.findByKey(key).map(s => {
               update[T, ID](s, u, dao, f)
