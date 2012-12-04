@@ -58,7 +58,7 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
         statKey = o.key + "-" + p.key,
         format = p.format,
         higherIsBetter = o.higherIsBetter)
-      m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).))).toMap))
+      m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).toArray))).toMap))
     }
     data.foldLeft(ctx)((context: ModelContext[Team], tup: (MetaStat, ModelValues[Team])) => context.copy(stats = context.stats + (tup._1 -> tup._2)))
   }
