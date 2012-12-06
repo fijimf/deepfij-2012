@@ -7,15 +7,54 @@ import com.fijimf.deepfij.util.Validation._
 import xml.{NodeSeq, Node}
 import util.control.Exception._
 import scala.Some
-import collection.immutable.Seq
 import org.joda.time.DateMidnight
 import java.util.Date
 
+object DataManager {
+  def fromNode[T](n: Node): DataManager[T] = {
+    val functions = for (dataNode <- (n \ "data");
+                         role <- dataNode.attribute("role").flatMap(_.headOption);
+                         className <- dataNode.attribute("class").flatMap(_.headOption)) yield {
+      dataOperatorCreator(role, dataNode, className)
+    }
+    functions.foldLeft(DataManager[T]())((dm, f) => f(dm))
+  }
 
-case class DataManager[T <: KeyedObject](initializer: Option[Initializer[T]],
-                                         updater: Option[(Updater[T], Option[String])],
-                                         exporter: Option[(Exporter[T], Option[String])],
-                                         verifier: Option[(Verifier[T], Option[String])])
+  //      val ex = (dataNode \ "execution").headOption.flatMap(_.attribute("schedule")).flatMap(_.headOption).map(_.text)
+
+
+  def dataOperatorCreator[T](role: Node, dataNode: Node, className: Node): (DataManager[T]) => DataManager[_ <: T] = {
+    role.text match {
+      case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Initializer[T]]))
+      case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Updater[T]], ex))
+      case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Exporter[T]], ex))
+      case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Verifier[T]], ex))
+    }
+  }
+
+  def getConstructor(dn: Node): Option[(String) => Any] = {
+    dn \ "parameter" match {
+      case NodeSeq.Empty => noArgConstructor
+      case s: NodeSeq => parameterMapConstructor(s)
+    }
+  }
+
+  def parameterMapConstructor(s: NodeSeq): Option[(String) => _] = {
+    val keyValues = for (ss <- s; k <- ss.attribute("key"); v <- ss.attribute("value")) yield {
+      k.text -> v.text
+    }
+    catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(keyValues.toMap))
+  }
+
+  def noArgConstructor: Option[(String) => _] = {
+    catching(classOf[Exception]).opt(Class.forName(_).newInstance())
+  }
+}
+
+case class DataManager[T <: KeyedObject](initializer: Option[Initializer[T]] = None,
+                                         updater: Option[Updater[T]] = None,
+                                         exporter: Option[Exporter[T]] = None,
+                                         verifier: Option[Verifier[T]] = None)
 
 object RichScheduleRunner {
   def fromNode(n: Node): RichScheduleRunner = {
@@ -38,47 +77,13 @@ object RichScheduleRunner {
       status = status,
       isPrimary = isPrimary,
       startup = startup,
-      conferenceMgr = parseManager[Conference](n, "conferences"),
-      aliasMgr = parseManager[Alias](n, "aliases"),
-      teamMgr = parseManager[Team](n, "teams"),
-      gameMgr = parseManager[Game](n, "games"),
-      resultMgr = parseManager[Result](n, "results")
+      conferenceMgr = DataManager.fromNode[Conference](n \ "conferences"),
+      aliasMgr = DataManager.fromNode[Alias](n, "aliases"),
+      teamMgr = DataManager.fromNode[Team](n \ "teams"),
+      gameMgr = DataManager.fromNode[Game](n \ "games"),
+      resultMgr = DataManager.fromNode[Result](n \ "results")
     )
   }
-
-  def parseManager[T <: KeyedObject](n: Node, t: String): DataManager[T] = {
-    def getConstructor(dn: Node): Option[(String) => Any] = {
-      dn \ "parameter" match {
-        case NodeSeq.Empty => {
-          catching(classOf[Exception]).opt(Class.forName(_).newInstance())
-        }
-        case s: NodeSeq => {
-          val parameters = (for (
-            ss <- s;
-            k <- ss.attribute("key");
-            v <- ss.attribute("value")) yield {
-            k.text -> v.text
-          }).toMap
-          catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(parameters))
-        }
-      }
-    }
-    val functions: Seq[(DataManager[T]) => DataManager[T]] = for (
-      cn <- (n \ t);
-      dn <- (cn \ "data");
-      rn <- dn.attribute("role");
-      tn <- dn.attribute("class")) yield {
-      val ex = (dn \ "execution").headOption.flatMap(_.attribute("schedule")).flatMap(_.headOption).map(_.text)
-      rn.text match {
-        case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dn).map(_.apply(tn.text).asInstanceOf[Initializer[T]]))
-        case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Updater[T]], ex)))
-        case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Exporter[T]], ex)))
-        case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dn).map(f => (f.apply(tn.text).asInstanceOf[Verifier[T]], ex)))
-      }
-    }
-    functions.foldLeft(DataManager[T](None, None, None, None))((dm, f) => f(dm))
-  }
-
 }
 
 sealed trait ScheduleStatus
@@ -104,33 +109,44 @@ case class RichScheduleRunner(key: String,
   require(StringUtils.isNotBlank(key) && validKey(key))
 
   log.info("Initializing schedule %s(%s)".format(name, key))
-  if (isPrimary) log.info("%s is the primary schedule of this instance".format(name))
+  log.info("Schedule %s status is %s".format(key, status))
+  if (isPrimary)
+    log.info("%s is the primary schedule of this instance".format(key))
+  else
+    log.info("%s is NOT the primary schedule of this instance".format(key))
 
+  def initializeSchedule() {
+    val sd = new ScheduleDao
+    val schedule: Schedule = startup match {
+      case ColdStartup => {
+        log.info("COLD startup everything will be initialized.")
+        sd.findByKey(key).map(s => {
+          log.info("Dropping existing schedule with key %s".format(key))
+          sd.delete(s.id)
+        })
+        log.info("Creating schedule with key %s".format(key))
+        (sd.save _).
+          andThen(s => conferenceMgr.initializer.map(i => load[Conference](s, i, new ConferenceDao())).getOrElse(s)).
+          andThen(s => teamMgr.initializer.map(i => load[Team](s, i, new TeamDao())).getOrElse(s)).
+          andThen(s => aliasMgr.initializer.map(i => load[Alias](s, i, new AliasDao())).getOrElse(s)).
+          andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
+          andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
+          apply(new Schedule(key = key, name = name, isPrimary = isPrimary))
+      }
 
-  startup match {
-    case ColdStartup => {
-      log.info("COLD startup everything will be initialized.")
-      val sd = new ScheduleDao
-      sd.findByKey(key).map(s => {
-        log.info("Dropping existing schedule with key %s".format(key))
-        sd.delete(s.id)
-      })
-      log.info("Creating schedule with key %s".format(key))
-      (sd.save _).
-        andThen(s => conferenceMgr.initializer.map(i => load[Conference](s, i, new ConferenceDao())).getOrElse(s)).
-        andThen(s => teamMgr.initializer.map(i => load[Team](s, i, new TeamDao())).getOrElse(s)).
-        andThen(s => aliasMgr.initializer.map(i => load[Alias](s, i, new AliasDao())).getOrElse(s)).
-        andThen(s => gameMgr.initializer.map(i => load[Game](s, i, new GameDao())).getOrElse(s)).
-        andThen(s => resultMgr.initializer.map(i => load[Result](s, i, new ResultDao())).getOrElse(s)).
-        apply(new Schedule(key = key, name = name, isPrimary = isPrimary))
-      log.info("Initialization is complete.")
+      case HotStartup => {
+        log.info("HOT startup no initialization, just start update jobs")
+        sd.findByKey(key) match {
+          case Some(s) => s
+          case None => throw new IllegalArgumentException("Schedule not found on hot startup")
+        }
+      }
     }
-
-    case HotStartup => {
-      log.info("HOT startup no initialization, just start update jobs")
-    }
+    log.info("Schedule initialization complete")
+    schedule
   }
 
+  initializeSchedule()
   initializeExporter(conferenceMgr, _.conferenceList)
   initializeExporter(aliasMgr, _.aliasList)
   initializeExporter(teamMgr, _.teamList)
@@ -191,16 +207,6 @@ case class RichScheduleRunner(key: String,
     new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
   }
 
-  private def loadIfEmpty[T <: KeyedObject](schedule: Schedule, emptyTest: Schedule => Boolean, ds: Initializer[T], dao: BaseDao[T, _]): Schedule = {
-    if (emptyTest(schedule)) {
-      for (data <- ds.load; t <- ds.build(schedule, data)) {
-        dao.save(t)
-      }
-      new ScheduleDao().findByKey(schedule.key).getOrElse(schedule)
-    } else {
-      schedule
-    }
-  }
 
   private def update[T <: KeyedObject, ID](schedule: Schedule, ds: Updater[T], dao: BaseDao[T, ID], f: Schedule => List[T], asOf: Date = new DateMidnight().toDate): Schedule = {
     val up: Map[String, T] = ds.loadAsOf(asOf).flatMap(d => ds.build(schedule, d)).map(x => x.key -> x).toMap
