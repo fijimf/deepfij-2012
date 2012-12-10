@@ -11,24 +11,22 @@ import org.joda.time.DateMidnight
 import java.util.Date
 
 object DataManager {
-  def fromNode[T](n: Node): DataManager[T] = {
+  def fromNode[T <: KeyedObject](n: Node): DataManager[T] = {
     val functions = for (dataNode <- (n \ "data");
                          role <- dataNode.attribute("role").flatMap(_.headOption);
                          className <- dataNode.attribute("class").flatMap(_.headOption)) yield {
-      dataOperatorCreator(role, dataNode, className)
+      dataOperatorCreator[T](role, dataNode, className)
     }
     functions.foldLeft(DataManager[T]())((dm, f) => f(dm))
   }
 
-  //      val ex = (dataNode \ "execution").headOption.flatMap(_.attribute("schedule")).flatMap(_.headOption).map(_.text)
 
-
-  def dataOperatorCreator[T](role: Node, dataNode: Node, className: Node): (DataManager[T]) => DataManager[_ <: T] = {
+  def dataOperatorCreator[T <: KeyedObject](role: Node, dataNode: Node, className: Node): (DataManager[T]) => DataManager[T] = {
     role.text match {
       case "initializer" => (d: DataManager[T]) => d.copy(initializer = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Initializer[T]]))
-      case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Updater[T]], ex))
-      case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Exporter[T]], ex))
-      case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Verifier[T]], ex))
+      case "updater" => (d: DataManager[T]) => d.copy(updater = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Updater[T]]))
+      case "exporter" => (d: DataManager[T]) => d.copy(exporter = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Exporter[T]]))
+      case "verifier" => (d: DataManager[T]) => d.copy(verifier = getConstructor(dataNode).map(_.apply(className.text).asInstanceOf[Verifier[T]]))
     }
   }
 
@@ -43,11 +41,11 @@ object DataManager {
     val keyValues = for (ss <- s; k <- ss.attribute("key"); v <- ss.attribute("value")) yield {
       k.text -> v.text
     }
-    catching(classOf[Exception]).opt(Class.forName(_).getConstructor(classOf[Map[String, String]]).newInstance(keyValues.toMap))
+    catching(classOf[Exception]).opt((s: String) => Class.forName(s).getConstructor(classOf[Map[String, String]]).newInstance(keyValues.toMap))
   }
 
   def noArgConstructor: Option[(String) => _] = {
-    catching(classOf[Exception]).opt(Class.forName(_).newInstance())
+    catching(classOf[Exception]).opt((s: String) => Class.forName(s).newInstance())
   }
 }
 
@@ -77,12 +75,23 @@ object RichScheduleRunner {
       status = status,
       isPrimary = isPrimary,
       startup = startup,
-      conferenceMgr = DataManager.fromNode[Conference](n \ "conferences"),
-      aliasMgr = DataManager.fromNode[Alias](n, "aliases"),
-      teamMgr = DataManager.fromNode[Team](n \ "teams"),
-      gameMgr = DataManager.fromNode[Game](n \ "games"),
-      resultMgr = DataManager.fromNode[Result](n \ "results")
+      conferenceMgr = DataManager.fromNode[Conference]((n \ "conferences").head),
+      aliasMgr = DataManager.fromNode[Alias]((n \ "aliases").head),
+      teamMgr = DataManager.fromNode[Team]((n \ "teams").head),
+      gameMgr = DataManager.fromNode[Game]((n \ "games").head),
+      resultMgr = DataManager.fromNode[Result]((n \ "results").head)
     )
+  }
+
+  def cronSchedule(n: Node): Map[String, Map[String, String]] = {
+    (for (d <- List("conferences", "aliases", "teams", "games", "results");
+          dn <- (n \ d)) yield {
+      d -> (for (r <- List("exporter", "updater", "verifier");
+                 rn <- (dn \ r);
+                 s <- rn.attribute("schedule").flatMap(_.headOption)) yield {
+        r -> s.text
+      }).toMap
+    }).toMap
   }
 }
 
@@ -147,55 +156,18 @@ case class RichScheduleRunner(key: String,
   }
 
   initializeSchedule()
-  initializeExporter(conferenceMgr, _.conferenceList)
-  initializeExporter(aliasMgr, _.aliasList)
-  initializeExporter(teamMgr, _.teamList)
-  initializeExporter(gameMgr, _.gameList)
-  initializeExporter(resultMgr, _.gameList.flatMap(_.resultOpt))
 
-  if (status == ActiveSchedule) {
-    initializeUpdater(gameMgr, new GameDao, _.gameList)
-    initializeUpdater(resultMgr, new ResultDao, _.gameList.flatMap(_.resultOpt))
-  }
+  //  initializeExporter(conferenceMgr, _.conferenceList)
+  //  initializeExporter(aliasMgr, _.aliasList)
+  //  initializeExporter(teamMgr, _.teamList)
+  //  initializeExporter(gameMgr, _.gameList)
+  //  initializeExporter(resultMgr, _.gameList.flatMap(_.resultOpt))
+  //
+  //  if (status == ActiveSchedule) {
+  //    initializeUpdater(gameMgr, new GameDao, _.gameList)
+  //    initializeUpdater(resultMgr, new ResultDao, _.gameList.flatMap(_.resultOpt))
+  //  }
 
-
-  def initializeExporter[T <: KeyedObject](mgr: DataManager[T], f: (Schedule) => List[T]): Any = {
-    mgr.exporter.foreach(exp => {
-      val export = exp._1
-      exp._2 match {
-        case Some(sched) => {
-          log.info("Setting schedule '%s' for exporter.".format(sched))
-          Cron.scheduleJob(sched, () => {
-            export.export(key, f)
-          })
-        }
-        case None => {
-          log.info("No schedule set for exporter.  Running once at startup")
-          export.export(key, f)
-        }
-      }
-    })
-  }
-
-  def initializeUpdater[T <: KeyedObject, ID](mgr: DataManager[T], dao: BaseDao[T, ID], f: (Schedule) => List[T]): Any = {
-    mgr.updater.foreach(up => {
-      val u = up._1
-      up._2 match {
-        case Some(sched) => {
-          log.info("Setting schedule '%s' for updater.".format(sched))
-          Cron.scheduleJob(sched, () => {
-            val sd = new ScheduleDao
-            sd.findByKey(key).map(s => {
-              update[T, ID](s, u, dao, f)
-            })
-          })
-        }
-        case None => {
-          log.info("No schedule set for updater.  Will not be called")
-        }
-      }
-    })
-  }
 
   private def load[T <: KeyedObject](schedule: Schedule, ds: Initializer[T], dao: BaseDao[T, _]): Schedule = {
     val list: List[Map[String, String]] = ds.load
