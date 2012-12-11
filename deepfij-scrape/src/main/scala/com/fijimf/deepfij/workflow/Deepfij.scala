@@ -56,7 +56,9 @@ object Deepfij {
   def initializeCronJobs[U <: KeyedObject](r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
     if (map.contains("exporter")) {
       val cronEntry = map("exporter")
-      log.info("  exporter -> " + cronEntry)
+      log.info("Running exporter")
+      mgr.exporter.get.export(r.key, f)
+      log.info("Adding exporter cron entry " + cronEntry)
       Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
     }
     if (map.contains("updater")) {
