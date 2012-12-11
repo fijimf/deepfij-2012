@@ -38,11 +38,11 @@ object Deepfij {
       cron.foreach {
         case (s: String, map: Map[String, String]) => {
           s match {
-            case "conferences" => initializeCronJobs[Conference](r.conferenceMgr, map)
-            case "aliases" => initializeCronJobs[Alias](r.aliasMgr, map)
-            case "teams" => initializeCronJobs[Team](r.teamMgr, map)
-            case "games" => initializeCronJobs[Game](r.gameMgr, map)
-            case "results" => initializeCronJobs[Result](r.resultMgr, map)
+            case "conferences" => initializeCronJobs[Conference](r, r.conferenceMgr, map, _.conferenceList, new ConferenceDao)
+            case "aliases" => initializeCronJobs[Alias](r, r.aliasMgr, map, _.aliasList, new AliasDao)
+            case "teams" => initializeCronJobs[Team](r, r.teamMgr, map, _.teamList, new TeamDao)
+            case "games" => initializeCronJobs[Game](r, r.gameMgr, map, _.gameList, new GameDao)
+            case "results" => initializeCronJobs[Result](r, r.resultMgr, map, _.gameList.flatMap(_.resultOpt), new ResultDao)
           }
         }
       }
@@ -51,8 +51,22 @@ object Deepfij {
     runners.toList
   }
 
-  def initializeCronJobs[U <: KeyedObject](mgr: DataManager[U], map: Map[String, String]) {
-
+  def initializeCronJobs[U <: KeyedObject](r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
+    if (map.contains("exporter")) {
+      val cronEntry = map("exporter")
+      Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
+    }
+    if (map.contains("updater")) {
+      val cronEntry = map("updater")
+      Cron.scheduleJob(cronEntry, () => {
+        log.info("Updating " + classOf[U].getName)
+        val (deletes, inserts) = mgr.updater.get.update[U](r.key, f)
+        log.info("Deletes: \n" + deletes.map(_.key).mkString("\n"))
+        log.info("Inserts: \n" + insertss.map(_.key).mkString("\n"))
+        dao.deleteObjects(deletes)
+        dao.saveAll(inserts)
+      })
+    }
   }
 
   def main(args: Array[String]) {
