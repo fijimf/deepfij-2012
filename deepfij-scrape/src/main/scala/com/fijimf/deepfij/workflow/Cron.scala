@@ -38,7 +38,6 @@ import it.sauronsoftware.cron4j.Scheduler
 
 object Cron {
   val scheduler = new Scheduler
-  scheduler.setDaemon(true)
   scheduler.start()
 
   def scheduleJob(cron: String, f: () => Unit): String = {
