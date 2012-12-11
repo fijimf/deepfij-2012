@@ -34,6 +34,7 @@ object Deepfij {
     val runners = schedNodes.map(n => {
       val r = RichScheduleRunner.fromNode(n)
       r.initializeSchedule()
+      log.info("Initializing cron jobs")
       val cron = RichScheduleRunner.cronSchedule(n)
       cron.foreach {
         case (s: String, map: Map[String, String]) => {
@@ -46,6 +47,7 @@ object Deepfij {
           }
         }
       }
+      log.info("Done initializing cron jobs")
       r
     })
     runners.toList
@@ -54,15 +56,17 @@ object Deepfij {
   def initializeCronJobs[U <: KeyedObject](r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
     if (map.contains("exporter")) {
       val cronEntry = map("exporter")
+      log.info("  exporter -> " + cronEntry)
       Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
     }
     if (map.contains("updater")) {
       val cronEntry = map("updater")
+      log.info(" updater -> " + cronEntry)
       Cron.scheduleJob(cronEntry, () => {
-        log.info("Updating " + classOf[U].getName)
-        val (deletes, inserts) = mgr.updater.get.update[U](r.key, f)
+        log.info("Updating ")
+        val (deletes, inserts) = mgr.updater.get.update(r.key, f)
         log.info("Deletes: \n" + deletes.map(_.key).mkString("\n"))
-        log.info("Inserts: \n" + insertss.map(_.key).mkString("\n"))
+        log.info("Inserts: \n" + inserts.map(_.key).mkString("\n"))
         dao.deleteObjects(deletes)
         dao.saveAll(inserts)
       })
