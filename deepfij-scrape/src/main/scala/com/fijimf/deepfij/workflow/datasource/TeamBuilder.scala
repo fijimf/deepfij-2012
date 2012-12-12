@@ -10,7 +10,7 @@ trait TeamBuilder extends Builder[Team] {
       key <- data.get("key");
       name <- data.get("name");
       conferenceName <- data.get("conference");
-      conference <- schedule.conferenceByName.get(conferenceName);
+      conference <- schedule.conferenceByName.get(conferenceName).orElse(schedule.conferenceByKey.get(conferenceName));
       longName <- data.get("longName")
     ) yield {
       new Team(id = 0L,

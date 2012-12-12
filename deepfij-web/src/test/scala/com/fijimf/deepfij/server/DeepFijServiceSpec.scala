@@ -1,5 +1,6 @@
 package com.fijimf.deepfij.server
 
+import com.fijimf.deepfij.server.controller._
 import java.util.Date
 import com.fijimf.deepfij.modelx._
 
@@ -23,7 +24,7 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   val securityManager: SecurityManager = factory.getInstance()
 
   SecurityUtils.setSecurityManager(securityManager)
-  addFilter(classOf[com.fijimf.deepfij.server.controller.Controller], "/*")
+  addFilter(classOf[Controller], "/*")
 
   val sdao: ScheduleDao = new ScheduleDao
   val cdao: ConferenceDao = new ConferenceDao

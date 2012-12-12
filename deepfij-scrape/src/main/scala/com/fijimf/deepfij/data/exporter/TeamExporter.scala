@@ -13,11 +13,9 @@ class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
 
   def load = data
 
-  println(data.mkString("\n"))
-
   def fromString(s: String): Map[String, String] = {
     def ident(m: Map[String, String]): Map[String, String] = m
-    s.split('|').toList match {
+    s.split('|').toList.padTo(9, "") match {
       case key :: name :: conference :: longName :: logo :: nickname :: officialUrl :: primaryColor :: secondaryColor :: tail => {
         (ident _).andThen(addNotBlank(_, "nickname", nickname)).
           andThen(addNotBlank(_, "logo", logo)).
@@ -26,12 +24,16 @@ class TeamExporter(parms: Map[String, String]) extends Exporter[Team] with TeamB
           andThen(addNotBlank(_, "secondaryColor", secondaryColor)).
           apply(Map("key" -> key, "name" -> name, "conference" -> conference, "longName" -> longName))
       }
-      case _ => Map.empty[String, String]
+      case _ => {
+        log.error("Cannot parse team=" + s)
+        log.error(s.split('|').toList.padTo(9, ""))
+        Map.empty[String, String]
+      }
     }
   }
 
   def toString(t: Team): String = {
-    t.key + "|" + t.name + "|" + t.conference.key + "|" + t.longName + "|" + t.logoOpt.getOrElse("") + "|" + t.nicknameOpt.getOrElse("") + "|" + t.officialUrlOpt.getOrElse("") + "|" + t.primaryColorOpt.getOrElse("") + "|" + t.secondaryColorOpt.getOrElse("")
+    t.key + "|" + t.name + "|" + t.conference.key + "|" + t.longName + "|" + t.logoOpt.getOrElse("") + "|" + t.nicknameOpt.getOrElse("") + "|" + t.officialUrlOpt.getOrElse("") + "|" + t.primaryColorOpt.getOrElse("") + "|" + t.secondaryColorOpt.getOrElse("") + "|"
   }
 
 }
