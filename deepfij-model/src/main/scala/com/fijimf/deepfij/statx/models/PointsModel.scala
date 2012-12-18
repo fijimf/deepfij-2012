@@ -2,8 +2,10 @@ package com.fijimf.deepfij.statx.models
 
 import java.util.Date
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
-import com.fijimf.deepfij.statx.{ModelValues, TeamModel, ModelContext, SinglePassGameModel}
+import com.fijimf.deepfij.statx._
 import com.fijimf.deepfij.modelx.{MetaStat, Game, Team}
+import com.fijimf.deepfij.statx.ModelValues
+import com.fijimf.deepfij.statx.ModelContext
 
 
 class PointsModel extends SinglePassGameModel[Team] with TeamModel {
@@ -37,29 +39,33 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
 
   private[this] var runningTotals = Map.empty[Team, PointsRunning].withDefaultValue(PointsRunning())
 
-  val modelStatistic = (
-    for (o <- observationTypes; p <- populationMeasures) yield new MetaStat(
-      name = o.description + " " + p.description,
-      statKey = o.key + "-" + p.key,
-      format = p.format,
-      higherIsBetter = o.higherIsBetter)
-    )
-
-  val statistics = modelStatistic
-
-  def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
-    for (g <- gs; r <- g.resultOpt) {
-      runningTotals += (g.homeTeam -> runningTotals(g.homeTeam).update(r.homeScore, r.awayScore))
-      runningTotals += (g.awayTeam -> runningTotals(g.awayTeam).update(r.homeScore, r.awayScore))
-    }
-    val data: List[(MetaStat, ModelValues[Team])] = for (o <- observationTypes; p <- populationMeasures) yield {
-      val m = new MetaStat(
+  val modelStatistics: Map[String, MetaStat] = (
+    for (o <- observationTypes; p <- populationMeasures) yield {
+      val ms: MetaStat = new MetaStat(
         name = o.description + " " + p.description,
         statKey = o.key + "-" + p.key,
         format = p.format,
         higherIsBetter = o.higherIsBetter)
+      ms.statKey -> ms
+    }).toMap
+
+  val statistics = modelStatistics.values.toList
+
+  def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
+    println("Processing %s".format(d))
+
+    for (g <- gs; r <- g.resultOpt) {
+      runningTotals += (g.homeTeam -> runningTotals(g.homeTeam).update(r.homeScore, r.awayScore))
+      runningTotals += (g.awayTeam -> runningTotals(g.awayTeam).update(r.awayScore, r.homeScore))
+    }
+    val data: List[(MetaStat, ModelValues[Team])] = for (o <- observationTypes; p <- populationMeasures; m <- modelStatistics.get(o.key + "-" + p.key)) yield {
       m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).toArray))).toMap))
     }
-    data.foldLeft(ctx)((context: ModelContext[Team], tup: (MetaStat, ModelValues[Team])) => context.copy(stats = context.stats + (tup._1 -> tup._2)))
+    val xxxxx: ModelContext[Team] = data.foldLeft(ctx)((context: ModelContext[Team], tup: (MetaStat, ModelValues[Team])) => {
+      val stats: Map[StatInfo, ModelValues[Team]] = context.stats
+      val mvs: ModelValues[Team] = stats(tup._1).       ddddddddddd
+      context.copy(stats = stats + (tup._1 -> tup._2))
+    })
+    xxxxx
   }
 }

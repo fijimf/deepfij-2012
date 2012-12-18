@@ -3,6 +3,7 @@ package com.fijimf.deepfij.statx.models
 import java.util.Date
 import com.fijimf.deepfij.modelx.{Game, Team, MetaStat}
 import com.fijimf.deepfij.statx.{TeamModel, ModelContext, SinglePassGameModel}
+import org.apache.log4j.Logger
 
 class WonLostModel extends SinglePassGameModel[Team] with TeamModel {
   val w = new MetaStat(name = "Wins", statKey = "wins", format = "%3.0f", higherIsBetter = true)
@@ -18,10 +19,11 @@ class WonLostModel extends SinglePassGameModel[Team] with TeamModel {
   }
 
   private[this] var runningTotals = Map.empty[Team, WonLostRunning].withDefaultValue(WonLostRunning())
-
+  val log = Logger.getLogger(this.getClass)
   def statistics = List(w, l, wp, ws, ls)
 
   def processGames(d: Date, gs: List[Game], ctx: ModelContext[Team]) = {
+    println("Processing %s".format(d))
     for (g <- gs; r <- g.resultOpt; wt <- g.winner; lt <- g.loser) {
       runningTotals += (wt -> runningTotals(wt).withWin)
       runningTotals += (lt -> runningTotals(lt).withLoss)
