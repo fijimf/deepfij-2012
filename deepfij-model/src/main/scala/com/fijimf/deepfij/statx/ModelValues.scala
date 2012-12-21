@@ -13,4 +13,15 @@ case class ModelValues[T](values: Map[Date, Map[T, Double]] = Map.empty[Date, Ma
     }
     ModelValues(values + (d -> revisedValue))
   }
+
+  def update(m: ModelValues[T]): ModelValues[T] = {
+    val dates: Iterable[Date] = m.values.keys
+    val updatedValues: Map[Date, Map[T, Double]] = dates.foldLeft(values)((vs: Map[Date, Map[T, Double]], d: Date) => {
+      vs.get(d) match {
+        case Some(dm: Map[T, Double]) => values + (d -> (dm ++ m.values(d)))
+        case None => values + (d -> m.values(d))
+      }
+    })
+    ModelValues(updatedValues)
+  }
 }

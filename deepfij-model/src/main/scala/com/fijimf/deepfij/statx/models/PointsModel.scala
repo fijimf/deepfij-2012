@@ -58,14 +58,11 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
       runningTotals += (g.homeTeam -> runningTotals(g.homeTeam).update(r.homeScore, r.awayScore))
       runningTotals += (g.awayTeam -> runningTotals(g.awayTeam).update(r.awayScore, r.homeScore))
     }
-    val data: List[(MetaStat, ModelValues[Team])] = for (o <- observationTypes; p <- populationMeasures; m <- modelStatistics.get(o.key + "-" + p.key)) yield {
+    val data: Map[StatInfo, ModelValues[Team]] = (for (o <- observationTypes;
+                                                       p <- populationMeasures;
+                                                       m <- modelStatistics.get(o.key + "-" + p.key)) yield {
       m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).toArray))).toMap))
-    }
-    val xxxxx: ModelContext[Team] = data.foldLeft(ctx)((context: ModelContext[Team], tup: (MetaStat, ModelValues[Team])) => {
-      val stats: Map[StatInfo, ModelValues[Team]] = context.stats
-      val mvs: ModelValues[Team] = stats(tup._1).       ddddddddddd
-      context.copy(stats = stats + (tup._1 -> tup._2))
-    })
-    xxxxx
+    }).toMap
+    ctx.update(ModelContext(data))
   }
 }
