@@ -16,7 +16,7 @@ class NcaaGameScraper(teams: Map[String, String]) {
 
     val h = new Http()
     def parseGameResponse(s: String): Option[GameResponse] = {
-      val j = s.replaceFirst( """^callbackWrapper\(\{""", "{").replaceFirst( """\}\)$""", "}").replaceAll( """,\s+,""", ",")
+      val j = s.replaceFirst( """^callbackWrapper\(\{""", "{").replaceFirst( """\}\)$""", "}").replaceAll( """,[\s+,]+""", ",").replaceAll( """,\s*\]""", "]")
       try {
         Some(parse[GameResponse](j))
       } catch {
