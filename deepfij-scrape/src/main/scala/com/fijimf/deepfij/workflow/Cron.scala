@@ -44,7 +44,7 @@ object Cron {
   val scheduler = new Scheduler
   scheduler.start()
 
-  scheduler.schedule("0/5 * * * *", new Runnable() {
+  scheduler.schedule("*/2 * * * *", new Runnable() {
     def run() {
       log.info("Cron Heartbeat.  Known tasks are " + tasks.mkString(", "))
     }
