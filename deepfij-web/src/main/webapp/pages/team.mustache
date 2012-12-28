@@ -6,23 +6,23 @@
 <div class="container-fluid">
     {{> epigram}}
     <div class="row-fluid">
-        <div class="span1 offset1">
+        <div class="span1">
             <a target="_blank" href="{{officialUrl}}">
-                <img src="{{logoUrl}}"/>
+                <img class="team-logo" src="{{logoUrl}}"/>
             </a>
         </div>
-        <div class="span10">
-            <h1>
+        <div class="span11">
+            <h2 class="team-name">
                 {{name}} {{nickname}}
-            </h1>
-            <h3>
+            </h2>
+            <h4>
                 ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
                 {{#conference}}
                     <a href="/conference/{{key}}">
                         {{name}}
                     </a>
                 {{/conference}}
-            </h3>
+            </h4>
         </div>
     </div>
     <div class="row">

@@ -7,10 +7,19 @@
 
 /* Body and structure
 -------------------------------------------------- */
+h2.team-name {
+    margin:0px;
+}
+
+img.team-logo {
+    padding-left: 15px;
+}
 body {
     background-color: #fff;
     position: relative;
+    padding: 25px;
 }
+
 
 section {
     padding-top: 60px;
