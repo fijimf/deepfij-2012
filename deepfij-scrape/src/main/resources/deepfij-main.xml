@@ -30,7 +30,7 @@
             <data role="updater" class="com.fijimf.deepfij.data.ncaa.NcaaComGameSource">
                 <parameter key="startDate" value="20121109"/>
                 <parameter key="endDate" value="20130415"/>
-                <execution schedule="0/10 * * * *"/>
+                <execution schedule="30 10 * * * *"/>
             </data>
         </games>
         <results>
@@ -42,7 +42,7 @@
             <data role="updater" class="com.fijimf.deepfij.data.ncaa.NcaaComResultSource">
                 <parameter key="startDate" value="20121109"/>
                 <parameter key="endDate" value="20130415"/>
-                <execution schedule="30 4 * * *"/>
+                <execution schedule="30 11 * * *"/>
             </data>
         </results>
     </schedule>
