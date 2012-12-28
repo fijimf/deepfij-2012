@@ -39,11 +39,11 @@ object Deepfij {
       cron.foreach {
         case (s: String, map: Map[String, String]) => {
           s match {
-            case "conferences" => initializeCronJobs[Conference](r, r.conferenceMgr, map, _.conferenceList, new ConferenceDao)
-            case "aliases" => initializeCronJobs[Alias](r, r.aliasMgr, map, _.aliasList, new AliasDao)
-            case "teams" => initializeCronJobs[Team](r, r.teamMgr, map, _.teamList, new TeamDao)
-            case "games" => initializeCronJobs[Game](r, r.gameMgr, map, _.gameList, new GameDao)
-            case "results" => initializeCronJobs[Result](r, r.resultMgr, map, _.gameList.flatMap(_.resultOpt), new ResultDao)
+            case "conferences" => initializeCronJobs[Conference]("conferences", r, r.conferenceMgr, map, _.conferenceList, new ConferenceDao)
+            case "aliases" => initializeCronJobs[Alias]("aliases", r, r.aliasMgr, map, _.aliasList, new AliasDao)
+            case "teams" => initializeCronJobs[Team]("teams", r, r.teamMgr, map, _.teamList, new TeamDao)
+            case "games" => initializeCronJobs[Game]("games", r, r.gameMgr, map, _.gameList, new GameDao)
+            case "results" => initializeCronJobs[Result]("results", r, r.resultMgr, map, _.gameList.flatMap(_.resultOpt), new ResultDao)
           }
         }
       }
@@ -53,18 +53,20 @@ object Deepfij {
     runners.toList
   }
 
-  def initializeCronJobs[U <: KeyedObject](r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
+  def initializeCronJobs[U <: KeyedObject](objKey: String, r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
     if (map.contains("exporter")) {
       val cronEntry = map("exporter")
-      log.info("Running exporter")
+      log.info("Running exporter for " + objKey)
       mgr.exporter.get.export(r.key, f)
-      log.info("Adding exporter cron entry " + cronEntry)
-      Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
+      log.info("Adding exporter cron entry for" + objKey + " (" + cronEntry + ")")
+      val id = Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
+      log.info("Scheduled job " + id)
+
     }
     if (map.contains("updater")) {
       val cronEntry = map("updater")
-      log.info(" updater -> " + cronEntry)
-      Cron.scheduleJob(cronEntry, () => {
+      log.info("Adding updater cron entry for" + objKey + " (" + cronEntry + ")")
+      val id = Cron.scheduleJob(cronEntry, () => {
         log.info("Updating ")
         val (deletes, inserts) = mgr.updater.get.update(r.key, f)
         log.info("Deletes: \n" + deletes.map(_.key).mkString("\n"))
@@ -72,6 +74,7 @@ object Deepfij {
         dao.deleteObjects(deletes)
         dao.saveAll(inserts)
       })
+      log.info("Scheduled job " + id)
     }
   }
 

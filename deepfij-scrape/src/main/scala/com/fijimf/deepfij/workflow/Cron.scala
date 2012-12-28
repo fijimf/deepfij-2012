@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.workflow
 
 import it.sauronsoftware.cron4j.Scheduler
+import org.apache.log4j.Logger
 
 /**
  * Solves the following problem.
@@ -37,15 +38,26 @@ import it.sauronsoftware.cron4j.Scheduler
  */
 
 object Cron {
+  val log = Logger.getLogger(this.getClass)
+
+  private var tasks = List.empty[String]
   val scheduler = new Scheduler
   scheduler.start()
 
+  scheduler.schedule("0/5 * * * *", new Runnable() {
+    def run() {
+      log.info("Cron Heartbeat.  Known tasks are " + tasks.mkString(", "))
+    }
+  })
+
   def scheduleJob(cron: String, f: () => Unit): String = {
-    scheduler.schedule(cron, new Runnable() {
+    val id = scheduler.schedule(cron, new Runnable() {
       def run() {
         f()
       }
     })
+    tasks = id :: tasks
+    id
   }
 
   def shutdown() {
