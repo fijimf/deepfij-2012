@@ -5,9 +5,9 @@ import com.fijimf.deepfij.modelx.Result
 import java.util.Date
 import com.fijimf.deepfij.workflow.{Verifier, Initializer, Updater}
 import com.fijimf.deepfij.workflow.datasource.ResultBuilder
+import com.fijimf.deepfij.util.Logging
 
-class KenPomResultSource(parms: Map[String, String]) extends Initializer[Result] with Updater[Result] with Verifier[Result] with ResultBuilder {
-  val log = Logger.getLogger(this.getClass)
+class KenPomResultSource(parms: Map[String, String]) extends Initializer[Result] with Updater[Result] with Verifier[Result] with ResultBuilder with Logging {
   val scraper = new KenPomScraper(parms("url"))
 
   def load = scraper.gameData.map(tup => Map("homeTeam" -> tup._2, "awayTeam" -> tup._4, "homeScore" -> tup._3, "awayScore" -> tup._5, "date" -> tup._1))

@@ -3,12 +3,11 @@ package com.fijimf.deepfij.data.ncaa
 import com.fijimf.deepfij.modelx.Result
 import java.util.Date
 import org.apache.log4j.Logger
-import com.fijimf.deepfij.util.DateStream
+import com.fijimf.deepfij.util.{Logging, DateStream}
 import com.fijimf.deepfij.workflow.{Verifier, Updater, Initializer}
 import com.fijimf.deepfij.workflow.datasource.ResultBuilder
 
-class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result] with Updater[Result] with Verifier[Result] with ResultBuilder {
-  val log = Logger.getLogger(this.getClass)
+class NcaaComResultSource(parms: Map[String, String]) extends Initializer[Result] with Updater[Result] with Verifier[Result] with ResultBuilder with Logging {
 
   val scraper = new NcaaGameScraper(Map.empty)
   val startDate = yyyymmdd.parse(parms("startDate"))

@@ -58,21 +58,31 @@ object Deepfij {
       val cronEntry = map("exporter")
       log.info("Running exporter for " + objKey)
       mgr.exporter.get.export(r.key, f)
-      log.info("Adding exporter cron entry for" + objKey + " (" + cronEntry + ")")
+      log.info("Adding exporter cron entry for " + objKey + " (" + cronEntry + ")")
       val id = Cron.scheduleJob(cronEntry, () => mgr.exporter.get.export(r.key, f))
       log.info("Scheduled job " + id)
 
     }
     if (map.contains("updater")) {
       val cronEntry = map("updater")
-      log.info("Adding updater cron entry for" + objKey + " (" + cronEntry + ")")
+      log.info("Adding updater cron entry for " + objKey + " (" + cronEntry + ")")
       val id = Cron.scheduleJob(cronEntry, () => {
-        log.info("Updating ")
+        log.info("Updating " + objKey)
         val (deletes, inserts) = mgr.updater.get.update(r.key, f)
         log.info("Deletes: \n" + deletes.map(_.key).mkString("\n"))
         log.info("Inserts: \n" + inserts.map(_.key).mkString("\n"))
-        dao.deleteObjects(deletes)
-        dao.saveAll(inserts)
+        try {
+          dao.deleteObjects(deletes)
+        }
+        catch {
+          case e: Throwable => "Unable to run update delete failed: " + e.getMessage
+        }
+        try {
+          dao.saveAll(inserts)
+        }
+        catch {
+          case e: Throwable => "Unable to run update delete failed: " + e.getMessage
+        }
       })
       log.info("Scheduled job " + id)
     }

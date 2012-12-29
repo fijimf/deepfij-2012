@@ -5,8 +5,9 @@ import java.util.Date
 import com.fijimf.deepfij.modelx._
 import com.fijimf.deepfij.workflow.{Updater, Verifier, Initializer}
 import com.fijimf.deepfij.workflow.datasource.ConferenceBuilder
+import com.fijimf.deepfij.util.Logging
 
-class NcaaComConferenceSource extends Initializer[Conference] with Updater[Conference] with Verifier[Conference] with ConferenceBuilder {
+class NcaaComConferenceSource extends Initializer[Conference] with Updater[Conference] with Verifier[Conference] with ConferenceBuilder with Logging {
 
   def load: List[Map[String, String]] = {
     val toSet = NcaaTeamScraper.teamData.flatMap(_.get("conference")).toSet
