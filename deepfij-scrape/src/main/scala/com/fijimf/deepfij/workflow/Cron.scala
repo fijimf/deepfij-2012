@@ -2,6 +2,7 @@ package com.fijimf.deepfij.workflow
 
 import it.sauronsoftware.cron4j.Scheduler
 import org.apache.log4j.Logger
+import management.{GarbageCollectorMXBean, ManagementFactory, MemoryMXBean}
 
 /**
  * Solves the following problem.
@@ -46,7 +47,11 @@ object Cron {
 
   scheduler.schedule("*/2 * * * *", new Runnable() {
     def run() {
-      log.info("Cron Heartbeat.  Known tasks are " + tasks.mkString(", "))
+      log.info("Cron Heartbeat.  %d tasks are scheduled.".format(tasks.size))
+
+      val mem: MemoryMXBean = ManagementFactory.getMemoryMXBean()
+      log.info("Heap Memory: " + mem.getHeapMemoryUsage.toString)
+      log.info("Non Heap Memory: " + mem.getNonHeapMemoryUsage.toString)
     }
   })
 

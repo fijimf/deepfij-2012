@@ -30,13 +30,14 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
 
   def saveAll(list: List[T]): Unit = {
     val em: EntityManager = entityManager
+    log.info("Starting save of %d objects".format(list.size))
     transactional {
       list.foreach(t => {
         em.persist(t)
       })
     }
     em.clear() //Flush 1st level cache
-
+    log.info("Save complete")
   }
 
   def delete(id: ID) {
