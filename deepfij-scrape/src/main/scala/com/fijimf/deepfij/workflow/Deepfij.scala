@@ -39,11 +39,11 @@ object Deepfij {
       cron.foreach {
         case (s: String, map: Map[String, String]) => {
           s match {
-            case "conferences" => initializeCronJobs[Conference]("conferences", r, r.conferenceMgr, map, _.conferenceList, new ConferenceDao)
-            case "aliases" => initializeCronJobs[Alias]("aliases", r, r.aliasMgr, map, _.aliasList, new AliasDao)
-            case "teams" => initializeCronJobs[Team]("teams", r, r.teamMgr, map, _.teamList, new TeamDao)
-            case "games" => initializeCronJobs[Game]("games", r, r.gameMgr, map, _.gameList, new GameDao)
-            case "results" => initializeCronJobs[Result]("results", r, r.resultMgr, map, _.gameList.flatMap(_.resultOpt), new ResultDao)
+            case "conferences" => initializeCronJobs[Conference]("conferences", r, r.conferenceMgr, map, _.conferenceList, () => new ConferenceDao)
+            case "aliases" => initializeCronJobs[Alias]("aliases", r, r.aliasMgr, map, _.aliasList, () => new AliasDao)
+            case "teams" => initializeCronJobs[Team]("teams", r, r.teamMgr, map, _.teamList, () => new TeamDao)
+            case "games" => initializeCronJobs[Game]("games", r, r.gameMgr, map, _.gameList, () => new GameDao)
+            case "results" => initializeCronJobs[Result]("results", r, r.resultMgr, map, _.gameList.flatMap(_.resultOpt), () => new ResultDao)
           }
         }
       }
@@ -53,7 +53,7 @@ object Deepfij {
     runners.toList
   }
 
-  def initializeCronJobs[U <: KeyedObject](objKey: String, r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: BaseDao[U, _]) {
+  def initializeCronJobs[U <: KeyedObject](objKey: String, r: RichScheduleRunner, mgr: DataManager[U], map: Map[String, String], f: (Schedule) => List[U], dao: () => BaseDao[U, _]) {
     if (map.contains("exporter")) {
       val cronEntry = map("exporter")
       log.info("Running exporter for " + objKey)
@@ -71,14 +71,15 @@ object Deepfij {
         val (deletes, inserts) = mgr.updater.get.update(r.key, f)
         log.info("Deletes: \n" + deletes.map(_.key).mkString("\n"))
         log.info("Inserts: \n" + inserts.map(_.key).mkString("\n"))
+        val d = dao()
         try {
-          dao.deleteObjects(deletes)
+          d.deleteObjects(deletes)
         }
         catch {
           case e: Throwable => "Unable to run update delete failed: " + e.getMessage
         }
         try {
-          dao.saveAll(inserts)
+          d.saveAll(inserts)
         }
         catch {
           case e: Throwable => "Unable to run update delete failed: " + e.getMessage
