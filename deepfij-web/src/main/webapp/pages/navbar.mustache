@@ -1,6 +1,6 @@
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
-        <div class="container">
+        <div class="container-fluid">
             <a class="brand" href="#"><img src="/images/deepfij-tiny.png"/> </a>
             <ul class="nav">
                 <li class="active">
@@ -13,8 +13,9 @@
                     <a href="/about">About</a>
                 </li>
             </ul>
-            <form method="get" class="navbar-search pull-left" action="/search">
-                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."/>
+            <form method="get" class="navbar-search pull-left" style="margin-top: 12px;" action="/search">
+                <input type="text" name="q" class="search-query" placeholder="Team, Conference, Statistic..."
+                       style="font-size: 16px; line-height: 20px;"/>
             </form>
             {{#user}}
                 <ul class="nav pull-right">

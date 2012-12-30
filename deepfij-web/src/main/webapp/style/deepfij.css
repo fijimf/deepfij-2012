@@ -11,6 +11,12 @@ h2.team-name {
     margin:0px;
 }
 
+.nav > li {
+    line-height: 32px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
 img.team-logo {
     padding-left: 15px;
 }
@@ -41,5 +47,6 @@ section > .row {
     font-size: 11px;
     color: #999;
     font-style: italic;
+    margin-top: 10px;
 }
 
