@@ -1,9 +1,12 @@
 package com.fijimf.deepfij.modelx
 
-import javax.persistence.EntityNotFoundException
+import javax.persistence.{EntityManager, EntityNotFoundException}
+import org.apache.log4j.Logger
 
 
 abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
+  val log = Logger.getLogger(this.getClass)
+
   def entityManager = PersistenceSource.entityManager
 
   def findBy(id: ID): Option[T] = {
@@ -25,12 +28,15 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
     t
   }
 
-  def saveAll(list: List[T]): List[T] = {
-    val t = transactional {
-      list.map(entityManager.merge(_))
+  def saveAll(list: List[T]): Unit = {
+    val em: EntityManager = entityManager
+    transactional {
+      list.foreach(t => {
+        em.persist(t)
+      })
     }
-    entityManager.clear() //Flush 1st level cache
-    t
+    em.clear() //Flush 1st level cache
+
   }
 
   def delete(id: ID) {
