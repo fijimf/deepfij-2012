@@ -3,6 +3,9 @@ package com.fijimf.deepfij.view.mappers
 import org.apache.shiro.subject.Subject
 import com.fijimf.deepfij.modelx.{Game, Conference, Team}
 import java.text.SimpleDateFormat
+import java.util.Date
+
+import scala.math._
 
 trait TemplateMapper[K] {
   def apply(k: K): Map[String, Any]
@@ -55,8 +58,28 @@ object TeamMapper extends TemplateMapper[Team] {
         else
           ""
         ),
-      "score" -> g.resultOpt.map(rslt => "%d - %d".format(rslt.homeScore, rslt.awayScore)).getOrElse("")
+      "score" -> g.resultOpt.map(rslt => "%d - %d".format(rslt.homeScore, rslt.awayScore)).getOrElse(""),
+      "oppSummary" -> (if (g.resultOpt.isDefined) oppSummary(opp, g.date) else "")
     )
+  }
+
+  def oppSummary(t: Team, d: Date): String = {
+    val fmt = new SimpleDateFormat("MMM d")
+    val last = t.games.filter(_.date.before(d)).headOption match {
+      case None => ""
+      case Some(g) => {
+        if (g.isWin(t)) {
+          "Defeated %s %d-%d %s.".format(g.loser.get.name, max(g.result.homeScore, g.result.awayScore), min(g.result.homeScore, g.result.awayScore), fmt.format(g.date))
+        } else {
+          "Lost to %s %d-%d %s.".format(g.winner.get.name, max(g.result.homeScore, g.result.awayScore), min(g.result.homeScore, g.result.awayScore), fmt.format(g.date))
+        }
+      }
+    }
+    "(%d - %d, %d - %d %s) %s".format(
+      t.wins.filter(_.date.before(d)).size, t.losses.filter(_.date.before(d)).size,
+      t.conferenceWins.filter(_.date.before(d)).size, t.conferenceLosses.filter(_.date.before(d)).size,
+      t.conference.name.replaceAll( """Conference$|League$|Association$""", "").trim, last)
+
   }
 }
 
