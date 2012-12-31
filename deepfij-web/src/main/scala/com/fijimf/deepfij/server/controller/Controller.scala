@@ -5,6 +5,7 @@ import org.scalatra.ScalatraFilter
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
 import java.text.SimpleDateFormat
+import mappers.{SubjectMapper, TeamMapper}
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
@@ -25,7 +26,7 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   get("/") {
     contentType = "text/html"
-    BasePage(title = "DeepFij", content = Some(<h1>Deep Fij</h1>)).toHtml5()
+    templateEngine.layout("pages/home.mustache", SubjectMapper(SecurityUtils.getSubject))
   }
 
   get("/date/:yyyymmdd") {
