@@ -26,7 +26,7 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   get("/") {
     contentType = "text/html"
-    templateEngine.layout("pages/home.mustache", SubjectMapper(SecurityUtils.getSubject))
+    templateEngine.layout("pages/home.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject))
   }
 
   get("/date/:yyyymmdd") {

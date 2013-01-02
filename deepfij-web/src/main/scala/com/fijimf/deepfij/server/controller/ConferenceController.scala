@@ -12,7 +12,7 @@ trait ConferenceController {
     contentType = "text/html"
     schedule.conferenceByKey.get(params("key")) match {
 
-      case Some(c) => templateEngine.layout("pages/conference.mustache", ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
+      case Some(c) => templateEngine.layout("pages/conference.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
     }
   }
@@ -20,7 +20,7 @@ trait ConferenceController {
   get("/conference/:schedule/:key") {
     contentType = "text/html"
     sd.findByKey(params("schedule")).flatMap(_.conferenceByKey.get(params("key"))) match {
-      case Some(c) => templateEngine.layout("pages/conferences.mustache", ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
+      case Some(c) => templateEngine.layout("pages/conferences.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
       case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
     }
   }
