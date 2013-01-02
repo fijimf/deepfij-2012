@@ -105,7 +105,7 @@ object SearchMapper {
         Option(DateUtils.parseDate(qq, Array("yyyyMMdd", "d/M/yy", "d/M/yyyy", "d-M-yy", "d-M-yyyy", "MMM d yyyy"))).toList
       }
       catch {
-        case DateParseException => List.empty[Date]
+        case ex:DateParseException => List.empty[Date]
       }
     } else {
       List.empty[Date]
