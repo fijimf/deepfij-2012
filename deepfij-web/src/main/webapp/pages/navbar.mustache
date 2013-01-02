@@ -4,13 +4,13 @@
             <a class="brand" href="#"><img src="{{ctx}}/images/deepfij-tiny.png"/> </a>
             <ul class="nav">
                 <li class="active">
-                    <a href="/">Home</a>
+                    <a href="{{ctx}}/">Home</a>
                 </li>
                 <li>
-                    <a href="/admin">Admin</a>
+                    <a href="{{ctx}}/admin">Admin</a>
                 </li>
                 <li>
-                    <a href="/about">About</a>
+                    <a href="{{ctx}}/about">About</a>
                 </li>
             </ul>
             <form method="get" class="navbar-search pull-left" style="margin-top: 12px;" action="/search">
@@ -20,22 +20,22 @@
             {{#user}}
                 <ul class="nav pull-right">
                     <li>
-                        <a href="/user">
+                        <a href="{{ctx}}/user">
                             {{name}}
                         </a>
                     </li>
                     <li>
-                        <a href="/logout">Logout</a>
+                        <a href="{{ctx}}/logout">Logout</a>
                     </li>
                 </ul>
             {{/user}}
             {{^user}}
                 <ul class="nav pull-right">
                     <li>
-                        <a href="/login">Login</a>
+                        <a href="{{ctx}}/login">Login</a>
                     </li>
                     <li>
-                        <a href="/register">Register</a>
+                        <a href="{{ctx}}/register">Register</a>
                     </li>
                 </ul>
             {{/user}}

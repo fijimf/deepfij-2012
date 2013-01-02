@@ -18,7 +18,7 @@
             <h4>
                 ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
                 {{#conference}}
-                    <a href="/conference/{{key}}">
+                    <a href="{{ctx}}/conference/{{key}}">
                         {{name}}
                     </a>
                 {{/conference}}
@@ -26,9 +26,7 @@
         </div>
     </div>
     <div class="row-fluid">
-
         <div id="donuts"></div>
-        <h1>{{ctx}}</h1>
     </div>
     <div class="row-fluid">
         <div class="span12">
@@ -45,7 +43,7 @@
                         <td style="text-align: center; width:6em; overflow:hidden;">{{score}}</td>
                         <td style="text-align: start; width:16em; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">
                             {{#opponent}}
-                                <a href="/team/{{key}}">
+                                <a href="{{ctx}}/team/{{key}}">
                                     {{name}}
                                 </a>
                             {{/opponent}}
