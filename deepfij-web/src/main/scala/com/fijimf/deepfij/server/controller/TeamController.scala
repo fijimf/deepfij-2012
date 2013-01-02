@@ -10,7 +10,7 @@ trait TeamController {
     contentType = "text/html"
     schedule.teamByKey.get(params("key")) match {
       case Some(t) => templateEngine.layout("pages/team.mustache", Map("ctx" -> request.getContextPath) ++ TeamMapper(t) ++ SubjectMapper(SecurityUtils.getSubject))
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key")))).toHtml5()
+      case None => templateEngine.layout("pages/notfound.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject)++Map("title"->"Not Found", "resource"->"team", "key"->params("key")))
     }
   }
 
@@ -18,7 +18,7 @@ trait TeamController {
     contentType = "text/html"
     sd.findByKey(params("schedule")).flatMap(_.teamByKey.get(params("key"))) match {
       case Some(t) => templateEngine.layout("pages/team.mustache", Map("ctx" -> request.getContextPath) ++ TeamMapper(t) ++ SubjectMapper(SecurityUtils.getSubject))
-      case None => BasePage(title = "Team Not Found", content = Some(MissingResourcePanel("team", params("key")))).toHtml5()
+      case None => templateEngine.layout("pages/notfound.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject)++Map("title"->"Not Found", "resource"->"team", "key"->params("key")))
     }
   }
 

@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.server.controller
 
-import com.fijimf.deepfij.view.{MissingResourcePanel, ConferencePanel, BasePage}
-import com.fijimf.deepfij.view.mappers.{SubjectMapper, ConferenceMapper, TeamMapper}
+import com.fijimf.deepfij.view.MissingResourcePanel
+import com.fijimf.deepfij.view.mappers.{SubjectMapper, ConferenceMapper}
 import org.apache.shiro.SecurityUtils
 
 trait ConferenceController {
@@ -13,7 +13,7 @@ trait ConferenceController {
     schedule.conferenceByKey.get(params("key")) match {
 
       case Some(c) => templateEngine.layout("pages/conference.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
-      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
+      case None => templateEngine.layout("pages/notfound.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject)++Map("title"->"Not Found", "resource"->"conference", "key"->params("key")))
     }
   }
 
@@ -21,7 +21,7 @@ trait ConferenceController {
     contentType = "text/html"
     sd.findByKey(params("schedule")).flatMap(_.conferenceByKey.get(params("key"))) match {
       case Some(c) => templateEngine.layout("pages/conferences.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(c) ++ SubjectMapper(SecurityUtils.getSubject))
-      case None => BasePage(title = "Conference Not Found", content = Some(MissingResourcePanel("conference", params("key")))).toHtml5()
+      case None => templateEngine.layout("pages/notfound.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject)++Map("title"->"Not Found", "resource"->"conference", "key"->params("key")))
     }
   }
 

@@ -1,11 +1,14 @@
 package com.fijimf.deepfij.view.mappers
 
 import org.apache.shiro.subject.Subject
-import com.fijimf.deepfij.modelx.{Game, Conference, Team}
+import com.fijimf.deepfij.modelx.{Schedule, Game, Conference, Team}
 import java.text.SimpleDateFormat
 import java.util.Date
 
 import scala.math._
+import org.apache.commons.lang.time.{DateUtils, DateFormatUtils}
+import org.h2.store.DataReader
+import org.apache.http.impl.cookie.DateParseException
 
 trait TemplateMapper[K] {
   def apply(k: K): Map[String, Any]
@@ -83,11 +86,50 @@ object TeamMapper extends TemplateMapper[Team] {
   }
 }
 
+object SearchMapper {
+  def apply(schedule: Schedule, q: String) = {
+    val qq = q.toLowerCase.trim
+    val ts:List[Team] = (schedule.teamList.filter(t => {
+      t.key.toLowerCase.contains(qq) ||
+        t.name.toLowerCase.contains(qq) ||
+        t.longName.toLowerCase.contains(qq) ||
+        t.nicknameOpt.map(_.toLowerCase.contains(qq)).getOrElse(false)
+    }) ++ schedule.aliasList.filter(_.alias.toLowerCase.contains(qq)).map(_.team)).toSet.toList
+
+    val cs:List[Conference] = schedule.conferenceList.filter(c => {
+      c.key.toLowerCase.contains(qq) || c.name.toLowerCase.contains(qq)
+    })
+
+    val ds = if (cs.isEmpty && ts.isEmpty) {
+      try {
+        Option(DateUtils.parseDate(qq, Array("yyyyMMdd", "d/M/yy", "d/M/yyyy", "d-M-yy", "d-M-yyyy", "MMM d yyyy"))).toList
+      }
+      catch {
+        case DateParseException => List.empty[Date]
+      }
+    } else {
+      List.empty[Date]
+    }
+
+    Map("title" -> "Search Results", "query" -> q,
+      "teams" -> ts,
+      "conferences" -> cs,
+      "dates" -> ds
+      )
+  }
+}
+
 object ConferenceMapper extends TemplateMapper[Conference] {
   def apply(conf: Conference) = {
     Map("title" -> conf.name, "name" -> conf.name,
       "key" -> conf.key,
       "standings" -> conf.standings
     )
+  }
+}
+
+object DateMapper  {
+  def apply(schedule: Schedule, d: Date) = {
+    Map("title" -> d.toString)
   }
 }

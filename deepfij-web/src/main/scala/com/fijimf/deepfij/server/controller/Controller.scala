@@ -5,12 +5,13 @@ import org.scalatra.ScalatraFilter
 import org.apache.shiro.SecurityUtils
 import com.fijimf.deepfij.view._
 import java.text.SimpleDateFormat
-import mappers.{SubjectMapper, TeamMapper}
+import com.fijimf.deepfij.view.mappers.{ConferenceMapper, SearchMapper, SubjectMapper, TeamMapper}
 import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 import org.scalatra.scalate.ScalateSupport
+import java.util.Date
 
 class Controller extends ScalatraFilter with ScalateSupport with TeamController with ConferenceController with StatsController with QuoteController {
   val log = Logger.getLogger(this.getClass)
@@ -33,15 +34,28 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   }
 
-
-
-
   get("/admin") {
     contentType = "text/html"
-    BasePage(title = "Deep Fij Admin", content = Some(AdminPanel())).toHtml5()
+    templateEngine.layout("pages/admin.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject) ++Map("title"-> "Admin"))
   }
 
+  get("/search") {
+    contentType = "text/html"
+    val results: Map[String, Object] = SearchMapper(schedule, params("q"))
+    val teams: List[Team] = results("teams").asInstanceOf[List[Team]]
+    val conferences: List[Team] = results("conferences").asInstanceOf[List[Conference]]
+    val dates: List[Date] = results("dates").asInstanceOf[List[Team]]
+    if (teams.size==1) {
+      templateEngine.layout("pages/team.mustache", Map("ctx" -> request.getContextPath) ++ TeamMapper(teams.head) ++ SubjectMapper(SecurityUtils.getSubject))
+    } else if (conferences.size==1 && teams.size==0) {
+      templateEngine.layout("pages/conference.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(conferences.head) ++ SubjectMapper(SecurityUtils.getSubject))
+    } else if (dates.size==1) {
+      templateEngine.layout("pages/date.mustache", Map("ctx" -> request.getContextPath) ++ DateMapper(dates.head) ++ SubjectMapper(SecurityUtils.getSubject))
+    } else {
+      templateEngine.layout("pages/searchresults.mustache", Map("ctx" -> request.getContextPath) ++ results++ SubjectMapper(SecurityUtils.getSubject))
+    }
 
+  }
 
   get("/login") {
     contentType = "text/html"

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{> head}}
+<body style="padding-top: 50px;">
+    {{> navbar}}
+<div class="container-fluid">
+    {{> epigram}}
+    <div class="row">
+        <div class="span12">
+            <h1>Admin</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            <div class="accordion" id="admin-accordian">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <h3>
+                            <a class="accordion-toggle" href="#collapseSchedules" data-parent="#admin-accordian"
+                               data-toggle="collapse">
+                                <h3>Schedules</h3>
+                            </a>
+
+                        </h3>
+                    </div>
+                    <div class="accordion-body collapse" style="height: 0px; " id="collapseSchedules">
+                        <div class="accordion-inner">
+                            <div class="row">
+                                <div class="span10">
+                                    <h3>Schedules</h3>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <h3>
+                                <a class="accordion-toggle" href="#collapseUsers" data-parent="#admin-accordian"
+                                   data-toggle="collapse">
+                                    <h3>Users</h3>
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="accordion-body collapse" style="height: 0px; " id="collapseUsers">
+                            <div class="accordion-inner">
+                                <p>Lorem</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <h3>
+                                <a class="accordion-toggle" href="#collapseQuotes" data-parent="#admin-accordian"
+                                   data-toggle="collapse">
+                                    <h3>Quotes</h3>
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="accordion-body collapse" style="height: 0px; " id="collapseQuotes">
+                            <div class="accordion-inner">
+                                <p>Lorem</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/scripts/popaccordion.js"></script>
+        {{> footer }}
+    </div>
+</body>
+</html>
