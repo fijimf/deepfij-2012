@@ -43,7 +43,8 @@ section > .row {
 
 .epigram {
     font-size: 11px;
-    color: #999;
+    color: #dde;
+    text-shadow: 1px 1px #336;
     font-style: italic;
     margin-top: 10px;
 }

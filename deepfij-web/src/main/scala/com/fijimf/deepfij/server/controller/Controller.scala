@@ -11,7 +11,7 @@ import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 import org.scalatra.scalate.ScalateSupport
-import java.util.Date
+import java.util.{TimerTask, Timer, Date}
 import com.fijimf.deepfij.view.BasePage
 import scala.Some
 
@@ -23,8 +23,14 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
   val sd = new ScheduleDao()
   val std = new TeamStatDao()
 
-  lazy val schedule = sd.findPrimary().get
+  var schedule = sd.findPrimary().get
 
+  //TODO -- Make this better
+  new Timer("reloadSchedule").schedule(new TimerTask {
+    def run() {
+      schedule = sd.findPrimary().get
+    }
+  }, 30000L, 3600000L)
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
 
   get("/") {
@@ -38,7 +44,7 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   get("/admin") {
     contentType = "text/html"
-    templateEngine.layout("pages/admin.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject) ++Map("title"-> "Admin"))
+    templateEngine.layout("pages/admin.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject) ++ Map("title" -> "Admin"))
   }
 
   get("/search") {
@@ -47,14 +53,14 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
     val teams: List[Team] = results("teams").asInstanceOf[List[Team]]
     val conferences: List[Conference] = results("conferences").asInstanceOf[List[Conference]]
     val dates: List[Date] = results("dates").asInstanceOf[List[Date]]
-    if (teams.size==1) {
+    if (teams.size == 1) {
       templateEngine.layout("pages/team.mustache", Map("ctx" -> request.getContextPath) ++ TeamMapper(teams.head) ++ SubjectMapper(SecurityUtils.getSubject))
-    } else if (conferences.size==1 && teams.size==0) {
+    } else if (conferences.size == 1 && teams.size == 0) {
       templateEngine.layout("pages/conference.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(conferences.head) ++ SubjectMapper(SecurityUtils.getSubject))
-    } else if (dates.size==1) {
+    } else if (dates.size == 1) {
       templateEngine.layout("pages/date.mustache", Map("ctx" -> request.getContextPath) ++ DateMapper(schedule, dates.head) ++ SubjectMapper(SecurityUtils.getSubject))
     } else {
-      templateEngine.layout("pages/searchresults.mustache", Map("ctx" -> request.getContextPath) ++ results++ SubjectMapper(SecurityUtils.getSubject))
+      templateEngine.layout("pages/searchresults.mustache", Map("ctx" -> request.getContextPath) ++ results ++ SubjectMapper(SecurityUtils.getSubject))
     }
 
   }
