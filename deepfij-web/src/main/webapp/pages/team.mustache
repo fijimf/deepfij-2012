@@ -6,54 +6,61 @@
     {{> epigram}}
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span1">
-            <a target="_blank" href="{{officialUrl}}">
-                <img class="team-logo" src="{{logoUrl}}"/>
-            </a>
-        </div>
-        <div class="span11">
-            <h2 class="team-name">
-                {{name}} {{nickname}}
-            </h2>
-            <h4>
-                ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
-                {{#conference}}
-                    <a href="{{ctx}}/conference/{{key}}">
-                        {{name}}
-                    </a>
-                {{/conference}}
-            </h4>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div id="donuts"></div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-bordered table-condensed" style="table-layout: fixed;">
-                <tbody>
-                    {{#games}}
-                    <tr>
-                        <td style="text-align: center;  width:7em; overflow:hidden;">
-                            {{date}}
-                        </td>
-                        <td style="text-align: center; width:1em; overflow:hidden;">
-                            {{wl}}
-                        </td>
-                        <td style="text-align: center; width:6em; overflow:hidden;">{{score}}</td>
-                        <td style="text-align: start; width:16em; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            {{#opponent}}
-                                <a href="{{ctx}}/team/{{key}}">
+        <div class="span10">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1">
+                        <a target="_blank" href="{{officialUrl}}">
+                            <img class="team-logo" src="{{logoUrl}}"/>
+                        </a>
+                    </div>
+                    <div class="span11">
+                        <h2 class="team-name">
+                            {{name}} {{nickname}}
+                        </h2>
+                        <h4>
+                            ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
+                            {{#conference}}
+                                <a href="{{ctx}}/conference/{{key}}">
                                     {{name}}
                                 </a>
-                            {{/opponent}}
-                        </td>
-                        <td>{{oppSummary}}</td>
-                    </tr>
-                    {{/games}}
-                </tbody>
-            </table>
+                            {{/conference}}
+                        </h4>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div id="donuts"></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <table class="table table-bordered table-condensed" style="table-layout: fixed;">
+                            <tbody>
+                                {{#games}}
+                                <tr>
+                                    <td style="text-align: center;  width:7em; overflow:hidden;">
+                                        {{date}}
+                                    </td>
+                                    <td style="text-align: center; width:1em; overflow:hidden;">
+                                        {{wl}}
+                                    </td>
+                                    <td style="text-align: center; width:6em; overflow:hidden;">{{score}}</td>
+                                    <td style="text-align: start; width:16em; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{#opponent}}
+                                            <a href="{{ctx}}/team/{{key}}">
+                                                {{name}}
+                                            </a>
+                                        {{/opponent}}
+                                    </td>
+                                    <td>{{oppSummary}}</td>
+                                </tr>
+                                {{/games}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="span2">{{> adsense}}</div>
     </div>
 </div>
 
