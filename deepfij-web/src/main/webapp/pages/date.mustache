@@ -3,59 +3,39 @@
     {{> head}}
 <body style="padding-top: 50px;">
     {{> navbar}}
-<div class="container-fluid">
     {{> epigram}}
+<div class="container-fluid">
     <div class="row-fluid">
-        <div class="span1">
-            <a target="_blank" href="{{officialUrl}}">
-                <img class="team-logo" src="{{logoUrl}}"/>
-            </a>
-        </div>
-        <div class="span11">
-            <h2 class="team-name">
-                {{name}} {{nickname}}
-            </h2>
-            <h4>
-                ({{wins}}-{{losses}}, {{conferenceWins}}-{{conferenceLosses}})
-                {{#conference}}
-                    <a href="{{ctx}}/conference/{{key}}">
-                        {{name}}
-                    </a>
-                {{/conference}}
-            </h4>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div id="donuts"></div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <table class="table table-bordered table-condensed" style="table-layout: fixed;">
-                <tbody>
-                    {{#games}}
-                    <tr>
-                        <td style="text-align: center;  width:7em; overflow:hidden;">
-                            {{date}}
-                        </td>
-                        <td style="text-align: center; width:1em; overflow:hidden;">
-                            {{wl}}
-                        </td>
-                        <td style="text-align: center; width:6em; overflow:hidden;">{{score}}</td>
-                        <td style="text-align: start; width:16em; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            {{#opponent}}
-                                <a href="{{ctx}}/team/{{key}}">
-                                    {{name}}
-                                </a>
-                            {{/opponent}}
-                        </td>
-                        <td>{{oppSummary}}</td>
-                    </tr>
-                    {{/games}}
-                </tbody>
-            </table>
+        <div class="span10">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <a href="{{ctx}}/date/{{prevYyyymmdd}}">
+                            <h4>&lt; {{prevDate}}</h4>
+                        </a>
+                    </div>
+                    <div class="span6"><h2>{{date}}</h2></div>
+                    <div class="span3">
+                        <a href="{{ctx}}/date/{{nextYyyymmdd}}">
+                            <h4>&lt; {{nextDate}}</h4>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span3"></div>
+                    <h3>Results</h3></div>
+            </div>
+            <div class="row-fluid">
+                <div class="span3"></div>
+                <h3>Games</h3></div>
         </div>
     </div>
-    {{> footer }}
 </div>
+<div class="span2">{{> adsense}}</div>
+</div>
+</div>
+
+    {{> footer }}
 </body>
 </html>

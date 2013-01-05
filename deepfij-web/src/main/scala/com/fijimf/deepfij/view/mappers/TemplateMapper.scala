@@ -125,7 +125,12 @@ object ConferenceMapper extends TemplateMapper[Conference] {
 }
 
 object DateMapper {
+  val yyyymmdd = new SimpleDateFormat("yyyyMMdd")
+  val fmt = new SimpleDateFormat("MMMM d, yyyy")
+
   def apply(schedule: Schedule, d: Date) = {
-    Map("title" -> d.toString)
+    val prev = DateUtils.addDays(d, -1)
+    val next = DateUtils.addDays(d, 1)
+    Map("title" -> d.toString, "date" -> fmt.format(d), "prevDate" -> fmt.format(prev), "prevYyyymmdd" -> yyyymmdd.format(prev), "nextDate" -> fmt.format(next), "nextYyyymmdd" -> yyyymmdd.format(next))
   }
 }
