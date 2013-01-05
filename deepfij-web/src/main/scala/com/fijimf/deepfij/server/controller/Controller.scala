@@ -44,7 +44,8 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   }
 
   get("/date/:yyyymmdd") {
-
+    contentType = "text/html"
+    templateEngine.layout("pages/home.mustache", attributes() ++ DateMapper(schedule, yyyymmdd.parse(params("yyyymmdd"))))
   }
 
   get("/team/:key") {
