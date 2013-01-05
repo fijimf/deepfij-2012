@@ -25,12 +25,17 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   var schedule = sd.findPrimary().get
 
   def attributes(): Map[String, Any] = {
-    val m: Map[String, Any] = Map("ctx" -> request.getContextPath, "quote" -> qd.random().getOrElse(new Quote(quote = "How bad it gets you can't imagine; the burning wax, the breath of reptiles.", source = "Shriekback", url = "http://www.mofito.com/music-videos/shriekback/6957067-nemesis.htm"))) ++ SubjectMapper(SecurityUtils.getSubject)
+    val m: Map[String, Any] = Map("ctx" -> contextPath, "quote" -> qd.random().getOrElse(new Quote(quote = "How bad it gets you can't imagine; the burning wax, the breath of reptiles.", source = "Shriekback", url = "http://www.mofito.com/music-videos/shriekback/6957067-nemesis.htm"))) ++ SubjectMapper(SecurityUtils.getSubject)
     log.info("Base attributes are " + m)
     m
   }
 
   //TODO -- Make this better
+
+  def contextPath: String = {
+    request.getContextPath
+  }
+
   new Timer("reloadSchedule").schedule(new TimerTask {
     def run() {
       schedule = sd.findPrimary().get
@@ -93,11 +98,11 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     val conferences: List[Conference] = results("conferences").asInstanceOf[List[Conference]]
     val dates: List[Date] = results("dates").asInstanceOf[List[Date]]
     if (teams.size == 1) {
-      redirect("/team/%s".format(teams.head.key))
+      redirect("%s/team/%s".format(contextPath, teams.head.key))
     } else if (conferences.size == 1 && teams.size == 0) {
-      redirect("/conference/%s".format(conferences.head.key))
+      redirect("%s/conference/%s".format(contextPath, conferences.head.key))
     } else if (dates.size == 1) {
-      redirect("/date/%s".format(yyyymmdd.format(dates.head)))
+      redirect("%s/date/%s".format(yyyymmdd.format(contextPath, dates.head)))
     } else {
       templateEngine.layout("pages/searchresults.mustache", attributes() ++ results)
     }
