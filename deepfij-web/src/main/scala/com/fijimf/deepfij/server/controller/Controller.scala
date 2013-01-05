@@ -3,10 +3,9 @@ package com.fijimf.deepfij.server.controller
 import api.StatsController
 import org.scalatra.ScalatraFilter
 import org.apache.shiro.SecurityUtils
-import com.fijimf.deepfij.view._
 import java.text.SimpleDateFormat
 import com.fijimf.deepfij.view.mappers._
-import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.authc.{UnknownAccountException, UsernamePasswordToken}
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
@@ -15,7 +14,7 @@ import java.util.{TimerTask, Timer, Date}
 import com.fijimf.deepfij.view.BasePage
 import scala.Some
 
-class Controller extends ScalatraFilter with ScalateSupport with TeamController with ConferenceController with StatsController with QuoteController {
+class Controller extends ScalatraFilter with ScalateSupport with ConferenceController with StatsController {
   val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
@@ -24,6 +23,12 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
   val std = new TeamStatDao()
 
   var schedule = sd.findPrimary().get
+
+  def attributes(): Map[String, Any] = {
+    val m: Map[String, Any] = Map("ctx" -> request.getContextPath, "quote" -> qd.random().getOrElse(new Quote(quote = "How bad it gets you can't imagine; the burning wax, the breath of reptiles.", source = "Shriekback", url = "http://www.mofito.com/music-videos/shriekback/6957067-nemesis.htm"))) ++ SubjectMapper(SecurityUtils.getSubject)
+    log.info("Base attributes are " + m)
+    m
+  }
 
   //TODO -- Make this better
   new Timer("reloadSchedule").schedule(new TimerTask {
@@ -35,16 +40,49 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
 
   get("/") {
     contentType = "text/html"
-    templateEngine.layout("pages/home.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject))
+    templateEngine.layout("pages/home.mustache", attributes())
   }
 
   get("/date/:yyyymmdd") {
 
   }
 
+  get("/team/:key") {
+    contentType = "text/html"
+    schedule.teamByKey.get(params("key")) match {
+      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t))
+      case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "team", "key" -> params("key")))
+    }
+  }
+
+  get("/team/:schedule/:key") {
+    contentType = "text/html"
+    sd.findByKey(params("schedule")).flatMap(_.teamByKey.get(params("key"))) match {
+      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t))
+      case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "team", "key" -> params("key")))
+    }
+  }
+
+  get("/conference/:key") {
+    contentType = "text/html"
+    schedule.conferenceByKey.get(params("key")) match {
+
+      case Some(c) => templateEngine.layout("pages/conference.mustache", attributes() ++ ConferenceMapper(c))
+      case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "conference", "key" -> params("key")))
+    }
+  }
+
+  get("/conference/:schedule/:key") {
+    contentType = "text/html"
+    sd.findByKey(params("schedule")).flatMap(_.conferenceByKey.get(params("key"))) match {
+      case Some(c) => templateEngine.layout("pages/conferences.mustache", attributes() ++ ConferenceMapper(c))
+      case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "conference", "key" -> params("key")))
+    }
+  }
+
   get("/admin") {
     contentType = "text/html"
-    templateEngine.layout("pages/admin.mustache", Map("ctx" -> request.getContextPath) ++ SubjectMapper(SecurityUtils.getSubject) ++ Map("title" -> "Admin"))
+    templateEngine.layout("pages/admin.mustache", attributes() ++ Map("title" -> "Admin"))
   }
 
   get("/search") {
@@ -54,26 +92,31 @@ class Controller extends ScalatraFilter with ScalateSupport with TeamController 
     val conferences: List[Conference] = results("conferences").asInstanceOf[List[Conference]]
     val dates: List[Date] = results("dates").asInstanceOf[List[Date]]
     if (teams.size == 1) {
-      templateEngine.layout("pages/team.mustache", Map("ctx" -> request.getContextPath) ++ TeamMapper(teams.head) ++ SubjectMapper(SecurityUtils.getSubject))
+      redirect("/team/%s".format(teams.head.key))
     } else if (conferences.size == 1 && teams.size == 0) {
-      templateEngine.layout("pages/conference.mustache", Map("ctx" -> request.getContextPath) ++ ConferenceMapper(conferences.head) ++ SubjectMapper(SecurityUtils.getSubject))
+      redirect("/conference/%s".format(conferences.head.key))
     } else if (dates.size == 1) {
-      templateEngine.layout("pages/date.mustache", Map("ctx" -> request.getContextPath) ++ DateMapper(schedule, dates.head) ++ SubjectMapper(SecurityUtils.getSubject))
+      redirect("/date/%s".format(yyyymmdd.format(dates.head)))
     } else {
-      templateEngine.layout("pages/searchresults.mustache", Map("ctx" -> request.getContextPath) ++ results ++ SubjectMapper(SecurityUtils.getSubject))
+      templateEngine.layout("pages/searchresults.mustache", attributes() ++ results)
     }
 
   }
 
   get("/login") {
     contentType = "text/html"
-    BasePage(title = "Login", content = Some(LoginPanel())).toHtml5()
+    templateEngine.layout("pages/login.mustache", attributes() ++ Map("title" -> "Login"))
   }
 
   post("/login") {
     contentType = "text/html"
-    SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password"), true))
-    WebUtils.redirectToSavedRequest(request, response, "/")
+    try {
+      SecurityUtils.getSubject.login(new UsernamePasswordToken(params("email"), params("password"), true))
+      WebUtils.redirectToSavedRequest(request, response, "/")
+    }
+    catch {
+      case ex: RuntimeException => templateEngine.layout("pages/login.mustache", attributes() ++ Map("title" -> "Login", "loginFailed" -> true, "email" -> params("email")))
+    }
   }
 
   get("/logout") {

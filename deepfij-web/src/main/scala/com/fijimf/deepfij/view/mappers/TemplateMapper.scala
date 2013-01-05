@@ -6,14 +6,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import scala.math._
-import org.apache.commons.lang.time.{DateUtils, DateFormatUtils}
-import org.h2.store.DataReader
-import org.apache.http.impl.cookie.DateParseException
+import org.apache.commons.lang.time.{DateUtils}
 
 trait TemplateMapper[K] {
   def apply(k: K): Map[String, Any]
-
-
 }
 
 object SubjectMapper extends TemplateMapper[Subject] {
@@ -89,14 +85,14 @@ object TeamMapper extends TemplateMapper[Team] {
 object SearchMapper {
   def apply(schedule: Schedule, q: String) = {
     val qq = q.toLowerCase.trim
-    val ts:List[Team] = (schedule.teamList.filter(t => {
+    val ts: List[Team] = (schedule.teamList.filter(t => {
       t.key.toLowerCase.contains(qq) ||
         t.name.toLowerCase.contains(qq) ||
         t.longName.toLowerCase.contains(qq) ||
         t.nicknameOpt.map(_.toLowerCase.contains(qq)).getOrElse(false)
     }) ++ schedule.aliasList.filter(_.alias.toLowerCase.contains(qq)).map(_.team)).toSet.toList
 
-    val cs:List[Conference] = schedule.conferenceList.filter(c => {
+    val cs: List[Conference] = schedule.conferenceList.filter(c => {
       c.key.toLowerCase.contains(qq) || c.name.toLowerCase.contains(qq)
     })
 
@@ -105,7 +101,7 @@ object SearchMapper {
         Option(DateUtils.parseDate(qq, Array("yyyyMMdd", "d/M/yy", "d/M/yyyy", "d-M-yy", "d-M-yyyy", "MMM d yyyy"))).toList
       }
       catch {
-        case ex:DateParseException => List.empty[Date]
+        case ex: Throwable => List.empty[Date]
       }
     } else {
       List.empty[Date]
@@ -115,7 +111,7 @@ object SearchMapper {
       "teams" -> ts,
       "conferences" -> cs,
       "dates" -> ds
-      )
+    )
   }
 }
 
@@ -128,7 +124,7 @@ object ConferenceMapper extends TemplateMapper[Conference] {
   }
 }
 
-object DateMapper  {
+object DateMapper {
   def apply(schedule: Schedule, d: Date) = {
     Map("title" -> d.toString)
   }
