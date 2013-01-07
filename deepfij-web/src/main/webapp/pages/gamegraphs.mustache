@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{> head}}
+<body style="padding-top: 50px;">
+    {{> navbar}}
+    {{> epigram}}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span10">
+            <div class="container-fluid">
+                <h3>Cool d3.js graphs</h3>
+
+                <div id="graphPanel">
+
+                </div>
+                <script>
+                    function loadGameData() {
+                    $.get("/api/games", { },
+                    function (stat) {
+                    var data = stat;
+                    console.log(data)
+                    var chart = d3.select("#graphPanel").append("svg")
+                    .attr("class", "chart")
+                    .attr("width", 1002)
+                    .attr("height", 64 * data.teams.length);
+
+                    chart.selectAll("g").data(data.teams).enter().append("g")
+                    .attr("class", "teamBox")
+                    .attr("x", 2)
+                    .attr("y", function(d,i) {return 2+(i*60);} )
+                    .attr("width",1000 )
+                    .attr("height", 60)
+                    .attr("stroke","white")
+                    .selectAll("rect").data(function(d,i) {return d.games;}).enter().append("rect")
+                    .attr("x", function(e,j) {console.log(e); return 2+(j*30);})
+                    .attr("y", function(e,j) {return 2+(i*60);} )
+                    .attr("width",30 )
+                    .attr("height",60)
+                    .attr("stroke","green")
+                    .attr("fill","red");
+
+
+                    });
+                    }
+
+                    loadGameData();
+                </script>
+            </div>
+        </div>
+        <div class="span2">{{> adsense}}</div>
+    </div>
+</div>
+
+    {{> footer }}
+</body>
+</html>

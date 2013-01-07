@@ -1,65 +1,38 @@
 package com.fijimf.deepfij.server.controller.api
 
 import com.fijimf.deepfij.server.controller.Controller
-import com.fijimf.deepfij.modelx.Team
-import com.fijimf.deepfij.statx.Population
+import com.fijimf.deepfij.modelx.Result
 import java.text.SimpleDateFormat
 import com.codahale.jerkson.Json
-import java.util.Date
-import com.fijimf.deepfij.view.{StatPanel, BasePage}
+import org.joda.time.{DateMidnight, DateTime, Days}
 
 
 trait StatsController {
   this: Controller =>
 
-  case class Stat(name: String, yyyymmddd: String, max:Double, min:Double, mean: Double, stdDev: Double, observations: List[Obs])
+  case class GameNode(opponentName: String, opponentKey: String, score: Int, oppScore: Int, dateStr: String, month: String, julDate: Int)
 
-  case class Obs(name: String, conference:String, color:String, rank: Double, value: Double)
+  case class TeamNode(name: String, key: String, logo: String, games: List[GameNode])
 
-  case class ConfNode(name:String, children:List[Obs])
+  case class RootNode(name: String, teams: List[TeamNode])
 
-  case class Root(name:String, children:List[ConfNode])
+  val startDate = new DateMidnight(1980, 1, 1)
+  val monFmt = new SimpleDateFormat("MMM")
+  get("/api/games") {
+    contentType = "application/json"
+    Json.generate(RootNode(schedule.name, schedule.teamList.map(t => {
+      TeamNode(t.name, t.key, t.logo, t.games.filter(_.resultOpt.isDefined).sortBy(_.date).map(g => {
+        val opp = (if (g.isWin(t)) g.loser else g.winner).get
+        val res: Result = g.result
+        val (score, oppScore) = if (g.homeTeam == t) (res.homeScore, res.awayScore) else (res.awayScore, res.homeScore)
+        GameNode(opp.name, opp.key, score, oppScore, yyyymmdd.format(g.date), monFmt.format(g.date), Days.daysBetween(startDate, new DateTime(g.date.getTime)).getDays)
+      }))
+    }))
+    )
+  }
 
-  get("/stat/:key") {
+  get("/games") {
     contentType = "text/html"
-    BasePage(title = "Deep Fij Admin", content = Some(StatPanel(params("key")))).toHtml5()
+    templateEngine.layout("pages/gamegraphs.mustache", attributes())
   }
-  get("/api/stat/:key") {
-    contentType = "application/json"
-    val s = std.statistic(params("key"))
-    generateJSON(s.name, s.endDate, s.population(s.endDate))
-  }
-  get("/api/stat/bubble/:key") {
-    contentType = "application/json"
-    val s = std.statistic(params("key"))
-    generateByConfJSON(s.name, s.endDate, s.population(s.endDate))
-  }
-
-  get("/api/stat/:key/:date") {
-    contentType = "application/json"
-    val s = std.statistic(params("key"))
-    val fmt = new SimpleDateFormat("yyyyMMdd")
-    val d = fmt.parse(params("date"))
-    generateJSON(s.name, d, s.population(d))
-  }
-
-  def generateJSON(name: String, date: Date, population: Population[Team]): String = {
-    val fmt = new SimpleDateFormat("yyyyMMdd")
-    val os: List[Obs] = population.topN(population.keys.size).map {
-      case (team: Team, d: Double) => Obs(team.name,team.conference.name, team.primaryColorOpt.getOrElse(null), population.rank(team).getOrElse(0.0), d)
-    }
-    val data: Stat = Stat(name, fmt.format(date), population.max.getOrElse(0),population.min.getOrElse(0),population.mean.getOrElse(0), population.stdDev.getOrElse(0), os)
-    Json.generate(data)
-  }
-
-  def generateByConfJSON(name: String, date: Date, population: Population[Team]): String = {
-    val fmt = new SimpleDateFormat("yyyyMMdd")
-    val os: List[Obs] = population.topN(population.keys.size).map {
-      case (team: Team, d: Double) => Obs(team.name, team.conference.name, team.primaryColorOpt.getOrElse(null), population.rank(team).getOrElse(0.0), d)
-    }
-    val data = Root(name, os.groupBy(_.conference).map{case (confName: String, oss: List[Obs]) => ConfNode(confName, oss)}.toList)
-    Json.generate(data)
-  }
-
-
 }
