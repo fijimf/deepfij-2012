@@ -10,7 +10,7 @@ import org.joda.time.{DateMidnight, DateTime, Days}
 trait StatsController {
   this: Controller =>
 
-  case class GameNode(opponentName: String, opponentKey: String, score: Int, oppScore: Int, dateStr: String, month: String, julDate: Int)
+  case class GameNode(opponentName: String, opponentKey: String,opponentLogo:String, score: Int, oppScore: Int, dateStr: String, month: String, julDate: Int)
 
   case class TeamNode(name: String, key: String, logo: String, games: List[GameNode])
 
@@ -25,7 +25,7 @@ trait StatsController {
         val opp = (if (g.isWin(t)) g.loser else g.winner).get
         val res: Result = g.result
         val (score, oppScore) = if (g.homeTeam == t) (res.homeScore, res.awayScore) else (res.awayScore, res.homeScore)
-        GameNode(opp.name, opp.key, score, oppScore, yyyymmdd.format(g.date), monFmt.format(g.date), Days.daysBetween(startDate, new DateTime(g.date.getTime)).getDays)
+        GameNode(opp.name, opp.key, opp.logo, score, oppScore, yyyymmdd.format(g.date), monFmt.format(g.date), Days.daysBetween(startDate, new DateTime(g.date.getTime)).getDays)
       }))
     }))
     )

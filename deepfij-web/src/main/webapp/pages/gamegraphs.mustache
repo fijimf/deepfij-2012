@@ -19,25 +19,13 @@
                     function (stat) {
                     var data = stat;
                     console.log(data)
-                    var chart = d3.select("#graphPanel").append("svg")
-                    .attr("class", "chart")
-                    .attr("width", 1002)
-                    .attr("height", 64 * data.teams.length);
+                    var chart = d3.select("#graphPanel").append("table")
 
-                    chart.selectAll("g").data(data.teams).enter().append("g")
-                    .attr("class", "teamBox")
-                    .attr("x", 2)
-                    .attr("y", function(d,i) {return 2+(i*60);} )
-                    .attr("width",1000 )
-                    .attr("height", 60)
-                    .attr("stroke","white")
-                    .selectAll("rect").data(function(d,i) {return d.games;}).enter().append("rect")
-                    .attr("x", function(e,j) {console.log(e); return 2+(j*30);})
-                    .attr("y", function(e,j) {return 2+(i*60);} )
-                    .attr("width",30 )
-                    .attr("height",60)
-                    .attr("stroke","green")
-                    .attr("fill","red");
+
+                    chart.selectAll("tbody tr").data(data.teams).enter().append("tr").selectAll("td").data(function(d,i) {return d.games;}).enter()
+                    .append("td")
+                    .attr("style", function(d,i) { if (d.score>d.oppScore) {return "background-color:#bfb;";} else {return "background-color:#fbb;";}}).append("img").attr("src", function(d,i) {return d.opponentLogo;})
+
 
 
                     });
