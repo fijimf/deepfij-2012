@@ -132,6 +132,10 @@ object DateMapper {
     val prev = DateUtils.addDays(d, -1)
     val next = DateUtils.addDays(d, 1)
     val (results, games) = schedule.gameList.filter(_.date == d).partition(_.resultOpt.isDefined)
-    Map("title" -> d.toString, "date" -> fmt.format(d), "prevDate" -> fmt.format(prev), "prevYyyymmdd" -> yyyymmdd.format(prev), "nextDate" -> fmt.format(next), "nextYyyymmdd" -> yyyymmdd.format(next), "games" -> games, "results" -> results)
+    Map("title" -> d.toString, "date" -> fmt.format(d),
+      "prevDate" -> fmt.format(prev), "prevYyyymmdd" -> yyyymmdd.format(prev),
+      "nextDate" -> fmt.format(next), "nextYyyymmdd" -> yyyymmdd.format(next),
+      "games" -> games, "hasGames" -> (!games.isEmpty),
+      "results" -> results, "hasResults" -> (!results.isEmpty))
   }
 }

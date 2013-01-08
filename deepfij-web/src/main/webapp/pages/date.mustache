@@ -11,33 +11,41 @@
                 <div class="row-fluid">
                     <div class="span3">
                         <a href="{{ctx}}/date/{{prevYyyymmdd}}">
-                            <h4>&lt; {{prevDate}}</h4>
+                            <h4 style="text-align:right;">&lt;&lt; {{prevDate}}</h4>
                         </a>
                     </div>
-                    <div class="span6"><h2>{{date}}</h2></div>
+                    <div class="span6"><h4 style="text-align:center;">{{date}}</h4></div>
                     <div class="span3">
                         <a href="{{ctx}}/date/{{nextYyyymmdd}}">
-                            <h4>&lt; {{nextDate}}</h4>
+                            <h4 style="text-align:left;">&{{nextDate}} &gt;&gt;</h4>
                         </a>
                     </div>
                 </div>
-
-                <div class="row-fluid">
-                    <div class="span3"></div>
-                    {{#results}}<h3>Results</h3>{{/results}}</div>
+                {{#hasResults}}
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h3>Results</h3>
+                            {{#results}}
+                                <p>{{awayTeam}} {{#result}}{{awayScore}}{{/result}}{{homeTeam}} {{#result}}{{homeScore}}{{/result}}</p>
+                            {{/results}}
+                        </div>
+                    </div>
+                {{/hasResults}}
+                {{#hasGames}}
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h3>Games</h3>
+                            {{#games}}
+                                <p>{{id}}</p>
+                            {{/games}}
+                        </div>
+                    </div>
+                {{/hasGames}}
             </div>
-            <div class="row-fluid">
-                <div class="span3"></div>
-                {{#games}}<h3>Games</h3>{{/games}}
-                </div>
         </div>
         <div class="span2">{{> adsense}}</div>
     </div>
 </div>
-
-</div>
-</div>
-
     {{> footer }}
 </body>
 </html>

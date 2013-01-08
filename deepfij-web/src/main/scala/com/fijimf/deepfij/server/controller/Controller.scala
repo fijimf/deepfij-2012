@@ -5,7 +5,7 @@ import org.scalatra.ScalatraFilter
 import org.apache.shiro.SecurityUtils
 import java.text.SimpleDateFormat
 import com.fijimf.deepfij.view.mappers._
-import org.apache.shiro.authc.{UnknownAccountException, UsernamePasswordToken}
+import org.apache.shiro.authc.UsernamePasswordToken
 import org.apache.shiro.web.util.WebUtils
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
@@ -38,6 +38,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
 
   new Timer("reloadSchedule").schedule(new TimerTask {
     def run() {
+      sd.entityManager.clear()
       schedule = sd.findPrimary().get
     }
   }, 30000L, 3600000L)
