@@ -103,7 +103,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     } else if (conferences.size == 1 && teams.size == 0) {
       redirect("%s/conference/%s".format(contextPath, conferences.head.key))
     } else if (dates.size == 1) {
-      redirect("%s/date/%s".format(yyyymmdd.format(contextPath, dates.head)))
+      redirect("%s/date/%s".format(contextPath, yyyymmdd.format(contextPath, dates.head)))
     } else {
       templateEngine.layout("pages/searchresults.mustache", attributes() ++ results)
     }

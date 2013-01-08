@@ -17,27 +17,41 @@
                     <div class="span6"><h4 style="text-align:center;">{{date}}</h4></div>
                     <div class="span3">
                         <a href="{{ctx}}/date/{{nextYyyymmdd}}">
-                            <h4 style="text-align:left;">&{{nextDate}} &gt;&gt;</h4>
+                            <h4 style="text-align:left;">{{nextDate}} &gt;&gt;</h4>
                         </a>
                     </div>
                 </div>
                 {{#hasResults}}
                     <div class="row-fluid">
-                        <div class="span8">
+                        <div class="span6 offset3">
                             <h3>Results</h3>
+                            <table class="table"><tbody>
                             {{#results}}
-                                <p>{{awayTeam}} {{#result}}{{awayScore}}{{/result}}{{homeTeam}} {{#result}}{{homeScore}}{{/result}}</p>
+                                   <tr>
+                                    <td>{{#awayTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
+                                    <td>{{#result}}{{awayScore}}{{/result}}</td>
+                                    <td>{{#homeTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
+                                    <td>{{#result}}{{homeScore}}{{/result}}</td>
+                                   </tr>
                             {{/results}}
+                            </tbody></table>
                         </div>
                     </div>
                 {{/hasResults}}
                 {{#hasGames}}
                     <div class="row-fluid">
-                        <div class="span8">
+                        <div class="span6 offset3">
                             <h3>Games</h3>
+                            <table class="table"><tbody>
                             {{#games}}
-                                <p>{{id}}</p>
+                            <tr>
+                                <td>{{#awayTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
+
+                                <td>{{#homeTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
+
+                            </tr>
                             {{/games}}
+                            </tbody></table>
                         </div>
                     </div>
                 {{/hasGames}}
