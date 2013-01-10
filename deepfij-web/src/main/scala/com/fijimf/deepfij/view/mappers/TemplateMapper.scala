@@ -77,7 +77,7 @@ object TeamMapper extends TemplateMapper[Team] {
     "(%d - %d, %d - %d %s) %s".format(
       t.wins.filter(_.date.before(d)).size, t.losses.filter(_.date.before(d)).size,
       t.conferenceWins.filter(_.date.before(d)).size, t.conferenceLosses.filter(_.date.before(d)).size,
-      t.conference.name.replaceAll( """Conference$|League$|Association$""", "").trim, last)
+      t.conference.name.replaceAll( """^The """, "").replaceAll( """Conf.$|Conference$|League$|Association$""", "").trim, last)
 
   }
 }
@@ -98,7 +98,7 @@ object SearchMapper {
 
     val ds = if (cs.isEmpty && ts.isEmpty) {
       try {
-        Option(DateUtils.parseDate(qq, Array("yyyyMMdd", "d/M/yy", "d/M/yyyy", "d-M-yy", "d-M-yyyy", "MMM d yyyy"))).toList
+        Option(DateUtils.parseDate(qq, Array("yyyyMMdd", "M/d/yy", "M/d/yyyy", "d-MMM-yy", "d-MMM-yyyy", "MMM d yyyy"))).toList
       }
       catch {
         case ex: Throwable => List.empty[Date]

@@ -152,7 +152,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   def logout: Any = {
     contentType = "text/html"
     SecurityUtils.getSubject.logout()
-    redirect("/")
+    redirect("/" + contextPath)
   }
 
 }
