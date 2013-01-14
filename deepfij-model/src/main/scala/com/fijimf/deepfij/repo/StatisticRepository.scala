@@ -28,17 +28,18 @@ class StatisticRepository extends Transactional {
       msd.findByStatKey(statistic.statKey).foreach(m => msd.delete(m.id))
     }
     val ms = msd.save(new MetaStat(name = statistic.name, statKey = statistic.statKey, format = statistic.format, higherIsBetter = statistic.higherIsBetter))
-    for (d <- DateStream(statistic.startDate, statistic.endDate)) {
-      transactional {
-        for (t <- statistic.keys;
-             x <- statistic.function(t, d)) {
-          if (x.isInfinite || x.isNaN) {
-            logger.warn("Skipping %s %s %s ==> %lf".format(statistic.statKey, t.key, d.toString, x))
-          } else {
-            tsd.save(new TeamStat(metaStat = ms, team = t, date = d, value = x))
-          }
-        }
+    val stat: List[TeamStat] = (for (d <- DateStream(statistic.startDate, statistic.endDate);
+                                     t <- statistic.keys;
+                                     x <- statistic.function(t, d)) yield {
+      if (x.isInfinite || x.isNaN) {
+        logger.warn("Skipping %s %s %s ==> %lf".format(statistic.statKey, t.key, d.toString, x))
+        None
+      } else {
+        Some(new TeamStat(metaStat = ms, team = t, date = d, value = x))
       }
-    }
+    }).flatten.toList
+    logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
+    tsd.saveAll(stat)
+
   }
 }

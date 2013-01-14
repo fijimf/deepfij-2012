@@ -1,0 +1,12 @@
+<h2>{{name}}</h2>
+<table>
+    <tbody>
+        {{#top25}}
+        <tr>
+            <td>{{rank}}.</td>
+            <td><a href="{{ctx}}/team/{{key}}">{{name}}</a></td>
+            <td>{{value}}</td>
+        </tr>
+        {{/top25}}
+    </tbody>
+</table>

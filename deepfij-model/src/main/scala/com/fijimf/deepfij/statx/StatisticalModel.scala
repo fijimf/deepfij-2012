@@ -4,6 +4,9 @@ import com.fijimf.deepfij.modelx.Schedule
 import java.util.Date
 
 trait StatisticalModel[T] {
+  def name: String
+
+  def key: String
 
   def statistics: List[StatInfo]
 

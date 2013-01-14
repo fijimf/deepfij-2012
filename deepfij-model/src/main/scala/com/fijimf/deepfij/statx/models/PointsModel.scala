@@ -10,6 +10,10 @@ import com.fijimf.deepfij.statx.ModelContext
 
 class PointsModel extends SinglePassGameModel[Team] with TeamModel {
 
+  def name = "Points"
+
+  def key = "points"
+
   case class ObservationType(description: String, key: String, higherIsBetter: Boolean, f: (PointsRunning) => List[Double])
 
   val observationTypes = List(

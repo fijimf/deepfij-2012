@@ -16,6 +16,67 @@
             <h3>The awesomest college basketball sort-of resource on the internet.</h3>
         </div>
     </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            {{#wins}}
+                {{>top25table}}
+            {{/wins}}
+        </div>
+        <div class="span2">
+            {{#losses}}
+                {{>top25table}}
+            {{/losses}}
+        </div>
+        <div class="span2">
+            {{#wp}}
+                {{>top25table}}
+            {{/wp}}
+        </div>
+        <div class="span2">
+            {{#win-streak}}
+                {{>top25table}}
+            {{/win-streak}}
+        </div>
+        <div class="span2">
+            {{#loss-streak}}
+                {{>top25table}}
+            {{/loss-streak}}
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span2">
+            {{#points-for-mean}}
+                {{>top25table}}
+            {{/points-for-mean}}
+        </div>
+        <div class="span2">
+            {{#points-against-mean}}
+                {{>top25table}}
+            {{/points-against-mean}}
+        </div>
+        <div class="span2">
+            {{#score-margin-mean}}
+                {{>top25table}}
+            {{/score-margin-mean}}
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span2">
+            {{#point-predictor}}
+                {{>top25table}}
+            {{/point-predictor}}
+        </div>
+        <div class="span2">
+            {{#win-predictor}}
+                {{>top25table}}
+            {{/win-predictor}}
+        </div>
+        \
+    </div>
+</div>
+<div class="container-fluid cool-gradient">
     {{> footer }}
 </div>
 </body>

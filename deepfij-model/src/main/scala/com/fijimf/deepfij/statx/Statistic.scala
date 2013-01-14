@@ -5,7 +5,7 @@ import java.util.Date
 
 
 trait Statistic[K] extends StatInfo {
-  statistic =>
+  outer: Statistic[K] =>
   def keys: List[K]
 
   def startDate: Date
@@ -14,40 +14,40 @@ trait Statistic[K] extends StatInfo {
 
   def function(k: K, d: Date): Option[Double]
 
-  def population( d: Date): Population[K] = {
+  def population(d: Date): Population[K] = {
     new Population[K] {
-      val format = statistic.format
+      val format = outer.format
 
-      val statKey = statistic.statKey
+      val statKey = outer.statKey
 
-      val name = statistic.name
+      val name = outer.name
 
-      val higherIsBetter = statistic.higherIsBetter
+      val higherIsBetter = outer.higherIsBetter
 
-      val stat = (k: K) => statistic.function(k, d)
+      val stat = (k: K) => outer.function(k, d)
 
       val date = d
 
-      val keys = statistic.keys
+      val keys = outer.keys
     }
   }
 
   def series(k: K): TimeSeries[K] = {
     new TimeSeries[K] {
-      val format = statistic.format
+      val format = outer.format
 
-      val statKey = statistic.statKey
-      val name = statistic.name
+      val statKey = outer.statKey
+      val name = outer.name
 
-      val higherIsBetter = statistic.higherIsBetter
+      val higherIsBetter = outer.higherIsBetter
 
 
-      val stat = (d: Date) => statistic.function(k, d)
+      val stat = (d: Date) => outer.function(k, d)
       val key = k
 
-      val endDate = statistic.endDate
+      val endDate = outer.endDate
 
-      val startDate = statistic.startDate
+      val startDate = outer.startDate
     }
   }
 }
