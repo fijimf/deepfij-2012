@@ -5,7 +5,7 @@ import java.util.Date
 
 
 trait Statistic[K] extends StatInfo {
-  outer: Statistic[K] =>
+  outer: StatInfo =>
   def keys: List[K]
 
   def startDate: Date
@@ -22,7 +22,11 @@ trait Statistic[K] extends StatInfo {
 
       val name = outer.name
 
-      val higherIsBetter = outer.higherIsBetter
+      val higherIsBetter = {
+        val better: Boolean = outer.higherIsBetter
+        println(better)
+        better
+      }
 
       val stat = (k: K) => outer.function(k, d)
 

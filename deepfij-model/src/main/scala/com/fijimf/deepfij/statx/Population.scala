@@ -12,22 +12,9 @@ trait Population[K] extends StatInfo {
 
   def stat: Function[K, Option[Double]]
 
-  val order = if (higherIsBetter) 1.0 else -1.0
+  def order = if (higherIsBetter) -1.0 else 1.0
 
-  private[this] lazy val valuePairs: List[(Double, K)] = {
-    val map: List[(Option[Double], K)] = keys.map(k => (stat(k) -> k))
-    println(map.take(10))
-    val filter: List[(Option[Double], K)] = map.filter(_._1.isDefined)
-    println(filter.take(10))
-
-    val map1: List[(Double, K)] = filter.map(p => (p._1.get -> p._2))
-    println(map1.take(10))
-
-    val by: List[(Double, K)] = map1.sortBy(_._1 * order)
-    println(by.take(10))
-
-    by
-  }
+  private[this] lazy val valuePairs: List[(Double, K)] = keys.map(k => (stat(k) -> k)).filter(_._1.isDefined).map(p => (p._1.get -> p._2)).sortBy(_._1 * order)
   private[this] lazy val values: List[Double] = valuePairs.map(_._1)
   private[this] lazy val valueCount: Map[Double, Int] = valuePairs.groupBy(_._1).map(tup => tup._1 -> tup._2.size)
   private[this] lazy val valueIndex: Map[Double, Int] = valueCount.keys.map(x => (x -> values.indexOf(x))).toMap
