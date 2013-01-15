@@ -27,7 +27,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   var schedule = sd.findPrimary().get
   val statList: List[String] = List("wins", "losses", "wp", "win-streak", "loss-streak",
     "points-for-mean", "points-against-mean", "score-margin-mean",
-    "point-predictor", "win-predictor")
+    "point-predictor", "win-predictor","log-win-predictor")
 
   var stats = statList.map(k => k -> std.population(k, DateUtils.truncate(new Date(), Calendar.DATE))).toMap
 
