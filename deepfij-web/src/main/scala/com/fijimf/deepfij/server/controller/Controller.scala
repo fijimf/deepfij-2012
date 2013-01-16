@@ -142,6 +142,11 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     logout
   }
 
+  get("/about") {
+    contentType = "text/html"
+    templateEngine.layout("pages/about.mustache", attributes())
+  }
+
   get("/scripts/*") {
     filterChain.doFilter(request, response)
   }
@@ -157,7 +162,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   notFound {
     contentType = "text/html"
     status(404)
-    BasePage(title = "Not Found", content = Some(<h1>Not Found</h1>)).toHtml5()
+    templateEngine.layout("pages/notFound.mustache",  attributes())
   }
 
 
