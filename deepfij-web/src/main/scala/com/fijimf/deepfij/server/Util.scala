@@ -5,10 +5,18 @@ import xml.{Elem, NodeSeq}
 
 object Util {
   def html5Wrapper(xml: NodeSeq): String = {
-      "<!DOCTYPE html>\n" + xml.toString
+    "<!DOCTYPE html>\n" + xml.toString
+  }
+
+  def ordinal(i: Int): String = {
+    val suffixes = Array("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+    (i % 100) match {
+      case 11 => "11th"
+      case 12 => "12th"
+      case 13 => "13th"
+      case _ => i + suffixes(i % 10)
     }
-
-
+  }
 
   def createAccordian(accordianId: String, children: List[(String, NodeSeq, NodeSeq)], parent: Boolean = false): Elem = {
     val par = if (parent) Some(accordianId) else None

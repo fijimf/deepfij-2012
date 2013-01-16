@@ -17,8 +17,8 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
   case class ObservationType(description: String, key: String, higherIsBetter: Boolean, f: (PointsRunning) => List[Double])
 
   val observationTypes = List(
-    ObservationType("Points For", "points-for", true, _.pointsFor),
-    ObservationType("Points Against", "points-against", false, _.pointsAgainst),
+    ObservationType("Pts For", "points-for", true, _.pointsFor),
+    ObservationType("Pts Against", "points-against", false, _.pointsAgainst),
     ObservationType("Margin", "score-margin", true, _.margin),
     ObservationType("Total Score", "score-total", true, _.totalScore)
   )
@@ -46,7 +46,7 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
   val modelStatistics: Map[String, MetaStat] = (
     for (o <- observationTypes; p <- populationMeasures) yield {
       val ms: MetaStat = new MetaStat(
-        name = o.description + " " + p.description,
+        name = p.description + " " + o.description,
         statKey = o.key + "-" + p.key,
         format = p.format,
         higherIsBetter = o.higherIsBetter)

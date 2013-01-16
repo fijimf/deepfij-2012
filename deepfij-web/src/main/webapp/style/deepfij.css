@@ -15,6 +15,14 @@ footer {
      font-size: 75%;
 }
 
+.game-dog {
+
+}
+
+.game-fav {
+   font-weight: bold;
+   background-color: #eef;
+}
 .nav > li {
     line-height: 32px;
     font-size: 16px;

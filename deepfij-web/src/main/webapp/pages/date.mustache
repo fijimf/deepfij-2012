@@ -25,33 +25,52 @@
                     <div class="row-fluid">
                         <div class="span6 offset3">
                             <h3>Results</h3>
-                            <table class="table"><tbody>
-                            {{#results}}
-                                   <tr>
-                                    <td>{{#awayTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
-                                    <td>{{#result}}{{awayScore}}{{/result}}</td>
-                                    <td>{{#homeTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
-                                    <td>{{#result}}{{homeScore}}{{/result}}</td>
-                                   </tr>
-                            {{/results}}
-                            </tbody></table>
+                            <table class="table">
+                                <tbody>
+                                    {{#results}}
+                                    <tr>
+                                        <td>{{#awayTeam}}<a href="{{ctx}}/team/{{key}}"
+                                                            style="padding-right: .66em;">{{name}}</a>{{#record}}
+                                            ({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
+                                        <td>{{#result}}{{awayScore}}{{/result}}</td>
+                                        <td>{{#homeTeam}}<a href="{{ctx}}/team/{{key}}"
+                                                            style="padding-right: .66em;">{{name}}</a>{{#record}}
+                                            ({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
+                                        <td>{{#result}}{{homeScore}}{{/result}}</td>
+                                    </tr>
+                                    {{/results}}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 {{/hasResults}}
                 {{#hasGames}}
                     <div class="row-fluid">
-                        <div class="span6 offset3">
+                        <div class="span10 offset1">
                             <h3>Games</h3>
-                            <table class="table"><tbody>
-                            {{#games}}
-                            <tr>
-                                <td>{{#awayTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th style="text-align:center">Away</th>
+                                    <th style="text-align:center">Home</th>
+                                    <th style="text-align:center">Naive Point Spread</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#games}}
+                                    <tr>
+                                        <td class="{{awayClass}}">{{#awayTeam}}<a href="{{ctx}}/team/{{key}}"
+                                                                                  style="padding-right: .66em;">{{name}}</a>{{#record}}
+                                            ({{won}}-{{lost}}){{/record}}{{/awayTeam}} </td>
 
-                                <td>{{#homeTeam}}<a href="{{ctx}}/team/{{key}}" style="padding-right: .66em;">{{name}}</a>{{#record}}({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
-
-                            </tr>
-                            {{/games}}
-                            </tbody></table>
+                                        <td class="{{homeClass}}">{{#homeTeam}}<a href="{{ctx}}/team/{{key}}"
+                                                                                  style="padding-right: .66em;">{{name}}</a>{{#record}}
+                                            ({{won}}-{{lost}}){{/record}}{{/homeTeam}} </td>
+                                        <td style="text-align:right">+ {{spread}}</td>
+                                    </tr>
+                                    {{/games}}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 {{/hasGames}}

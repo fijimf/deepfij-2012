@@ -63,13 +63,13 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
 
   get("/date/:yyyymmdd") {
     contentType = "text/html"
-    templateEngine.layout("pages/date.mustache", attributes() ++ DateMapper(schedule, yyyymmdd.parse(params("yyyymmdd"))))
+    templateEngine.layout("pages/date.mustache", attributes() ++ DateMapper(schedule, yyyymmdd.parse(params("yyyymmdd")), stats))
   }
 
   get("/team/:key") {
     contentType = "text/html"
     schedule.teamByKey.get(params("key")) match {
-      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t))
+      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t, stats))
       case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "team", "key" -> params("key")))
     }
   }
@@ -77,7 +77,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   get("/team/:schedule/:key") {
     contentType = "text/html"
     sd.findByKey(params("schedule")).flatMap(_.teamByKey.get(params("key"))) match {
-      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t))
+      case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t, stats))
       case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "team", "key" -> params("key")))
     }
   }

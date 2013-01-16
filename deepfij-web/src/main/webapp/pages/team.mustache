@@ -28,7 +28,24 @@
                         </h4>
                     </div>
                 </div>
-                <div class="row-fluid">
+                <div class="row-fluid" style="margin-bottom:20px;">
+                    {{#stats}}
+                        {{#point-predictor}}
+                            {{>statbox}}
+                        {{/point-predictor}}
+                        {{#win-predictor}}
+                            {{>statbox}}
+                        {{/win-predictor}}
+                        {{#score-margin-mean}}
+                            {{>statbox}}
+                        {{/score-margin-mean}}
+                        {{#points-for-mean}}
+                            {{>statbox}}
+                        {{/points-for-mean}}
+                        {{#points-against-mean}}
+                            {{>statbox}}
+                        {{/points-against-mean}}
+                    {{/stats}}
                     <div id="donuts"></div>
                 </div>
                 <div class="row-fluid">
