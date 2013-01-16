@@ -13,7 +13,7 @@ class WonLostModel extends SinglePassGameModel[Team] with TeamModel {
 
   val w = new MetaStat(name = "Wins", statKey = "wins", format = "%3.0f", higherIsBetter = true)
   val l = new MetaStat(name = "Losses", statKey = "losses", format = "%3.0f", higherIsBetter = false)
-  val wp = new MetaStat(name = "Winning Pct.", statKey = "wp", format = "%3.0f", higherIsBetter = true)
+  val wp = new MetaStat(name = "Winning Pct.", statKey = "wp", format = "%5.3f", higherIsBetter = true)
   val ws = new MetaStat(name = "Win Streak", statKey = "win-streak", format = "%3.0f", higherIsBetter = true)
   val ls = new MetaStat(name = "Loss Streak", statKey = "loss-streak", format = "%3.0f", higherIsBetter = true)
 

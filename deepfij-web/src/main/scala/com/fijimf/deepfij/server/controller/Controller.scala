@@ -27,7 +27,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   var schedule = sd.findPrimary().get
   val statList: List[String] = List("wins", "losses", "wp", "win-streak", "loss-streak",
     "points-for-mean", "points-against-mean", "score-margin-mean",
-    "point-predictor", "win-predictor","log-win-predictor")
+    "point-predictor", "win-predictor")
 
   var stats = statList.map(k => k -> std.population(k, DateUtils.truncate(new Date(), Calendar.DATE))).toMap
 
@@ -56,8 +56,8 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     contentType = "text/html"
 
     val zzz = stats.mapValues(pop => Map("name" -> pop.name, "mean" -> pop.mean,
-      "top25" -> pop.topN(25).map(tup => Map(
-        "name" -> tup._1.name, "key" -> tup._1.key, "value" -> tup._2, "rank" -> pop.rank(tup._1)))))
+      "top25" -> pop.topN(20).map(tup => Map(
+        "name" -> tup._1.name, "key" -> tup._1.key, "value" -> pop.format.format(tup._2), "rank" -> pop.rank(tup._1)))))
     templateEngine.layout("pages/home.mustache", zzz ++ attributes())
   }
 
