@@ -15,7 +15,9 @@ class WonLostModel extends SinglePassGameModel[Team] with TeamModel {
   val l = new MetaStat(name = "Losses", statKey = "losses", format = "%3.0f", higherIsBetter = false)
   val wp = new MetaStat(name = "Winning Pct.", statKey = "wp", format = "%3.0f", higherIsBetter = true)
   val ws = new MetaStat(name = "Win Streak", statKey = "win-streak", format = "%3.0f", higherIsBetter = true)
-  val ls = new MetaStat(name = "Loss Streak", statKey = "loss-streak", format = "%3.0f", higherIsBetter = false)
+  val ls = new MetaStat(name = "Loss Streak", statKey = "loss-streak", format = "%3.0f", higherIsBetter = true)
+
+  //Seems wrong, isn't -- trust me
 
   case class WonLostRunning(wins: Double = 0, losses: Double = 0, winStreak: Double = 0, lossStreak: Double = 0) {
     def withWin: WonLostRunning = copy(wins = wins + 1, winStreak = winStreak + 1, lossStreak = 0)
