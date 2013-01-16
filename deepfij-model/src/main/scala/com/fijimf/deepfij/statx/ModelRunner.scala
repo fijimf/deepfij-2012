@@ -15,8 +15,7 @@ object ModelRunner {
   def main(args: Array[String]) {
     val sched: Schedule = sd.findByKey("ncaa2013").get
     val repo: StatisticRepository = new StatisticRepository
-//    List(new WonLostModel, new PointsModel, new LinearRegression).foreach(model => {
-    List(new LogisticRegression).foreach(model => {
+    List(new WonLostModel, new PointsModel, new LinearRegression).foreach(model => {
       log.info("Start running " + model.name)
       val statistics: Map[String, Statistic[Team]] = model.createStatistics(sched)
       log.info("Done running " + model.name)
