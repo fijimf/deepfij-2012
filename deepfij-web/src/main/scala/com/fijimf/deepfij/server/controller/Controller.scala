@@ -26,6 +26,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   val msd: MetaStatDao = new MetaStatDao()
 
   var schedule = sd.findPrimary().get
+
   val statList: List[String] = msd.findAll().map(_.statKey)
 
   var stats = statList.map(k => k -> catching(classOf[Exception]).opt({
@@ -180,7 +181,11 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   notFound {
     contentType = "text/html"
     status(404)
+<<<<<<< HEAD
     templateEngine.layout("pages/notFound.mustache", attributes())
+=======
+    templateEngine.layout("pages/404.mustache", attributes())
+>>>>>>> 4dec33cab84f231922b3105282cce2ba3c01f78b
   }
 
 

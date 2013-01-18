@@ -46,9 +46,11 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
   }
 
   def population(statKey: String, date: Date): Population[Team] = {
-    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.date=:date")
+    val q: Query = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.date=:date")
       .setParameter("statKey", statKey)
       .setParameter("date", date)
+    println(q.toString)
+    val stats = q
       .getResultList.toList.asInstanceOf[List[TeamStat]]
     listToStat(stats).population(stats.head.date)
   }

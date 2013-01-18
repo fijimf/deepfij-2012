@@ -3,28 +3,56 @@
     {{> head}}
 <body style="padding-top: 50px;">
     {{> navbar}}
-<div class="container-fluid cool-gradient">
+<div class="container-fluid">
     <div class="row-fluid">
-        <div class="span12">
-            <h2 style="font-size: 144px; line-height: 120%;">
-                Deep Fij
-            </h2>
+        <div class="span10 offset1" style="padding-top:40px; padding-bottom:30px;">
+            <h1>About Deep Fij</h1>
         </div>
     </div>
 </div>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span2"><image style="align:center;" src="{{ctx}}/images/zeke.jpg" /><h5 style="text-align:center;">Our satisfied user</h5></div>
-        <div class="span9">
-            <p>Deep Fij is a side project of a long time college basketball fan and computer programmer.</p>
-            <p>While nothing would please him more than providing useful, entertaining and enlightening information
-            about college basketball to hosts of fans, he has no illusion about the likelihood of that, and if Google
-            Analytics is he appears to be spot on.</p><p>At this point we have one known satisfied user</p>
 
-            <p>Because of this, it often appears as if the site has been abandoned.  Certain obvious expected
-            features either are broken or have not yet been implemented.  Don't worry -- work is proceeding just very slowly.</p>
-            <p>Technical issues.  The software is written in Scala, using the Scalatra web framework with Mustache for templating
-            running on a Tomcat7 server..</p>
+        <div class="span10 offset1" style="padding-bottom:30px;">
+            <h3>Overview</h3>
+
+            <p>Deep Fij is a permanently-in-beta web site devoted to analysis of college basketball.</p>
+
+            <p>It has existed on the web for about the past five years, off and on and in various forms and degrees of
+                polish. Prior to that had been a home project for a number of years as well.</p>
+
+            <h3>Roadmap</h3>
+
+            <div class="pull-left" style="margin: 8px;"><img class="img-polaroid" src="{{ctx}}/images/zeke.jpg"/><h5>Our
+                satisfied user</h5></div>
+            <p>In its current form, it largely just serves results, schedules and team rankings based on certain
+                statistics I calculate. In the past I have offered head-to-head analyses and
+                some predictive modelling, but in its current version those have not yet been reimplemented</p>
+
+
+            <p>While nothing would please me more than providing useful, entertaining, enlightening and most of all
+                engaging analysis and information about college basketball to hosts of fans, I have no illusion about
+                the time commitment required for that. And this is decidedly a side project. Because of this, it often
+                appears as if the site has been abandoned. Certain obvious expected features either are broken or have
+                not yet been implemented. Don't worry -- work is proceeding just very slowly.</p>
+
+            <p> At this point we have one known satisfied user.</p>
+
+            <p>In the near future I hope to implement more team statistics and to have more predictive analytics, that
+                is game probabilities and fair point spreads. I also have a few ideas about visualizations I'd like to
+                implement. In the longer term, I'd like to have a little more interactivity on the site rather than
+                static display. And in the very long term I'd like to wire up the user registration for personalized
+                interaction and display. If you have some comments, complaints, or suggestions email me at <a
+                        href="mailto:deepfij@gmail.com">
+                    deepfij@gmail.com</a></p>
+
+            <h3>Technical</h3>
+
+            <p>The software is written in Scala, using the Scalatra web framework with Mustache for templating. It runs
+                on
+                on a Tomcat7 server running on a virtual CentOS box. Data is served by Hibernate/JPA hitting MySql.
+                Website is all Bootstrap. Logo is
+                an original design create with GIMP. Lots of open source libraries. No Spring. </p>
         </div>
     </div>
 </div>
