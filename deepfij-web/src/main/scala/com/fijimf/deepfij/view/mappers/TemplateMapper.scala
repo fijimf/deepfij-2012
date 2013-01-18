@@ -39,7 +39,7 @@ object TeamMapper {
       "name" -> team.name,
       "key" -> team.key,
       "logoUrl" -> team.logoOpt.getOrElse("#"),
-      "officalUrl" -> team.officialUrlOpt.getOrElse("#"),
+      "officialUrl" -> team.officialUrlOpt.getOrElse("#"),
       "nickname" -> team.nicknameOpt.getOrElse(" "),
       "conference" -> Map("name" -> team.conference.name, "key" -> team.conference.key),
       "wins" -> team.wins.size,
