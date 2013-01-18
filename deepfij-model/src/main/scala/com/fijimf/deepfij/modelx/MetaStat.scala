@@ -42,5 +42,7 @@ class MetaStatDao extends BaseDao[MetaStat, Long] {
       case x: NonUniqueResultException => None
     }
   }
+
+  def findAll(): List[MetaStat] = entityManager.createQuery("SELECT m FROM MetaStat m").getResultList.toList.asInstanceOf[List[MetaStat]]
 }
 

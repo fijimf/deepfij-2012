@@ -11,10 +11,9 @@ import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx._
 import org.scalatra.scalate.ScalateSupport
 import java.util.{Calendar, TimerTask, Timer, Date}
-import com.fijimf.deepfij.view.BasePage
 import scala.Some
 import org.apache.commons.lang.time.DateUtils
-import java.util
+import scala.util.control.Exception._
 
 class Controller extends ScalatraFilter with ScalateSupport with ConferenceController with StatsController {
   val log = Logger.getLogger(this.getClass)
@@ -23,13 +22,14 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   val qd = new QuoteDao()
   val sd = new ScheduleDao()
   val std = new TeamStatDao()
+  val msd: MetaStatDao = new MetaStatDao()
 
   var schedule = sd.findPrimary().get
-  val statList: List[String] = List("wins", "losses", "wp", "win-streak", "loss-streak",
-    "points-for-mean", "points-against-mean", "score-margin-mean",
-    "point-predictor", "win-predictor")
+  val statList: List[String] = msd.findAll().map(_.statKey)
 
-  var stats = statList.map(k => k -> std.population(k, DateUtils.truncate(new Date(), Calendar.DATE))).toMap
+  var stats = statList.map(k => k -> catching(classOf[Exception]).opt({
+    std.population(k, DateUtils.truncate(new Date(), Calendar.DATE))
+  })).filter(_._2.isEmpty).map(p => (p._1, p._2.get)).toMap
 
   def attributes(): Map[String, Any] = {
     val m: Map[String, Any] = Map("ctx" -> contextPath, "quote" -> qd.random().getOrElse(new Quote(quote = "How bad it gets you can't imagine; the burning wax, the breath of reptiles.", source = "Shriekback", url = "http://www.mofito.com/music-videos/shriekback/6957067-nemesis.htm"))) ++ SubjectMapper(SecurityUtils.getSubject)
@@ -99,11 +99,6 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     }
   }
 
-  get("/admin") {
-    contentType = "text/html"
-    templateEngine.layout("pages/admin.mustache", attributes() ++ Map("title" -> "Admin"))
-  }
-
   get("/search") {
     contentType = "text/html"
     val results: Map[String, Object] = SearchMapper(schedule, params("q"))
@@ -162,7 +157,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   notFound {
     contentType = "text/html"
     status(404)
-    templateEngine.layout("pages/notFound.mustache",  attributes())
+    templateEngine.layout("pages/notFound.mustache", attributes())
   }
 
 
