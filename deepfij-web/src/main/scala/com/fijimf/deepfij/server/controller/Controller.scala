@@ -14,6 +14,7 @@ import java.util.{Calendar, TimerTask, Timer, Date}
 import scala.Some
 import org.apache.commons.lang.time.DateUtils
 import scala.util.control.Exception._
+import com.codahale.jerkson.Json
 
 class Controller extends ScalatraFilter with ScalateSupport with ConferenceController with StatsController {
   val log = Logger.getLogger(this.getClass)
@@ -79,6 +80,28 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     sd.findByKey(params("schedule")).flatMap(_.teamByKey.get(params("key"))) match {
       case Some(t) => templateEngine.layout("pages/team.mustache", attributes() ++ TeamMapper(t, stats))
       case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "team", "key" -> params("key")))
+    }
+  }
+
+  get("/stat/:key") {
+    contentType = "text/html"
+    stats.get(params("key")) match {
+      case Some(s) => templateEngine.layout("pages/stat.mustache", attributes() ++ StatMapper(s))
+      case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "statistic", "key" -> params("key")))
+    }
+  }
+
+  get("/stat/:key/api") {
+    contentType = "application/json"
+    stats.get(params("key")) match {
+      case Some(s) => {
+        val map: Map[String, Object] = StatMapper(s)
+        println(map)
+        Json.generate(map)
+      }
+      case None => {   "[]"
+
+      }
     }
   }
 

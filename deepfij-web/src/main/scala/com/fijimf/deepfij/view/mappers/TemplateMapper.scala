@@ -25,7 +25,7 @@ object SubjectMapper extends TemplateMapper[Subject] {
 }
 
 object TeamMapper {
-  def apply(team: Team, stats: Map[String, Population[Team]]) = {
+  def apply(team: Team, stats: Map[String, Population[Team]]=Map.empty[String, Population[Team]], includeGames:Boolean=true) = {
     val statValues: Map[String, Map[String, Any]] = (for (k <- List("point-predictor", "win-predictor", "points-for-mean", "points-against-mean", "score-margin-mean");
                                                           stat <- stats.get(k);
                                                           rank <- stat.rank(team);
@@ -33,6 +33,12 @@ object TeamMapper {
       k -> Map("name" -> stat.name, "rank" -> Util.ordinal(rank.toInt), "value" -> stat.format.format(value))
     }).toMap
     statValues
+
+    val games = if (includeGames) {
+      team.games
+    } else {
+      List.empty[Game]
+    }
 
     Map(
       "title" -> team.name,
@@ -46,7 +52,7 @@ object TeamMapper {
       "losses" -> team.losses.size,
       "conferenceWins" -> team.wins.filter(g => g.homeTeam.conference == g.awayTeam.conference).size,
       "conferenceLosses" -> team.losses.filter(g => g.homeTeam.conference == g.awayTeam.conference).size,
-      "games" -> team.games.sortBy(_.date).map(g => {
+      "games" -> games.sortBy(_.date).map(g => {
         gameToMap(g, team)
       }),
       "stats" -> statValues
@@ -134,6 +140,15 @@ object ConferenceMapper extends TemplateMapper[Conference] {
     )
   }
 }
+
+
+object StatMapper  {
+  def apply(pop: Population[Team]) = {
+    val list: List[Map[String, Any]] = pop.keys.map(t => Map("team" -> TeamMapper(t, Map.empty[String, Population[Team]], false), "rank" -> pop.rank(t).getOrElse(0), "value" -> pop.stat(t).getOrElse(0))).sortBy(_("rank").asInstanceOf[Double])
+    Map("title" -> pop.name, "name" -> pop.name, "data"-> list)
+  }
+}
+
 
 object DateMapper {
   val yyyymmdd = new SimpleDateFormat("yyyyMMdd")

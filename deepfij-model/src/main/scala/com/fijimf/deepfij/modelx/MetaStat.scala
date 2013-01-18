@@ -3,6 +3,7 @@ package com.fijimf.deepfij.modelx
 import annotation.target.field
 import javax.persistence._
 import com.fijimf.deepfij.statx.StatInfo
+import scala.collection.JavaConversions._
 
 
 @Entity
