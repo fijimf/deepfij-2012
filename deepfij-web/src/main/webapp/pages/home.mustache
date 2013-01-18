@@ -69,6 +69,11 @@
             {{/point-predictor}}
         </div>
         <div class="span2">
+            {{#normalized-point-predictor}}
+                {{>top25table}}
+            {{/normalized-point-predictor}}
+        </div>
+        <div class="span2">
             {{#win-predictor}}
                 {{>top25table}}
             {{/win-predictor}}
