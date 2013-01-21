@@ -8,30 +8,29 @@
     <div class="row-fluid">
         <div class="span10">
             <div class="container-fluid">
-                <h3>Cool d3.js graphs</h3>
+                <h1>{{name}}</h1>
+                <style>
+                    .bar rect {
+                    fill: steelblue;
+                    }
+
+                    .axis text {
+                    font: 10px sans-serif;
+                    }
+
+                    .axis path, .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                    }
+                </style>
 
                 <div id="graphPanel">
 
                 </div>
+
                 <script>
-                    function loadGameData() {
-                    $.get("{{ctx}}/stat/{{key}}/api/", { },
-                    function (stat) {
-                    var data = stat;
-                    console.log(data)
-                    var chart = d3.select("#graphPanel").append("table")
-
-
-                    chart.selectAll("tbody tr").data(data.teams).enter().append("tr").selectAll("td").data(function(d,i) {return d.games;}).enter()
-                    .append("td")
-                    .attr("style", function(d,i) { if (d.score>d.oppScore) {return "background-color:#bfb;";} else {return "background-color:#fbb;";}}).append("img").attr("src", function(d,i) {return d.opponentLogo;})
-
-
-
-                    });
-                    }
-
-                    loadGameData();
+                    d3.json("{{ctx}}/stat/{{key}}/api", statHistogram)
                 </script>
             </div>
         </div>

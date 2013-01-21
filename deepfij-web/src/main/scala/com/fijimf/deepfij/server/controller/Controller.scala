@@ -97,10 +97,10 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     stats.get(params("key")) match {
       case Some(s) => {
         val map: Map[String, Object] = StatMapper(s)
-        println(map)
         Json.generate(map)
       }
-      case None => {   "[]"
+      case None => {
+        "[]"
 
       }
     }
@@ -181,11 +181,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   notFound {
     contentType = "text/html"
     status(404)
-<<<<<<< HEAD
-    templateEngine.layout("pages/notFound.mustache", attributes())
-=======
     templateEngine.layout("pages/404.mustache", attributes())
->>>>>>> 4dec33cab84f231922b3105282cce2ba3c01f78b
   }
 
 
