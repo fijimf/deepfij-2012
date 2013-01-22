@@ -81,7 +81,7 @@ object TeamMapper {
 
   def oppSummary(t: Team, d: Date): String = {
     val fmt = new SimpleDateFormat("MMM d")
-    val last = t.games.filter(_.date.before(d)).sortBy(_.date).lastOption match {
+    val last = t.games.filter(g=>g.resultOpt.isDefined && g.date.before(d)).sortBy(_.date).lastOption match {
       case None => ""
       case Some(g) => {
         if (g.isWin(t)) {
