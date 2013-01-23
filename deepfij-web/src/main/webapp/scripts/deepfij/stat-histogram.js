@@ -60,16 +60,24 @@ function statHistogram(stat) {
 
    var scatterX = d3.scale.ordinal().domain([1, values.length]).range([0, width]);
 
-  var scatterXAxis = d3.svg.axis().scale(scatterX).orient("bottom");
-  var scatterYAxis = d3.svg.axis().scale(scatterY).orient("left");
-      scatter.append("g")
+   var scatterXAxis = d3.svg.axis().scale(scatterX).orient("bottom");
+   var scatterYAxis = d3.svg.axis().scale(scatterY).orient("left");
+    scatter.append("g")
           .attr("class", "axis")
-          .attr("transform", "translate(0, "+margin.top+")")
+          .attr("transform", "translate("+margin.left+", "+height+")")
           .call(scatterXAxis);
 
-      scatter.append("g")
+   scatter.append("g")
           .attr("class", "axis")
           .attr("transform", "translate("+(margin.left)+", 0)")
           .call(scatterYAxis);
 
+ scatter.selectAll("circle")
+        .data(values)
+        .enter()
+        .append("circle")
+        .attr("class", "circle")
+        .attr("cx", function (d,i) { return x(i); })
+        .attr("cy", function (d) { return y(d); })
+        .attr("r", 3);
 }
