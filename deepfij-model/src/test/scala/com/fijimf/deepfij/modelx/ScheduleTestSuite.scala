@@ -3,10 +3,16 @@ package com.fijimf.deepfij.modelx
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import javax.persistence.PersistenceException
+import org.apache.commons.lang.StringUtils
 
 @RunWith(classOf[JUnitRunner])
 class ScheduleTestSuite extends DaoTestSuite {
   val dao: ScheduleDao = new ScheduleDao
+
+  test("Empty constructor") {
+    assert(StringUtils.isBlank(new Schedule().key))
+    assert(StringUtils.isBlank(new Schedule().name))
+  }
 
   test("Find empty") {
     assert(dao.findAll().isEmpty)
@@ -90,25 +96,56 @@ class ScheduleTestSuite extends DaoTestSuite {
     dao.save(new Schedule(key = "ooo", name = "OOO"))
     dao.save(new Schedule(key = "ppp", name = "PPP"))
 
-    assert(dao.findByKey("nnn").get.isPrimary==false)
-    assert(dao.findByKey("ooo").get.isPrimary==false)
-    assert(dao.findByKey("ppp").get.isPrimary==false)
+    assert(dao.findByKey("nnn").get.isPrimary == false)
+    assert(dao.findByKey("ooo").get.isPrimary == false)
+    assert(dao.findByKey("ppp").get.isPrimary == false)
 
     dao.setPrimary("ooo")
- //   PersistenceSource.entityManager.clear() //Flush 1st level cache
+    //   PersistenceSource.entityManager.clear() //Flush 1st level cache
 
-    assert(dao.findByKey("nnn").get.isPrimary==false)
+    assert(dao.findByKey("nnn").get.isPrimary == false)
     assert(dao.findByKey("ooo").get.isPrimary)
-    assert(dao.findByKey("ppp").get.isPrimary==false)
+    assert(dao.findByKey("ppp").get.isPrimary == false)
 
     dao.setPrimary("ppp")
-//    PersistenceSource.entityManager.clear() //Flush 1st level cache
+    //    PersistenceSource.entityManager.clear() //Flush 1st level cache
 
 
-    assert(dao.findByKey("nnn").get.isPrimary==false)
-    assert(dao.findByKey("ooo").get.isPrimary==false)
+    assert(dao.findByKey("nnn").get.isPrimary == false)
+    assert(dao.findByKey("ooo").get.isPrimary == false)
     assert(dao.findByKey("ppp").get.isPrimary)
+
+    assert(dao.findPrimary() == dao.findByKey("ppp"))
 
 
   }
+
+  test("Data methods on new schedule") {
+    val schedule: Schedule = new Schedule(key = "nnn", name = "NNN")
+    assert(schedule.gameByKey == Map.empty[String, Game])
+    assert(schedule.teamByKey == Map.empty[String, Team])
+    assert(schedule.gameList == List.empty[Game])
+    assert(schedule.teamList == List.empty[Team])
+    assert(schedule.conferenceByKey == Map.empty[String, Conference])
+    assert(schedule.conferenceByName == Map.empty[String, Conference])
+    assert(schedule.conferenceList == List.empty[Conference])
+    assert(schedule.aliasByKey == Map.empty[String, Alias])
+    assert(schedule.aliasList == List.empty[Alias])
+  }
+
+  test("Data methods on retrieved empty schedule") {
+    dao.save(new Schedule(key = "nnn", name = "NNN"))
+    val schedule: Schedule = dao.findByKey("nnn").get
+    assert(schedule.gameByKey == Map.empty[String, Game])
+    assert(schedule.teamByKey == Map.empty[String, Team])
+    assert(schedule.gameList == List.empty[Game])
+    assert(schedule.teamList == List.empty[Team])
+    assert(schedule.conferenceByKey == Map.empty[String, Conference])
+    assert(schedule.conferenceByName == Map.empty[String, Conference])
+    assert(schedule.conferenceList == List.empty[Conference])
+    assert(schedule.aliasByKey == Map.empty[String, Alias])
+    assert(schedule.aliasList == List.empty[Alias])
+  }
+
+
 }

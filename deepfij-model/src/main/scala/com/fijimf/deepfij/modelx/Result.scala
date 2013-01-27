@@ -27,9 +27,17 @@ class Result(
               ) extends KeyedObject {
   def this() = this(0L)
 
-  def homeWin = homeScore > awayScore
+  def winner = if (homeScore > awayScore) {
+    game.homeTeam
+  } else {
+    game.awayTeam
+  }
 
-  def homeLoss = homeScore < awayScore
+  def loser = if (homeScore < awayScore) {
+    game.homeTeam
+  } else {
+    game.awayTeam
+  }
 
   def key = game.key + ":" + homeScore + ":" + awayScore
 }

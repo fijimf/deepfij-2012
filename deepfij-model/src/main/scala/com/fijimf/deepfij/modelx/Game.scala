@@ -43,26 +43,26 @@ class Game(
             @(Column@field)(name = "updatedAt")
             var updatedAt: Date = new Date
             ) extends KeyedObject {
-  require((homeTeam == null && awayTeam == null) || (homeTeam != null))
+  require((homeTeam == null && awayTeam == null && homeTeam == null) || (homeTeam != null && awayTeam != null && schedule != null))
 
   def this() = this(0L)
 
   @transient lazy val resultOpt = Option(result)
 
   def isWin(t: Team): Boolean = {
-    resultOpt.isDefined && ((homeTeam == t && result.homeWin) || (awayTeam == t && result.homeLoss))
+    resultOpt.isDefined && t == winner.get
   }
 
   def isLoss(t: Team): Boolean = {
-    resultOpt.isDefined && ((homeTeam == t && result.homeLoss) || (awayTeam == t && result.homeWin))
+    resultOpt.isDefined && t == loser.get
   }
 
   def winner: Option[Team] = {
-    resultOpt.map(r => if (r.homeWin) homeTeam else awayTeam)
+    resultOpt.map(_.winner)
   }
 
   def loser: Option[Team] = {
-    resultOpt.map(r => if (r.homeLoss) homeTeam else awayTeam)
+    resultOpt.map(_.loser)
   }
 
   def key = {

@@ -26,6 +26,9 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   SecurityUtils.setSecurityManager(securityManager)
   addFilter(classOf[Controller], "/*")
 
+  PersistenceSource.buildDatabase()
+  PersistenceSource.entityManager.clear()
+
   val sdao: ScheduleDao = new ScheduleDao
   val cdao: ConferenceDao = new ConferenceDao
   val tdao: TeamDao = new TeamDao
@@ -33,19 +36,14 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   val rdao: ResultDao = new ResultDao
 
 
-  override def beforeEach() {
-    PersistenceSource.buildDatabase()
-    PersistenceSource.entityManager.clear()
-
-    val s = sdao.save(new Schedule(0L, "test", "Test", isPrimary = true))
-    val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
-    val ta = tdao.save(new Team(key = "marquette", name = "Marquette", schedule = s, conference = c, longName = "Marquette", updatedAt = new Date))
-    val tb = tdao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
-    val tc = tdao.save(new Team(key = "syracuse", name = "Syracuse", schedule = s, conference = c, longName = "Syracuse", updatedAt = new Date))
-    val ga = gdao.save(new Game(schedule = s, homeTeam = ta, awayTeam = tb))
-    val gb = gdao.save(new Game(schedule = s, homeTeam = tc, awayTeam = tb))
-    val res = rdao.save(new Result(game = gb, homeScore = 50, awayScore = 123))
-  }
+  val s = sdao.save(new Schedule(0L, "test", "Test", isPrimary = true))
+  val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
+  val ta = tdao.save(new Team(key = "marquette", name = "Marquette", schedule = s, conference = c, longName = "Marquette", updatedAt = new Date))
+  val tb = tdao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
+  val tc = tdao.save(new Team(key = "syracuse", name = "Syracuse", schedule = s, conference = c, longName = "Syracuse", updatedAt = new Date))
+  val ga = gdao.save(new Game(schedule = s, homeTeam = ta, awayTeam = tb))
+  val gb = gdao.save(new Game(schedule = s, homeTeam = tc, awayTeam = tb))
+  val res = rdao.save(new Result(game = gb, homeScore = 50, awayScore = 123))
 
   describe("The DeepfijController filter") {
     it("should always return OK status and valid HTML for the supported urls") {

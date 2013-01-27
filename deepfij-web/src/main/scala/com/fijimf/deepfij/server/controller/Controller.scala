@@ -109,7 +109,6 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   get("/conference/:key") {
     contentType = "text/html"
     schedule.conferenceByKey.get(params("key")) match {
-
       case Some(c) => templateEngine.layout("pages/conference.mustache", attributes() ++ ConferenceMapper(c))
       case None => templateEngine.layout("pages/notfound.mustache", attributes() ++ Map("title" -> "Not Found", "resource" -> "conference", "key" -> params("key")))
     }

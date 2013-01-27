@@ -58,7 +58,7 @@ function statHistogram(stat) {
 
    var scatterY = d3.scale.linear().domain([0, d3.max(values, function(d) { return d; })]).range([height, 0]);
 
-   var scatterX = d3.scale.ordinal().domain([1, values.length]).range([0, width]);
+   var scatterX = d3.scale.linear().domain([1, values.length]).range([0, width]);
 
    var scatterXAxis = d3.svg.axis().scale(scatterX).orient("bottom");
    var scatterYAxis = d3.svg.axis().scale(scatterY).orient("left");
@@ -72,12 +72,23 @@ function statHistogram(stat) {
           .attr("transform", "translate("+(margin.left)+", 0)")
           .call(scatterYAxis);
 
- scatter.selectAll("circle")
-        .data(values)
-        .enter()
-        .append("circle")
-        .attr("class", "circle")
-        .attr("cx", function (d,i) { return x(i); })
-        .attr("cy", function (d) { return y(d); })
-        .attr("r", 3);
+// scatter.selectAll("circle")
+//        .data(values)
+//        .enter()
+//        .append("circle")
+//        .attr("class", "circle")
+//        .attr("cx", function (d,i) { return scatterX(i); })
+//        .attr("cy", function (d) { return scatterY(d); })
+//        .attr("r", 1);
+
+  var area = d3.svg.area()
+       .x(function(d,i) { return scatterX(i); })
+       .y0(function(d) { return scatterY(height); })
+       .y1(function(d) { return scatterY(d); });
+
+  scatter.selectAll("path")
+         .data(values)
+         .enter().append("path")
+         .attr("d", area)
+         .style("fill", function() { return color(Math.random()); });
 }

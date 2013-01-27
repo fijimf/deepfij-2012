@@ -58,14 +58,6 @@ class Schedule(
     this(0L, "", "", false, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Conference]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Team]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Alias]], new Date())
   }
 
-  def vitalsSigns() = Map(
-    "name" -> name, "key" -> key,
-    "numberOfConferences" -> conferenceList.size,
-    "conferenceSize" ->
-      conferenceList.map(c => (c.key -> c.teamList.size)).toMap,
-    "numberOfTeams" -> teamList.size,
-    "teamGames" -> teamList.map(t => (t.key -> Map("first" -> t.games.minBy(_.date), "last" -> t.games.maxBy(_.date), "count" -> t.games.size)))
-  )
 }
 
 class ScheduleDao extends BaseDao[Schedule, Long] {
@@ -73,7 +65,11 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
   def findByKey(key: String): Option[Schedule] = {
     val s: Option[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s WHERE s.key = :key").setParameter("key", key).getResultList.toList.asInstanceOf[List[Schedule]].headOption
     s.map(sch => {
-      sch.conferenceList; sch.teamList; sch.gameList; sch.aliasList; sch
+      sch.conferenceList;
+      sch.teamList;
+      sch.gameList;
+      sch.aliasList;
+      sch
     })
   }
 
