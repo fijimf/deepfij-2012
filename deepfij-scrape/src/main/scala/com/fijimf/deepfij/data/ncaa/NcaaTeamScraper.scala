@@ -2,13 +2,25 @@ package com.fijimf.deepfij.data.ncaa
 
 import xml.{NodeSeq, Node}
 import collection.immutable.{Map, List}
-import com.fijimf.deepfij.repo.TeamData
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.HttpScraper
 import collection.parallel.ForkJoinTasks
 import com.fijimf.deepfij.util.Timing._
 
 object NcaaTeamScraper extends HttpScraper {
+
+  object TeamData {
+    val Key = "key"
+    val Name = "name"
+    val ConferenceName = "conference"
+    val LongName = "longName"
+    val Nickname = "nickname"
+    val PrimaryColor = "primaryColor"
+    val SecondaryColor = "secondaryColor"
+    val OfficialUrl = "officialUrl"
+    val LogoUrl = "logo"
+  }
+
   val logger = Logger.getLogger(NcaaTeamScraper.getClass)
   ForkJoinTasks.defaultForkJoinPool.setParallelism(24)
 
@@ -118,10 +130,25 @@ object NcaaTeamScraper extends HttpScraper {
     val colorsKey = "Colors"
     val urlKey = "Url"
     val detailMap: Map[String, String] = (page \\ "td").map((node: Node) => node match {
-      case <td><h6>Nickname</h6><p>{nickname}</p></td> => Some((nicknameKey -> nickname.text))
-      case <td><h6>Athletics Website</h6><p><a>{url}</a></p></td> => Some((urlKey -> url.text))
-      case <td><h6>Colors</h6><p>{colors}</p></td> => Some((colorsKey -> colors.text))
-      case _ => None }).flatten.toMap
+      case <td>
+        <h6>Nickname</h6> <p>
+        {nickname}
+        </p>
+        </td> => Some((nicknameKey -> nickname.text))
+      case <td>
+        <h6>Athletics Website</h6> <p>
+        <a>
+          {url}
+          </a>
+        </p>
+        </td> => Some((urlKey -> url.text))
+      case <td>
+        <h6>Colors</h6> <p>
+        {colors}
+        </p>
+        </td> => Some((colorsKey -> colors.text))
+      case _ => None
+    }).flatten.toMap
     val optColors = detailMap.get(colorsKey)
     if (optColors.isDefined) {
       val carr: Array[String] = optColors.get.trim.split('&')
