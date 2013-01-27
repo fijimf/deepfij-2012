@@ -2,10 +2,9 @@ package com.fijimf.deepfij.modelx
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import com.fijimf.deepfij.modelx.Team._
 
 @RunWith(classOf[JUnitRunner])
-class MetaStatTestSuite extends DaoTestSuite{
+class MetaStatTestSuite extends DaoTestSuite {
   val dao: MetaStatDao = new MetaStatDao
 
   test("Create") {

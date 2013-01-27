@@ -63,7 +63,7 @@ class GameTestSuite extends DaoTestSuite {
     val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
     val q = tdao.save(new Team(key = "marquette", name = "Marquette", schedule = s, conference = c, longName = "Marquette", updatedAt = new Date))
     val r = tdao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
-    val gg = dao.save(new Game(schedule = s, homeTeam = q, awayTeam = r))
+    dao.save(new Game(schedule = s, homeTeam = q, awayTeam = r))
 
     assert(dao.findAll().size == 1)
     val g1 = dao.findAll().head
@@ -95,7 +95,7 @@ class GameTestSuite extends DaoTestSuite {
     assert(gg.resultOpt.isEmpty)
     assert(gg.key == new SimpleDateFormat("yyyyMMdd").format(new Date) + ":marquette:georgetown")
 
-    val rr = rao.save(new Result(game = gg, homeScore = 99, awayScore = 101))
+    rao.save(new Result(game = gg, homeScore = 99, awayScore = 101))
 
     val hh = dao.findBy(gg.id).get
     val mu: Team = hh.homeTeam

@@ -65,10 +65,10 @@ class ScheduleDao extends BaseDao[Schedule, Long] {
   def findByKey(key: String): Option[Schedule] = {
     val s: Option[Schedule] = entityManager.createQuery("SELECT s FROM Schedule s WHERE s.key = :key").setParameter("key", key).getResultList.toList.asInstanceOf[List[Schedule]].headOption
     s.map(sch => {
-      sch.conferenceList;
-      sch.teamList;
-      sch.gameList;
-      sch.aliasList;
+      sch.conferenceList
+      sch.teamList
+      sch.gameList
+      sch.aliasList
       sch
     })
   }

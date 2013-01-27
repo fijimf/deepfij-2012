@@ -5,7 +5,7 @@ import org.scalatest.junit.JUnitRunner
 import javax.persistence.PersistenceException
 
 @RunWith(classOf[JUnitRunner])
-class ConferenceTestSuite extends DaoTestSuite{
+class ConferenceTestSuite extends DaoTestSuite {
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
@@ -24,7 +24,7 @@ class ConferenceTestSuite extends DaoTestSuite{
     assert(conferenceDao.findAll().isEmpty)
     assert(None == conferenceDao.findBy(999))
     val r = conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s))
-    val rx = conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s1))
+    conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s1))
     val cs: List[Conference] = conferenceDao.findAll()
     assert(cs.size == 2)
     assert(cs.head.key == "big-east")
@@ -38,15 +38,15 @@ class ConferenceTestSuite extends DaoTestSuite{
     assert(r1.teamList.isEmpty)
 
     assert(r1 == conferenceDao.findByKey("big-east").get)
-    assert(r1 == conferenceDao.findByKey("test","big-east").get)
-    assert(r1 != conferenceDao.findByKey("not-primary","big-east").get)
+    assert(r1 == conferenceDao.findByKey("test", "big-east").get)
+    assert(r1 != conferenceDao.findByKey("not-primary", "big-east").get)
   }
 
   test("Schedule knows conferences") {
     val s = scheduleDao.save(new Schedule(0L, "test", "Test"))
     assert(conferenceDao.findAll().isEmpty)
     assert(None == conferenceDao.findBy(999))
-    val r = conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s))
+    conferenceDao.save(new Conference(key = "big-east", name = "Big East", schedule = s))
     val s1 = scheduleDao.findBy(s.id).get
     assert(s1.conferenceList.size == 1)
   }
@@ -54,7 +54,7 @@ class ConferenceTestSuite extends DaoTestSuite{
 
   test("Conference name is unique") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
-    val c = conferenceDao.save(new Conference(schedule = s, key = "big-east", name = "Big East"))
+    conferenceDao.save(new Conference(schedule = s, key = "big-east", name = "Big East"))
     val ex = intercept[RuntimeException] {
       conferenceDao.save(new Conference(schedule = s, key = "big-eastx", name = "Big East"))
       fail("Expected exception not thrown")
@@ -65,7 +65,7 @@ class ConferenceTestSuite extends DaoTestSuite{
   test("Conference key is unique") {
     val s = scheduleDao.save(new Schedule(key = "test", name = "Test"))
 
-    val c = conferenceDao.save(new Conference(schedule = s, key = "big-east", name = "Big East"))
+    conferenceDao.save(new Conference(schedule = s, key = "big-east", name = "Big East"))
     val ex = intercept[RuntimeException] {
       conferenceDao.save(new Conference(schedule = s, key = "big-east", name = "BigEast"))
       fail("Expected exception not thrown")

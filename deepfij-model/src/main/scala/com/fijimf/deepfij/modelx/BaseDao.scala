@@ -28,7 +28,7 @@ abstract class BaseDao[T: ClassManifest, ID] extends Transactional {
     t
   }
 
-  def saveAll(list: List[T]): Unit = {
+  def saveAll(list: List[T]) {
     val em: EntityManager = entityManager
     log.info("Starting save of %d objects".format(list.size))
     transactional {

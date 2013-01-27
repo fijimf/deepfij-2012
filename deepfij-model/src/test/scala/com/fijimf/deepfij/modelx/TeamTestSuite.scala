@@ -15,7 +15,7 @@ class TeamTestSuite extends DaoTestSuite {
     val c = cdao.save(new Conference(0L, s, "big-east", "Big East"))
     assert(dao.findAll().isEmpty)
     assert(dao.findBy(999) == None)
-    val r = dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
+    dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
 
     assert(dao.findAll().size == 1)
     val r1 = dao.findAll().head
@@ -36,11 +36,11 @@ class TeamTestSuite extends DaoTestSuite {
     val c1 = cdao.save(new Conference(0L, s1, "big-east", "Big East"))
     assert(dao.findAll().isEmpty)
     assert(dao.findBy(999) == None)
-    val r = dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
-    val r1 = dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s1, conference = c1, longName = "Georgetown", updatedAt = new Date))
+    dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s, conference = c, longName = "Georgetown", updatedAt = new Date))
+    dao.save(new Team(key = "georgetown", name = "Georgetown", schedule = s1, conference = c1, longName = "Georgetown", updatedAt = new Date))
 
     assert(dao.findByKey("georgetown").size == 1)
-    assert(dao.findByKey("test","georgetown").size == 1)
+    assert(dao.findByKey("test", "georgetown").size == 1)
 
 
   }
@@ -101,7 +101,7 @@ class TeamTestSuite extends DaoTestSuite {
     val t1 = dao.save(new Team(key = "villanova", name = "Villanova", longName = "Villanova", conference = c, schedule = s))
     assert(t1.id > 0)
     val ex = intercept[Exception] {
-      val t2 = dao.save(new Team(key = "villanova", name = "X-Villanova", longName = "X-Villanova", conference = c, schedule = s))
+      dao.save(new Team(key = "villanova", name = "X-Villanova", longName = "X-Villanova", conference = c, schedule = s))
       fail("Expected exception not thrown")
     }
     assert(ex.isInstanceOf[RuntimeException])
@@ -113,7 +113,7 @@ class TeamTestSuite extends DaoTestSuite {
     val t1 = dao.save(new Team(key = "syracuse", name = "Syracuse", longName = "Syracuse", conference = c, schedule = s))
     assert(t1.id > 0)
     val ex = intercept[Exception] {
-      val t2 = dao.save(new Team(key = "syracusex", name = "Syracuse", longName = "Syracuse", conference = c, schedule = s))
+      dao.save(new Team(key = "syracusex", name = "Syracuse", longName = "Syracuse", conference = c, schedule = s))
       fail("Expected exception not thrown")
     }
     assert(ex.isInstanceOf[RuntimeException])

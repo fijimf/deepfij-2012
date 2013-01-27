@@ -5,7 +5,7 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 
 @RunWith(classOf[JUnitRunner])
-class SchemaTestSuite extends DaoTestSuite{
+class SchemaTestSuite extends DaoTestSuite {
 
   val scheduleDao = new ScheduleDao
   val conferenceDao = new ConferenceDao
@@ -99,7 +99,7 @@ class SchemaTestSuite extends DaoTestSuite{
     assert(g.awayTeam.id == t.id)
 
     val u1 = teamDao.findBy(u.id).get
-    val t1 = teamDao.findBy(t.id).get
+    teamDao.findBy(t.id).get
     assert(u1.games.size == 1)
     assert(u1.homeGames.size == 1)
     assert(u1.awayGames.size == 0)

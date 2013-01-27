@@ -1,9 +1,7 @@
 package com.fijimf.deepfij.statx
 
-import com.fijimf.deepfij.modelx.{TeamStatDao, Team, Schedule, ScheduleDao}
-import java.util.Date
-import java.text.SimpleDateFormat
-import com.fijimf.deepfij.statx.models.{LogisticRegression, LinearRegression, WonLostModel, PointsModel}
+import com.fijimf.deepfij.modelx.{Team, Schedule, ScheduleDao}
+import com.fijimf.deepfij.statx.models.{LinearRegression, WonLostModel, PointsModel}
 import com.fijimf.deepfij.repo.StatisticRepository
 import org.apache.log4j.Logger
 

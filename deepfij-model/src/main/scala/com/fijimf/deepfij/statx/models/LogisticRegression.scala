@@ -1,14 +1,12 @@
 package com.fijimf.deepfij.statx.models
 
-import org.apache.mahout.classifier.sgd.{L1, PriorFunction, OnlineLogisticRegression}
-import java.io.{DataOutput, DataInput}
+import org.apache.mahout.classifier.sgd.{L1, OnlineLogisticRegression}
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.modelx.{Game, Team, Schedule, MetaStat}
 import com.fijimf.deepfij.statx.{TeamModel, StatisticalModel, ModelContext}
 import java.util.Date
 import com.fijimf.deepfij.util.DateStream
-import org.apache.mahout.math.{DenseVector, SparseMatrix, RandomAccessSparseVector}
-import org.apache.mahout.math.solver.LSMR
+import org.apache.mahout.math.RandomAccessSparseVector
 
 class LogisticRegression extends StatisticalModel[Team] with TeamModel {
   val log = Logger.getLogger(this.getClass)

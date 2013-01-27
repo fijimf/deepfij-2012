@@ -11,7 +11,7 @@ class QuoteTestSuite extends DaoTestSuite {
     assert(dao.findAll().isEmpty)
     assert(dao.findBy(999).isEmpty)
     val q = new Quote(quote = "Is it the hat?")
-    val r = dao.save(q)
+    dao.save(q)
     assert(dao.findAll().size == 1)
   }
 
