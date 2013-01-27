@@ -20,24 +20,24 @@ class PermissionTestSuite extends DaoTestSuite {
     try {
       new Permission(permission = "")
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
     try {
       new Permission(permission = null)
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
   }
 
   test("Uniqueness") {
     dao.save(new Permission(permission = "Admin"))
-    try {
+    assert(try {
       dao.save(new Permission(permission = "Admin"))
+      false
     } catch {
-      case _: Throwable => //OK
-    }
-
+      case e: RuntimeException => true
+    })
   }
 
 }

@@ -25,6 +25,9 @@ class Result(
               @(Column@field)(name = "updatedAt")
               var updatedAt: Date = new Date
               ) extends KeyedObject {
+  require(homeScore >= 0 && awayScore >= 0)
+  require((homeScore == 0 && awayScore == 0) || (homeScore != awayScore))
+
   def this() = this(0L)
 
   def winner = if (homeScore > awayScore) {

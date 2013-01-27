@@ -13,7 +13,7 @@ class User(
             @(Column@field)(name = "id", nullable = false)
             val id: Long = 0L,
 
-            @(Column@field)(name = "email", nullable = false)
+            @(Column@field)(name = "email", nullable = false, unique = true)
             val email: String = "",
 
             @(Column@field)(name = "password", nullable = false)

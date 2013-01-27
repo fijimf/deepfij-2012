@@ -33,36 +33,37 @@ class UserTestSuite extends DaoTestSuite {
     try {
       new User(email = "", password = "xxxx")
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
     try {
       new User(email = "a@a.com", password = "")
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
     try {
       new User(email = null, password = "xxxx")
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
     try {
       new User(email = "a@a.com", password = null)
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
   }
 
   test("Uniqueness") {
     dao.save(new User(email = "a@a.com", password = "xxxx"))
-    try {
+    assert(try {
       dao.save(new User(email = "a@a.com", password = "xxxx"))
+      false
     } catch {
-      case _: Throwable => //OK
-    }
+      case _: RuntimeException => true
+    })
 
   }
 }

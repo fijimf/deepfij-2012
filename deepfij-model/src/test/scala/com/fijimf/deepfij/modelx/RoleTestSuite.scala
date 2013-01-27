@@ -2,6 +2,7 @@ package com.fijimf.deepfij.modelx
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import javax.persistence.PersistenceException
 
 @RunWith(classOf[JUnitRunner])
 class RoleTestSuite extends DaoTestSuite {
@@ -33,23 +34,24 @@ class RoleTestSuite extends DaoTestSuite {
     try {
       new Role(name = "")
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
 
     try {
       new Role(name = null)
     } catch {
-      case _: Throwable => //OK
+      case _: IllegalArgumentException => //OK
     }
   }
 
   test("Uniqueness") {
     dao.save(new Role(name = "Admin"))
-    try {
+    assert(try {
       dao.save(new Role(name = "Admin"))
+      false
     } catch {
-      case _: Throwable => //OK
-    }
+      case _: RuntimeException => true
+    })
 
   }
 }

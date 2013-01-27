@@ -23,4 +23,8 @@ class AliasTestSuite extends DaoTestSuite {
     val schedule: Schedule = scheduleDao.findByKey("test").get
     assert(schedule.aliasList.size == 1)
   }
+
+  test("Create requirements") {
+
+  }
 }

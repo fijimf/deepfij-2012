@@ -4,24 +4,22 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class QuoteTestSuite extends DaoTestSuite{
+class QuoteTestSuite extends DaoTestSuite {
   val dao: QuoteDao = new QuoteDao
 
   test("Find") {
-    dao.findAll()
-    dao.findBy(999)
+    assert(dao.findAll().isEmpty)
+    assert(dao.findBy(999).isEmpty)
     val q = new Quote(quote = "Is it the hat?")
     val r = dao.save(q)
-    dao.findAll()
-    print(q)
-    print(r)
-
+    assert(dao.findAll().size == 1)
   }
 
   test("Find Random") {
-    val r = dao.save(new Quote(quote = "Is it the hat?"))
+    dao.save(new Quote(quote = "Is it the hat?"))
+    dao.save(new Quote(quote = "Is it my hat?"))
+    dao.save(new Quote(quote = "Is it his hat?"))
     val q: Option[Quote] = dao.random()
-    print(q)
-    assert(r.quote == q.get.quote)
+    assert(q.isDefined)
   }
 }
