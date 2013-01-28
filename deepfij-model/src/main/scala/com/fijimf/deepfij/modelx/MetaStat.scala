@@ -13,6 +13,12 @@ class MetaStat(@(Id@field)
                @(Column@field)(name = "id")
                val id: Long = 0L,
 
+               @(Column@field)(name = "modelKeyName", unique = true)
+               val modelKey: String = "",
+
+               @(Column@field)(name = "modelName", unique = true)
+               val modelName: String = "",
+
                @(Column@field)(name = "keyName", unique = true)
                val statKey: String = "",
 
@@ -36,6 +42,16 @@ class MetaStatDao extends BaseDao[MetaStat, Long] {
   def findByStatKey(statKey: String): Option[MetaStat] = {
     try {
       val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat m WHERE m.statKey=:statKey").setParameter("statKey", statKey).getSingleResult.asInstanceOf[MetaStat]
+      Some(m)
+    }
+    catch {
+      case x: NoResultException => None
+      case x: NonUniqueResultException => None
+    }
+  }
+  def findByModelKey(statKey: String): Option[MetaStat] = {
+    try {
+      val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat m WHERE m.modelKey=:modelKey").setParameter("modelKey", modelKey).getSingleResult.asInstanceOf[MetaStat]
       Some(m)
     }
     catch {

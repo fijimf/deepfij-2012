@@ -19,9 +19,9 @@ class LinearRegression extends StatisticalModel[Team] with TeamModel {
 
   val statW: MetaStat = new MetaStat(statKey = "win-predictor", name = "Win Predictor", format = "%9.5f", higherIsBetter = true)
   val statP: MetaStat = new MetaStat(statKey = "point-predictor", name = "Point Predictor", format = "%9.5f", higherIsBetter = true)
-  val statE: MetaStat = new MetaStat(statKey = "normalized-point-predictor", name = "Normalized Point Predictor", format = "%9.5f", higherIsBetter = true)
 
-  def statistics = List(statW, statP, statE)
+
+  def statistics = List(statW, statP)
 
   override def process(s: Schedule, ctx: ModelContext[Team], from: Option[Date], to: Option[Date]) = {
     DateStream(scheduleStartDate(s), scheduleEndDate(s)).foldLeft(ctx)((ctx, d) => processDate(s, d, ctx))
@@ -31,10 +31,7 @@ class LinearRegression extends StatisticalModel[Team] with TeamModel {
     log.info("Processing " + date)
     val games: List[Game] = s.gameList.filter(g => g.resultOpt.isDefined && !g.date.after(date))
 
-    val gd: DescriptiveStatistics = new DescriptiveStatistics(games.map(g => (g.result.homeScore - g.result.awayScore).toDouble).toArray)
-    val mean = gd.getMean
-    val sd = gd.getStandardDeviation
-    log.info("Margin = N(%f, %f)".format(mean, sd))
+
 
     val teamMap: Map[String, Int] = (games.map(_.homeTeam.key) ++ games.map(_.awayTeam.key)).toSet.toList.sorted.zipWithIndex.toMap
     val a: java.util.Map[java.lang.Integer, RandomAccessSparseVector] = new java.util.HashMap[java.lang.Integer, RandomAccessSparseVector]()
@@ -47,11 +44,11 @@ class LinearRegression extends StatisticalModel[Team] with TeamModel {
     val A = new SparseMatrix(games.size, teamMap.size, a)
     val b0 = new DenseVector(games.map(g => math.signum(margin(g))).toArray)
     val b1 = new DenseVector(games.map(g => margin(g)).toArray)
-    val be = new DenseVector(games.map(g => Erf.erf(margin(g) - mean) / sd).toArray)
+
     val r1: (ModelContext[Team]) => ModelContext[Team] = runRegression(A, b0, teamMap, _, date, s, statW)
     val r2: (ModelContext[Team]) => ModelContext[Team] = runRegression(A, b1, teamMap, _, date, s, statP)
-    val r3: (ModelContext[Team]) => ModelContext[Team] = runRegression(A, be, teamMap, _, date, s, statE)
-    r1.andThen(r2.andThen(r3)).apply(ctx)
+
+    r1.andThen(r2).apply(ctx)
 
   }
 
@@ -65,4 +62,100 @@ class LinearRegression extends StatisticalModel[Team] with TeamModel {
     val x = lsmr.solve(A, b)
     teamMap.foldLeft(ctx)((ctx, pair) => ctx.update(statInfo, date, s.teamByKey(pair._1), x.get(pair._2)))
   }
+}
+
+class HomeAdjustedLinearRegression extends StatisticalModel[Team] with TeamModel {
+  val log = Logger.getLogger(this.getClass)
+
+  def name = "Simple Linear Regression Model"
+
+  def key = "homadj-linear-regression"
+
+  val statHAPP: MetaStat = new MetaStat(statKey = "homadj-point-predictor", name = "Home Adj Point Predictor", format = "%9.5f", higherIsBetter = true)
+
+
+
+  def statistics = List(statHAPP)
+
+  override def process(s: Schedule, ctx: ModelContext[Team], from: Option[Date], to: Option[Date]) = {
+    DateStream(scheduleStartDate(s), scheduleEndDate(s)).foldLeft(ctx)((ctx, d) => processDate(s, d, ctx))
+  }
+
+  def processDate(s: Schedule, date: Date, ctx: ModelContext[Team]): ModelContext[Team] = {
+    log.info("Processing " + date)
+    val games: List[Game] = s.gameList.filter(g => g.resultOpt.isDefined && !g.date.after(date))
+    val teamMap: Map[String, Int] = (games.map(_.homeTeam.key) ++ games.map(_.awayTeam.key)).toSet.toList.sorted.zipWithIndex.toMap
+    val a: java.util.Map[java.lang.Integer, RandomAccessSparseVector] = new java.util.HashMap[java.lang.Integer, RandomAccessSparseVector]()
+    games.zipWithIndex.foreach(pair => {
+      val r = new RandomAccessSparseVector(teamMap.size+1)
+      r.set(teamMap.size, 1.0)
+      r.set(teamMap(pair._1.homeTeam.key), 1.0)
+      r.set(teamMap(pair._1.awayTeam.key), -1.0)
+      a.put(pair._2, r)
+    })
+    val A = new SparseMatrix(games.size,1+ teamMap.size, a)
+
+    val b = new DenseVector(games.map(g => margin(g)).toArray)
+
+    val lsmr: LSMR = new LSMR()
+    lsmr.setIterationLimit(100)
+    lsmr.setAtolerance(0.00001)
+    lsmr.setBtolerance(0.00001)
+    val x = lsmr.solve(A, b)
+    println(x.get(teamMap.size))
+    teamMap.foldLeft(ctx)((ctx, pair) => {
+      ctx.update(statHAPP, date, s.teamByKey(pair._1), x.get(pair._2))
+    })
+  }
+
+  def margin(g: Game): Double = (g.result.homeScore - g.result.awayScore).toDouble
+
+}
+class HomeAwayLinearRegression extends StatisticalModel[Team] with TeamModel {
+  val log = Logger.getLogger(this.getClass)
+
+  def name = "Simple Linear Regression Model"
+
+  def key = "ha-linear-regression"
+
+  val statHome: MetaStat = new MetaStat(statKey = "home-point-predictor", name = "Home Point Predictor", format = "%9.5f", higherIsBetter = true)
+  val statAway: MetaStat = new MetaStat(statKey = "away-point-predictor", name = "Away Point Predictor", format = "%9.5f", higherIsBetter = true)
+  val statHADiff: MetaStat = new MetaStat(statKey = "home-away-point-diff", name = "H/A Point Predictor Diff", format = "%9.5f", higherIsBetter = true)
+
+
+  def statistics = List(statHome, statAway, statHADiff)
+
+  override def process(s: Schedule, ctx: ModelContext[Team], from: Option[Date], to: Option[Date]) = {
+    DateStream(scheduleStartDate(s), scheduleEndDate(s)).foldLeft(ctx)((ctx, d) => processDate(s, d, ctx))
+  }
+
+  def processDate(s: Schedule, date: Date, ctx: ModelContext[Team]): ModelContext[Team] = {
+    log.info("Processing " + date)
+    val games: List[Game] = s.gameList.filter(g => g.resultOpt.isDefined && !g.date.after(date))
+    val teamMap: Map[String, Int] = (games.map(_.homeTeam.key) ++ games.map(_.awayTeam.key)).toSet.toList.sorted.zipWithIndex.toMap
+    val a: java.util.Map[java.lang.Integer, RandomAccessSparseVector] = new java.util.HashMap[java.lang.Integer, RandomAccessSparseVector]()
+    games.zipWithIndex.foreach(pair => {
+      val r = new RandomAccessSparseVector(2 * teamMap.size)
+      r.set(teamMap(pair._1.homeTeam.key), 1.0)
+      r.set(teamMap(pair._1.awayTeam.key) + teamMap.size, -1.0)
+      a.put(pair._2, r)
+    })
+    val A = new SparseMatrix(games.size,2* teamMap.size, a)
+
+    val b = new DenseVector(games.map(g => margin(g)).toArray)
+
+    val lsmr: LSMR = new LSMR()
+    lsmr.setIterationLimit(100)
+    lsmr.setAtolerance(0.00001)
+    lsmr.setBtolerance(0.00001)
+    val x = lsmr.solve(A, b)
+    teamMap.foldLeft(ctx)((ctx, pair) => {
+      ctx.update(statHome, date, s.teamByKey(pair._1), x.get(pair._2)).
+        update(statAway, date, s.teamByKey(pair._1), x.get(pair._2+teamMap.size)).
+        update(statHADiff, date, s.teamByKey(pair._1), x.get(pair._2 - pair._2+teamMap.size))
+    })
+  }
+
+  def margin(g: Game): Double = (g.result.homeScore - g.result.awayScore).toDouble
+
 }
