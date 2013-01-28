@@ -14,6 +14,8 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
 import com.fijimf.deepfij.matchers.CustomMatchers
+import org.eclipse.jetty.servlet.FilterHolder
+import org.fusesource.scalate.TemplateEngine
 
 
 @RunWith(classOf[JUnitRunner])
@@ -25,6 +27,8 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
 
   SecurityUtils.setSecurityManager(securityManager)
   addFilter(classOf[Controller], "/*")
+
+
 
   PersistenceSource.buildDatabase()
   PersistenceSource.entityManager.clear()
@@ -48,6 +52,8 @@ class DeepFijServiceSpec extends FunSpec with ScalatraSuite with BeforeAndAfterE
   describe("The DeepfijController filter") {
     it("should always return OK status and valid HTML for the supported urls") {
       get("/") {
+        println(status)
+        println(body)
         status should equal(200)
         body should be(validHtml5)
       }
