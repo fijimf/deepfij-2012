@@ -34,7 +34,7 @@ class MetaStat(@(Id@field)
                @(OneToMany@field)(mappedBy = "metaStat", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[TeamStat])
                val values: java.util.Set[TeamStat] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]]) extends StatInfo {
   def this() = {
-    this(0L, "", "", "%f", true, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]])
+    this(0L, "", "", "", "", "%f", true, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]])
   }
 }
 
@@ -49,7 +49,8 @@ class MetaStatDao extends BaseDao[MetaStat, Long] {
       case x: NonUniqueResultException => None
     }
   }
-  def findByModelKey(statKey: String): Option[MetaStat] = {
+
+  def findByModelKey(modelKey: String): Option[MetaStat] = {
     try {
       val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat m WHERE m.modelKey=:modelKey").setParameter("modelKey", modelKey).getSingleResult.asInstanceOf[MetaStat]
       Some(m)

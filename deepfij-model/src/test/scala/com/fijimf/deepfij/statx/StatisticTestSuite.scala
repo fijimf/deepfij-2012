@@ -32,6 +32,10 @@ class StatisticTestSuite extends FunSuite {
 
     def function(k: String, d: Date) = data.get(d).flatMap(_.get(k))
 
+    def modelName = "Test"
+
+    def modelKey = "test"
+
     def name = "Test"
 
     def statKey = "test"

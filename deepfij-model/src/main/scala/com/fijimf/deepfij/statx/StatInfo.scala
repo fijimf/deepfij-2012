@@ -1,7 +1,11 @@
 package com.fijimf.deepfij.statx
 
 trait StatInfo {
-  def statKey:String
+  def modelKey: String
+
+  def modelName: String
+
+  def statKey: String
 
   def name: String
 

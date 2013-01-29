@@ -32,6 +32,10 @@ trait StatisticalModel[T] {
 
       val name = k.name
 
+      val modelKey = k.modelKey
+
+      val modelName = k.modelName
+
       val higherIsBetter = k.higherIsBetter
 
       val keys = scheduleKeys(s)

@@ -65,13 +65,15 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
 
   private[this] def listToStat(stats: List[TeamStat]): Statistic[Team] = {
     require(!stats.isEmpty, "Cannot create stat for empty result")
+    val modelKey = stats.head.metaStat.modelKey
+    val modelName = stats.head.metaStat.modelName
     val statKey = stats.head.metaStat.statKey
     val name = stats.head.metaStat.name
     val format = stats.head.metaStat.format
     val hib = stats.head.metaStat.higherIsBetter
 
     val values: Map[(Date, Team), Double] = stats.map(s => (s.date, s.team) -> s.value).toMap
-    StatisticMap(statKey, name, format, hib, values)
+    StatisticMap(modelKey, modelName, statKey, name, format, hib, values)
   }
 
 
