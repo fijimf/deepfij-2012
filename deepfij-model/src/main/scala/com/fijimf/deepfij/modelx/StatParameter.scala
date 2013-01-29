@@ -8,30 +8,37 @@ import com.fijimf.deepfij.statx.StatInfo
 
 
 @Entity
-@Table(name = "teamStat",
+@Table(name = "statParameter",
   uniqueConstraints = Array(new UniqueConstraint(columnNames = Array("metaStat_id", "keyName", "date")))
 )
 class StatParameter(
-                @(Id@field)
-                @(GeneratedValue@field)(strategy = GenerationType.IDENTITY)
-                @(Column@field)(name = "id")
-                val id: Long = 0L,
+                     @(Id@field)
+                     @(GeneratedValue@field)(strategy = GenerationType.IDENTITY)
+                     @(Column@field)(name = "id")
+                     val id: Long = 0L,
 
-                @(ManyToOne@field)(optional = false)
-                @(JoinColumn@field)(name = "metaStat_id")
-                val metaStat: MetaStat = null,
+                     @(ManyToOne@field)(optional = false)
+                     @(JoinColumn@field)(name = "metaStat_id")
+                     val metaStat: MetaStat = null,
 
-                @(Column@field)(name = "keyName")
-                val key: String = null,
+                     @(Column@field)(name = "keyName")
+                     val key: String = null,
 
-                @(Column@field)(name = "date")
-                @(Temporal@field)(value = TemporalType.DATE)
-                val date: Date = new Date(),
+                     @(Column@field)(name = "name")
+                     val name: String = null,
 
-                @(Column@field)(name = "value")
-                val value: Double = 0.0
-                ) {
+                     @(Column@field)(name = "date")
+                     @(Temporal@field)(value = TemporalType.DATE)
+                     val date: Date = new Date(),
+
+                     @(Column@field)(name = "value")
+                     val value: Double = 0.0
+                     ) {
   def this() = this(0L)
 
+
+}
+
+class StatParameterDao extends BaseDao[StatParameter, Long] {
 
 }

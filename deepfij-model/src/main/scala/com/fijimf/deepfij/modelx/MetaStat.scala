@@ -32,9 +32,12 @@ class MetaStat(@(Id@field)
                val higherIsBetter: Boolean = true,
 
                @(OneToMany@field)(mappedBy = "metaStat", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[TeamStat])
-               val values: java.util.Set[TeamStat] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]]) extends StatInfo {
+               val values: java.util.Set[TeamStat] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]],
+
+               @(OneToMany@field)(mappedBy = "metaStat", cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY, targetEntity = classOf[StatParameter])
+               val parameters: java.util.Set[StatParameter] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[StatParameter]]) extends StatInfo {
   def this() = {
-    this(0L, "", "", "", "", "%f", true, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]])
+    this(0L, "", "", "", "", "%f", true, java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]], java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[StatParameter]])
   }
 }
 
@@ -53,6 +56,17 @@ class MetaStatDao extends BaseDao[MetaStat, Long] {
   def findByModelKey(modelKey: String): Option[MetaStat] = {
     try {
       val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat m WHERE m.modelKey=:modelKey").setParameter("modelKey", modelKey).getSingleResult.asInstanceOf[MetaStat]
+      Some(m)
+    }
+    catch {
+      case x: NoResultException => None
+      case x: NonUniqueResultException => None
+    }
+  }
+
+  def findByModelKey(modelKey: String, statKey: String): Option[MetaStat] = {
+    try {
+      val m: MetaStat = entityManager.createQuery("SELECT m FROM MetaStat m WHERE m.modelKey=:modelKey AND  m.statKey=:statKey").setParameter("modelKey", modelKey).setParameter("statKey", statKey).getSingleResult.asInstanceOf[MetaStat]
       Some(m)
     }
     catch {
