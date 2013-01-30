@@ -7,22 +7,26 @@ import scala.collection.JavaConversions._
 
 
 @Entity
-@Table(name = "metaStat")
+@Table(name = "metaStat",
+  uniqueConstraints = Array(
+    new UniqueConstraint(columnNames = Array("modelKey", "keyName")),
+    new UniqueConstraint(columnNames = Array("modelName", "name")))
+)
 class MetaStat(@(Id@field)
                @(GeneratedValue@field)(strategy = GenerationType.IDENTITY)
                @(Column@field)(name = "id")
                val id: Long = 0L,
 
-               @(Column@field)(name = "modelKeyName", unique = true)
+               @(Column@field)(name = "modelKey")
                val modelKey: String = "",
 
-               @(Column@field)(name = "modelName", unique = true)
+               @(Column@field)(name = "modelName")
                val modelName: String = "",
 
-               @(Column@field)(name = "keyName", unique = true)
+               @(Column@field)(name = "keyName")
                val statKey: String = "",
 
-               @(Column@field)(name = "name", unique = true)
+               @(Column@field)(name = "name")
                val name: String = "",
 
                @(Column@field)(name = "format", unique = false)

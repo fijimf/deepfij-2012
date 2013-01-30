@@ -45,7 +45,7 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
 
   val modelStatistics: Map[String, MetaStat] = (
     for (o <- observationTypes; p <- populationMeasures) yield {
-      val ms: MetaStat = new MetaStat(
+      val ms: MetaStat = new MetaStat(modelName = name, modelKey = key,
         name = p.description + " " + o.description,
         statKey = o.key + "-" + p.key,
         format = p.format,

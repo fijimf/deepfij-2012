@@ -27,7 +27,7 @@ class StatisticRepository extends Transactional {
     transactional {
       msd.findByStatKey(statistic.statKey).foreach(m => msd.delete(m.id))
     }
-    val ms = msd.save(new MetaStat(name = statistic.name, statKey = statistic.statKey, format = statistic.format, higherIsBetter = statistic.higherIsBetter))
+    val ms = msd.save(new MetaStat(modelName = statistic.modelName, modelKey = statistic.modelKey, name = statistic.name, statKey = statistic.statKey, format = statistic.format, higherIsBetter = statistic.higherIsBetter))
     val stat: List[TeamStat] = (for (d <- DateStream(statistic.startDate, statistic.endDate);
                                      t <- statistic.keys;
                                      x <- statistic.function(t, d)) yield {

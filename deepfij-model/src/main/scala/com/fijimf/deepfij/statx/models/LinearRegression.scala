@@ -17,8 +17,8 @@ class LinearRegression extends StatisticalModel[Team] with TeamModel {
 
   def key = "linear-regression"
 
-  val statW: MetaStat = new MetaStat(statKey = "win-predictor", name = "Win Predictor", format = "%9.5f", higherIsBetter = true)
-  val statP: MetaStat = new MetaStat(statKey = "point-predictor", name = "Point Predictor", format = "%9.5f", higherIsBetter = true)
+  val statW: MetaStat = new MetaStat(modelName = name, modelKey = key, statKey = "win-predictor", name = "Win Predictor", format = "%9.5f", higherIsBetter = true)
+  val statP: MetaStat = new MetaStat(modelName = name, modelKey = key, statKey = "point-predictor", name = "Point Predictor", format = "%9.5f", higherIsBetter = true)
 
 
   def statistics = List(statW, statP)
@@ -74,7 +74,6 @@ class HomeAdjustedLinearRegression extends StatisticalModel[Team] with TeamModel
   val statHAPP: MetaStat = new MetaStat(statKey = "homadj-point-predictor", name = "Home Adj Point Predictor", format = "%9.5f", higherIsBetter = true)
 
 
-
   def statistics = List(statHAPP)
 
   override def process(s: Schedule, ctx: ModelContext[Team], from: Option[Date], to: Option[Date]) = {
@@ -87,13 +86,13 @@ class HomeAdjustedLinearRegression extends StatisticalModel[Team] with TeamModel
     val teamMap: Map[String, Int] = (games.map(_.homeTeam.key) ++ games.map(_.awayTeam.key)).toSet.toList.sorted.zipWithIndex.toMap
     val a: java.util.Map[java.lang.Integer, RandomAccessSparseVector] = new java.util.HashMap[java.lang.Integer, RandomAccessSparseVector]()
     games.zipWithIndex.foreach(pair => {
-      val r = new RandomAccessSparseVector(teamMap.size+1)
+      val r = new RandomAccessSparseVector(teamMap.size + 1)
       r.set(teamMap.size, 1.0)
       r.set(teamMap(pair._1.homeTeam.key), 1.0)
       r.set(teamMap(pair._1.awayTeam.key), -1.0)
       a.put(pair._2, r)
     })
-    val A = new SparseMatrix(games.size,1+ teamMap.size, a)
+    val A = new SparseMatrix(games.size, 1 + teamMap.size, a)
 
     val b = new DenseVector(games.map(g => margin(g)).toArray)
 
@@ -111,6 +110,7 @@ class HomeAdjustedLinearRegression extends StatisticalModel[Team] with TeamModel
   def margin(g: Game): Double = (g.result.homeScore - g.result.awayScore).toDouble
 
 }
+
 class HomeAwayLinearRegression extends StatisticalModel[Team] with TeamModel {
   val log = Logger.getLogger(this.getClass)
 
@@ -140,7 +140,7 @@ class HomeAwayLinearRegression extends StatisticalModel[Team] with TeamModel {
       r.set(teamMap(pair._1.awayTeam.key) + teamMap.size, -1.0)
       a.put(pair._2, r)
     })
-    val A = new SparseMatrix(games.size,2* teamMap.size, a)
+    val A = new SparseMatrix(games.size, 2 * teamMap.size, a)
 
     val b = new DenseVector(games.map(g => margin(g)).toArray)
 
@@ -151,8 +151,8 @@ class HomeAwayLinearRegression extends StatisticalModel[Team] with TeamModel {
     val x = lsmr.solve(A, b)
     teamMap.foldLeft(ctx)((ctx, pair) => {
       ctx.update(statHome, date, s.teamByKey(pair._1), x.get(pair._2)).
-        update(statAway, date, s.teamByKey(pair._1), x.get(pair._2+teamMap.size)).
-        update(statHADiff, date, s.teamByKey(pair._1), x.get(pair._2 - pair._2+teamMap.size))
+        update(statAway, date, s.teamByKey(pair._1), x.get(pair._2 + teamMap.size)).
+        update(statHADiff, date, s.teamByKey(pair._1), x.get(pair._2 - pair._2 + teamMap.size))
     })
   }
 

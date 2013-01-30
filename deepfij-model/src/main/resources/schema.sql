@@ -32,7 +32,7 @@ drop table if exists user_role;
 create table alias (id bigint not null auto_increment, alias varchar(255) not null, updatedAt datetime, scheduleId bigint, teamId bigint, primary key (id), unique (scheduleId, alias));
 create table conference (id bigint not null auto_increment, keyName varchar(255), name varchar(255), updatedAt datetime, schedule_id bigint not null, primary key (id), unique (schedule_id, keyName), unique (schedule_id, name));
 create table game (id bigint not null auto_increment, date date not null, isConferenceTournament bit not null, isNcaaTournament bit not null, isNeutralSite bit not null, updatedAt datetime, awayTeamId bigint, homeTeamId bigint, schedule_id bigint, primary key (id));
-create table metaStat (id bigint not null auto_increment, format varchar(255), higherIsBetter bit, modelKeyName varchar(255) unique, modelName varchar(255) unique, name varchar(255) unique, keyName varchar(255) unique, primary key (id));
+create table metaStat (id bigint not null auto_increment, format varchar(255), higherIsBetter bit, modelKey varchar(255), modelName varchar(255), name varchar(255), keyName varchar(255), primary key (id), unique (modelKey, keyName), unique (modelName, name));
 create table permission (id bigint not null auto_increment, permission varchar(255) not null unique, updatedAt datetime not null, primary key (id));
 create table quote (id bigint not null auto_increment, quote varchar(255) not null, source varchar(255), updatedAt datetime not null, url varchar(255), primary key (id));
 create table result (id bigint not null auto_increment, awayScore integer, homeScore integer, updatedAt datetime, game_id bigint, primary key (id));
@@ -43,7 +43,6 @@ create table statParameter (id bigint not null auto_increment, date date, keyNam
 create table team (id bigint not null auto_increment, keyName varchar(255) not null, logo varchar(255), longName varchar(255) not null, name varchar(255) not null, nickname varchar(255), officialUrl varchar(255), primaryColor varchar(255), secondaryColor varchar(255), updatedAt datetime, conference_id bigint, schedule_id bigint, primary key (id), unique (schedule_id, keyName), unique (schedule_id, longName), unique (schedule_id, name));
 create table teamStat (id bigint not null auto_increment, date date, value double precision, metaStat_id bigint not null, team_id bigint not null, primary key (id), unique (metaStat_id, team_id, date));
 create table user (id bigint not null auto_increment, email varchar(255) not null unique, password varchar(255) not null, updatedAt datetime not null, primary key (id));
-
 create table user_role (role_id bigint not null, user_id bigint not null, primary key (user_id, role_id));
 alter table alias add index FK5899650C8E8797B (teamId), add constraint FK5899650C8E8797B foreign key (teamId) references team (id);
 alter table alias add index FK5899650A8A106F (scheduleId), add constraint FK5899650A8A106F foreign key (scheduleId) references schedule (id);
