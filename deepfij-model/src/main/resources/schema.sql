@@ -42,7 +42,7 @@ create table schedule (id bigint not null auto_increment, isPrimary bit, keyName
 create table statParameter (id bigint not null auto_increment, date date, keyName varchar(255), name varchar(255), value double precision, metaStat_id bigint not null, primary key (id), unique (metaStat_id, keyName, date));
 create table team (id bigint not null auto_increment, keyName varchar(255) not null, logo varchar(255), longName varchar(255) not null, name varchar(255) not null, nickname varchar(255), officialUrl varchar(255), primaryColor varchar(255), secondaryColor varchar(255), updatedAt datetime, conference_id bigint, schedule_id bigint, primary key (id), unique (schedule_id, keyName), unique (schedule_id, longName), unique (schedule_id, name));
 create table teamStat (id bigint not null auto_increment, date date, value double precision, metaStat_id bigint not null, team_id bigint not null, primary key (id), unique (metaStat_id, team_id, date));
-create table user (id bigint not null auto_increment, email varchar(255) not null unique, password varchar(255) not null, updatedAt datetime not null, primary key (id))13/01/29 01:05:58 INFO hbm2ddl.SchemaExport: schema export complete;
+create table user (id bigint not null auto_increment, email varchar(255) not null unique, password varchar(255) not null, updatedAt datetime not null, primary key (id));
 
 create table user_role (role_id bigint not null, user_id bigint not null, primary key (user_id, role_id));
 alter table alias add index FK5899650C8E8797B (teamId), add constraint FK5899650C8E8797B foreign key (teamId) references team (id);
