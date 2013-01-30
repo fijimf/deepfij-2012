@@ -48,6 +48,9 @@ trait StatisticalModel[T] {
         ctx.get(k, d, t)
       }
 
+      def parameter(s: String, d: Date) = {
+        ctx.getParam(k, d, s)
+      }
     })).toMap
   }
 }

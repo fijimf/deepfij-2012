@@ -42,17 +42,22 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
     val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey")
       .setParameter("statKey", statKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
-    listToStat(stats)
+    val parms = entityManager.createQuery("SELECT p FROM StatParameter p where p.metaStat.statKey=:statKey")
+      .setParameter("statKey", statKey)
+      .getResultList.toList.asInstanceOf[List[StatParameter]]
+    resultsToStat(stats, parms)
   }
 
   def population(statKey: String, date: Date): Population[Team] = {
-    val q: Query = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.date=:date")
+    val stats = entityManager.createQuery("SELECT q FROM TeamStat q where q.team.schedule.isPrimary=true AND q.metaStat.statKey=:statKey and q.date=:date")
       .setParameter("statKey", statKey)
       .setParameter("date", date)
-    println(q.toString)
-    val stats = q
       .getResultList.toList.asInstanceOf[List[TeamStat]]
-    listToStat(stats).population(stats.head.date)
+    val parms = entityManager.createQuery("SELECT p FROM StatParameter p where p.metaStat.statKey=:statKey AND p.date=:date")
+      .setParameter("statKey", statKey)
+      .setParameter("date", date)
+      .getResultList.toList.asInstanceOf[List[StatParameter]]
+    resultsToStat(stats, parms).population(date)
   }
 
   def timeSeries(statKey: String, teamKey: String): TimeSeries[Team] = {
@@ -60,10 +65,13 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
       .setParameter("statKey", statKey)
       .setParameter("teamKey", teamKey)
       .getResultList.toList.asInstanceOf[List[TeamStat]]
-    listToStat(stats).series(stats.head.team)
+    val parms = entityManager.createQuery("SELECT p FROM StatParameter p where p.metaStat.statKey=:statKey")
+      .setParameter("statKey", statKey)
+      .getResultList.toList.asInstanceOf[List[StatParameter]]
+    resultsToStat(stats, parms).series(stats.head.team)
   }
 
-  private[this] def listToStat(stats: List[TeamStat]): Statistic[Team] = {
+  private[this] def resultsToStat(stats: List[TeamStat], params: List[StatParameter]): Statistic[Team] = {
     require(!stats.isEmpty, "Cannot create stat for empty result")
     val modelKey = stats.head.metaStat.modelKey
     val modelName = stats.head.metaStat.modelName
@@ -73,7 +81,8 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
     val hib = stats.head.metaStat.higherIsBetter
 
     val values: Map[(Date, Team), Double] = stats.map(s => (s.date, s.team) -> s.value).toMap
-    StatisticMap(modelKey, modelName, statKey, name, format, hib, values)
+    val parameters: Map[(Date, String), Double] = params.map(p => (p.date, p.key) -> p.value).toMap
+    StatisticMap(modelKey, modelName, statKey, name, format, hib, values, parameters)
   }
 
 

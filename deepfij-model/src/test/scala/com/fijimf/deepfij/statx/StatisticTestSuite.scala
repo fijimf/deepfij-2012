@@ -24,6 +24,9 @@ class StatisticTestSuite extends FunSuite {
       d6 -> Map("A" -> 1.0, "B" -> 2.0, "C" -> 2.0, "D" -> 7.0, "E" -> 16.0, "F" -> 6.0)
     )
 
+
+    def parameter(s: String, d: Date) = None
+
     def keys = (data.values.map(_.keys).flatten).toSet.toList.sorted
 
     def startDate = d1

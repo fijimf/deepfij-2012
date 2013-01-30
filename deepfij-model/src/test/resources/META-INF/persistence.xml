@@ -12,6 +12,7 @@
         <class>com.fijimf.deepfij.modelx.Game</class>
         <class>com.fijimf.deepfij.modelx.Result</class>
         <class>com.fijimf.deepfij.modelx.MetaStat</class>
+        <class>com.fijimf.deepfij.modelx.StatParameter</class>
         <class>com.fijimf.deepfij.modelx.TeamStat</class>
         <class>com.fijimf.deepfij.modelx.User</class>
         <class>com.fijimf.deepfij.modelx.Role</class>

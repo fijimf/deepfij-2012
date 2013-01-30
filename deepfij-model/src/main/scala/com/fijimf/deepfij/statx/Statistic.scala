@@ -13,6 +13,8 @@ trait Statistic[K] extends StatInfo {
 
   def function(k: K, d: Date): Option[Double]
 
+  def parameter(s: String, d: Date): Option[Double]
+
   def population(d: Date): Population[K] = {
     new Population[K] {
       val format = outer.format
@@ -32,6 +34,8 @@ trait Statistic[K] extends StatInfo {
       val date = d
 
       val keys = outer.keys
+
+      def parameters = (s: String) => outer.parameter(s, d)
     }
   }
 

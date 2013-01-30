@@ -8,6 +8,8 @@ trait Population[K] extends StatInfo {
   statInfo: StatInfo =>
   def keys: List[K]
 
+  def parameters: Function[String, Option[Double]]
+
   def date: Date
 
   def stat: Function[K, Option[Double]]

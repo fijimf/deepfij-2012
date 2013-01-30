@@ -14,6 +14,7 @@ class MetaStatTestSuite extends DaoTestSuite {
     assert(d.isDefined)
     assert(d.get.name == "Wins")
     assert(d.get.values.isEmpty)
+    assert(d.get.parameters.isEmpty)
   }
 
   test("Find by key") {
@@ -23,6 +24,7 @@ class MetaStatTestSuite extends DaoTestSuite {
     assert(d.isDefined)
     assert(d.get.name == "Wins")
     assert(d.get.values.isEmpty)
+    assert(d.get.parameters.isEmpty)
   }
 
 }
