@@ -40,5 +40,18 @@ class StatisticRepository extends Transactional {
     }).flatten.toList
     logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
     tsd.saveAll(stat)
+
+    val parms: List[StatParameter] = (for (d <- DateStream(statistic.startDate, statistic.endDate);
+                                           t <- statistic.keys;
+                                           x <- statistic.function(t, d)) yield {
+      if (x.isInfinite || x.isNaN) {
+        logger.warn("Skipping %s %s %s ==> %f".format(statistic.statKey, t.key, d.toString, x))
+        None
+      } else {
+        Some(new TeamStat(metaStat = ms, team = t, date = d, value = x))
+      }
+    }).flatten.toList
+    logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
+    tsd.saveAll(stat)
   }
 }
