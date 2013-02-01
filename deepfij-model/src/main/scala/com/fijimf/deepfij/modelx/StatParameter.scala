@@ -9,7 +9,7 @@ import com.fijimf.deepfij.statx.StatInfo
 
 @Entity
 @Table(name = "statParameter",
-  uniqueConstraints = Array(new UniqueConstraint(columnNames = Array("metaStat_id", "keyName", "date")))
+  uniqueConstraints = Array(new UniqueConstraint(columnNames = Array("metaStat_id", "name", "date")))
 )
 class StatParameter(
                      @(Id@field)
@@ -20,9 +20,6 @@ class StatParameter(
                      @(ManyToOne@field)(optional = false)
                      @(JoinColumn@field)(name = "metaStat_id")
                      val metaStat: MetaStat = null,
-
-                     @(Column@field)(name = "keyName")
-                     val key: String = null,
 
                      @(Column@field)(name = "name")
                      val name: String = null,

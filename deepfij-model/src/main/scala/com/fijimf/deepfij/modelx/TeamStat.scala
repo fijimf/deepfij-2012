@@ -81,7 +81,7 @@ class TeamStatDao extends BaseDao[TeamStat, Long] {
     val hib = stats.head.metaStat.higherIsBetter
 
     val values: Map[(Date, Team), Double] = stats.map(s => (s.date, s.team) -> s.value).toMap
-    val parameters: Map[(Date, String), Double] = params.map(p => (p.date, p.key) -> p.value).toMap
+    val parameters: Map[(Date, String), Double] = params.map(p => (p.date, p.name) -> p.value).toMap
     StatisticMap(modelKey, modelName, statKey, name, format, hib, values, parameters)
   }
 

@@ -9,6 +9,8 @@ case class StatisticMap[T](modelKey: String, modelName: String, statKey: String,
 
   def keys = k.toSet.toList
 
+  def parameterKeys = parameters.keys.map(_._2).toSet.toList
+
   def startDate = d.min
 
   def endDate = d.max

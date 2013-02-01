@@ -16,6 +16,8 @@ trait StatisticalModel[T] {
 
   def complete(ctx: ModelContext[T]): ModelContext[T] = ctx
 
+  def parameterKeys: List[String]
+
   def scheduleKeys(s: Schedule): List[T]
 
   def scheduleStartDate(s: Schedule): Date
@@ -39,6 +41,8 @@ trait StatisticalModel[T] {
       val higherIsBetter = k.higherIsBetter
 
       val keys = scheduleKeys(s)
+
+      val parameterKeys = ctx.parameters(k).values.values.map(_.keySet).flatten.toList
 
       val startDate = scheduleStartDate(s)
 

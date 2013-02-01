@@ -7,6 +7,8 @@ trait Statistic[K] extends StatInfo {
   outer: StatInfo =>
   def keys: List[K]
 
+  def parameterKeys: List[String]
+
   def startDate: Date
 
   def endDate: Date

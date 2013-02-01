@@ -4,7 +4,7 @@ import com.fijimf.deepfij.modelx.{Schedule, Team}
 
 
 trait TeamModel {
-  self:StatisticalModel[Team]=>
+  self: StatisticalModel[Team] =>
 
   def scheduleKeys(s: Schedule) = s.teamList.sortBy(_.name)
 
@@ -12,4 +12,5 @@ trait TeamModel {
 
   def scheduleEndDate(s: Schedule) = s.gameList.maxBy(_.date).date
 
+  def parameterKeys = List.empty[String]
 }

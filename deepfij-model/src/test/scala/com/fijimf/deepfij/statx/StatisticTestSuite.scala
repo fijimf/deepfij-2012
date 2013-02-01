@@ -27,6 +27,8 @@ class StatisticTestSuite extends FunSuite {
 
     def parameter(s: String, d: Date) = None
 
+    def parameterKeys = List.empty[String]
+
     def keys = (data.values.map(_.keys).flatten).toSet.toList.sorted
 
     def startDate = d1

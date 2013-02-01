@@ -42,13 +42,13 @@ class StatisticRepository extends Transactional {
     tsd.saveAll(stat)
 
     val parms: List[StatParameter] = (for (d <- DateStream(statistic.startDate, statistic.endDate);
-                                           t <- statistic.keys;
-                                           x <- statistic.function(t, d)) yield {
+                                           t <- statistic.parameterKeys;
+                                           x <- statistic.parameter(t, d)) yield {
       if (x.isInfinite || x.isNaN) {
-        logger.warn("Skipping %s %s %s ==> %f".format(statistic.statKey, t.key, d.toString, x))
+        logger.warn("Skipping %s %s %s ==> %f".format(statistic.statKey, t, d.toString, x))
         None
       } else {
-        Some(new TeamStat(metaStat = ms, team = t, date = d, value = x))
+        Some(new StatParameter(metaStat = ms, name = t, date = d, value = x))
       }
     }).flatten.toList
     logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
