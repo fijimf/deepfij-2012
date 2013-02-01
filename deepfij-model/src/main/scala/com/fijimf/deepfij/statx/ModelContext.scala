@@ -11,6 +11,7 @@ import java.util.Date
  *            Schedule or Date
  */
 case class ModelContext[T](stats: Map[StatInfo, ModelValues[T]] = Map.empty[StatInfo, ModelValues[T]], parameters: Map[StatInfo, ModelValues[String]] = Map.empty[StatInfo, ModelValues[String]]) {
+  require(stats.keySet == parameters.keySet)
 
   def get(k: StatInfo, d: Date, s: T): Option[Double] = for (c <- stats.get(k); x <- c.get(d, s)) yield x
 

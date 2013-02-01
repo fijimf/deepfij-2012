@@ -10,7 +10,11 @@ trait StatisticalModel[T] {
 
   def statistics: List[StatInfo]
 
-  def initialize(): ModelContext[T] = ModelContext[T](statistics.map(k => (k -> ModelValues[T]())).toMap)
+  def initialize(): ModelContext[T] =
+    ModelContext[T](
+      stats = statistics.map(k => (k -> ModelValues[T]())).toMap,
+      parameters = statistics.map(k => (k -> ModelValues[String]())).toMap
+    )
 
   def process(s: Schedule, ctx: ModelContext[T], from: Option[Date] = None, to: Option[Date] = None): ModelContext[T] = ctx
 

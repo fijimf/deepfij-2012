@@ -67,6 +67,6 @@ class PointsModel extends SinglePassGameModel[Team] with TeamModel {
                                                        m <- modelStatistics.get(o.key + "-" + p.key)) yield {
       m -> ModelValues[Team](values = Map(d -> runningTotals.keys.map(t => t -> p.f(new DescriptiveStatistics(o.f(runningTotals(t)).toArray))).toMap))
     }).toMap
-    ctx.update(ModelContext(data))
+    ctx.update(ModelContext(data, data.keys.map(k => (k -> ModelValues[String]())).toMap))
   }
 }

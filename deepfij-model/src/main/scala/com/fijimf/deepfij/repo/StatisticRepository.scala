@@ -13,6 +13,7 @@ class StatisticRepository extends Transactional {
 
   val msd = new MetaStatDao
   val tsd = new TeamStatDao
+  val spsd = new StatParameterDao
 
   def publish(statistics: Map[String, Statistic[Team]]) {
     statistics.foreach {
@@ -52,6 +53,6 @@ class StatisticRepository extends Transactional {
       }
     }).flatten.toList
     logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
-    tsd.saveAll(stat)
+    spsd.saveAll(parms)
   }
 }
