@@ -125,7 +125,7 @@ class OffenseDefenseLinearRegression extends StatisticalModel[Team] with TeamMod
     val games: List[Game] = s.gameList.filter(g => g.resultOpt.isDefined && !g.date.after(date))
     val teamMap: Map[String, Int] = (games.map(_.homeTeam.key) ++ games.map(_.awayTeam.key)).toSet.toList.sorted.zipWithIndex.toMap
 
-    println(games.size)
+
 
     val A = games.zipWithIndex.map(pair => {
       val homeScoreRowIndex: Int = pair._2
@@ -153,6 +153,7 @@ class OffenseDefenseLinearRegression extends StatisticalModel[Team] with TeamMod
     val b = games.map(g => g.result.homeScore.toDouble) ++ games.map(g => g.result.awayScore.toDouble)
 
     val x = LSMRSolver.solve(A,games.size*2, teamMap.size*2+1,  b)
+    println("Nans==>"+x.filter(_.isNaN).mkString(">>",",","<<"))
     teamMap.foldLeft(ctx)((ctx, pair) => {
       ctx.update(statOff, date, s.teamByKey(pair._1), x(pair._2)).
         update(statDef, date, s.teamByKey(pair._1), x(pair._2 + teamMap.size))
@@ -171,7 +172,7 @@ object LSMRSolver extends LinearRegressionSolver {
 
 
   //  println("Rows %d   Columns %d    ZSum %f  ".format(Ai.numRows(), Ai.numCols(), Ai.zSum()) )
-    0.until(Ai.numRows()).foreach(r=>println(r+"->"+Ai.viewRow(r).asFormatString()))
+  //  0.until(Ai.numRows()).foreach(r=>println(r+"->"+Ai.viewRow(r).asFormatString()))
 
     val bi = new DenseVector(b.toArray)
 
@@ -181,6 +182,7 @@ object LSMRSolver extends LinearRegressionSolver {
     lsmr.setBtolerance(0.00001)
     val xi = lsmr.solve(Ai, bi)
     0.until(aCols).map(i=>xi.get(i)).toList
+
   }
 
   def createRASparseMatrix(A: Map[(Int, Int), Double], aRows: Int, aCols: Int): SparseMatrix = {
