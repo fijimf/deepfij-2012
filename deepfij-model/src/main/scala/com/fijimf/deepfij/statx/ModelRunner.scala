@@ -31,15 +31,20 @@ object ModelTester {
   def main(args: Array[String]) {
     val sched: Schedule = sd.findByKey("ncaa2013").get
     val repo: StatisticRepository = new StatisticRepository
-    List(new HomeAdjustedLinearRegression).foreach(model => {
+    List(new OffenseDefenseLinearRegression).foreach(model => {
       log.info("Start running " + model.name)
       val statistics: Map[String, Statistic[Team]] = model.createStatistics(sched)
       log.info("Done running " + model.name)
-      val h: Statistic[Team] = statistics.get("homadj-point-predictor").get
+      List("off-point-predictor", "def-point-predictor").foreach {
+        k => {
+          val h: Statistic[Team] = statistics.get(k).get
 
-      val hp: Population[Team] = h.population(h.endDate)
+          val hp: Population[Team] = h.population(h.endDate)
 
-      sched.teamList.sortBy(t=>hp.stat(t).getOrElse(0.0)).foreach(t=>println("%-18s %8.4f ".format(t.key,hp.stat(t).getOrElse(Double.NaN))))
+          sched.teamList.sortBy(t => hp.stat(t).getOrElse(0.0)).foreach(t => println("%-18s %8.4f ".format(t.key, hp.stat(t).getOrElse(Double.NaN))))
+
+        }
+      }
     })
 
   }
