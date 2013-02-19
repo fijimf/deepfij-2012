@@ -36,6 +36,7 @@ object ModelTester {
       val statistics: Map[String, Statistic[Team]] = model.createStatistics(sched)
       log.info("Done running " + model.name)
       List("off-point-predictor", "def-point-predictor").foreach {
+//      List("point-predictor", "win-predictor").foreach {
         k => {
           val h: Statistic[Team] = statistics.get(k).get
 
