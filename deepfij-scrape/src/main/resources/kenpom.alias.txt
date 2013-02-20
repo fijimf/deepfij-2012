@@ -164,6 +164,8 @@ Alabama,alabama
 Denver,denver
 Southeast Missouri St.,southeast-mo-st
 Mississippi,mississippi
+Ole Miss,mississippi
+ole-miss,mississippi
 Central Michigan,central-mich
 Florida Gulf Coast,fla-gulf-coast
 Eastern Washington,eastern-wash

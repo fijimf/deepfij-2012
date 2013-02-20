@@ -31,7 +31,7 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
 
   var stats = statList.map(k => k -> catching(classOf[Exception]).opt({
     std.population(k, DateUtils.truncate(new Date(), Calendar.DATE))
-  })).filter(_._2.isEmpty).map(p => (p._1, p._2.get)).toMap
+  })).filter(_._2.isDefined).map(p => (p._1, p._2.get)).toMap
 
   def attributes(): Map[String, Any] = {
     val m: Map[String, Any] = Map("ctx" -> contextPath, "quote" -> qd.random().getOrElse(new Quote(quote = "How bad it gets you can't imagine; the burning wax, the breath of reptiles.", source = "Shriekback", url = "http://www.mofito.com/music-videos/shriekback/6957067-nemesis.htm"))) ++ SubjectMapper(SecurityUtils.getSubject)

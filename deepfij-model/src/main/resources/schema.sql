@@ -39,7 +39,7 @@ create table result (id bigint not null auto_increment, awayScore integer, homeS
 create table role (id bigint not null auto_increment, name varchar(255) not null unique, updatedAt datetime not null, primary key (id));
 create table role_permission (permission_id bigint not null, role_id bigint not null, primary key (role_id, permission_id));
 create table schedule (id bigint not null auto_increment, isPrimary bit, keyName varchar(255) unique, name varchar(255) unique, updatedAt datetime, primary key (id));
-create table statParameter (id bigint not null auto_increment, date date, keyName varchar(255), name varchar(255), value double precision, metaStat_id bigint not null, primary key (id), unique (metaStat_id, keyName, date));
+create table statParameter (id bigint not null auto_increment, date date, name varchar(255), value double precision, metaStat_id bigint not null, primary key (id), unique (metaStat_id, name, date));
 create table team (id bigint not null auto_increment, keyName varchar(255) not null, logo varchar(255), longName varchar(255) not null, name varchar(255) not null, nickname varchar(255), officialUrl varchar(255), primaryColor varchar(255), secondaryColor varchar(255), updatedAt datetime, conference_id bigint, schedule_id bigint, primary key (id), unique (schedule_id, keyName), unique (schedule_id, longName), unique (schedule_id, name));
 create table teamStat (id bigint not null auto_increment, date date, value double precision, metaStat_id bigint not null, team_id bigint not null, primary key (id), unique (metaStat_id, team_id, date));
 create table user (id bigint not null auto_increment, email varchar(255) not null unique, password varchar(255) not null, updatedAt datetime not null, primary key (id));
@@ -60,6 +60,7 @@ alter table teamStat add index FK9C8B4651A76F8380 (team_id), add constraint FK9C
 alter table teamStat add index FK9C8B465122D71320 (metaStat_id), add constraint FK9C8B465122D71320 foreign key (metaStat_id) references metaStat (id);
 alter table user_role add index FK143BF46A4F4A20E0 (role_id), add constraint FK143BF46A4F4A20E0 foreign key (role_id) references role (id);
 alter table user_role add index FK143BF46AF474E4C0 (user_id), add constraint FK143BF46AF474E4C0 foreign key (user_id) references user (id);
+
 -------BELOW THIS LINE WILL NOT BE AUTO GENERATED-------;
 
 insert into user(email, password, updatedAt) values ('fijimf@gmail.com', '7556a0d1970e9e8b7f5fa40110a6f4f998a66806d079095acc10108b6d610724', '1900-01-01');
