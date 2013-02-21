@@ -4,6 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import org.apache.mahout.math.SparseMatrix
+import com.fijimf.deepfij.statx.models.linreg.LSMRSolver
 
 @RunWith(classOf[JUnitRunner])
 class LinearRegressionSolverTestSuite extends FunSuite {
