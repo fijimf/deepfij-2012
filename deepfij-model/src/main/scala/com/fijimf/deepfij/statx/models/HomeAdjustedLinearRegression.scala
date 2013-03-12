@@ -42,7 +42,7 @@ class HomeAdjustedLinearRegression extends StatisticalModel[Team] with TeamModel
 
     val b = games.map(g => (g.result.homeScore - g.result.awayScore).toDouble)
 
-    val x = LSMRSolver.solve(A, games.size, teamMap.size, b)
+    val x = LSMRSolver.solve(A, games.size, teamMap.size + 1, b)
 
     val homeAdv = x(teamMap.size)
 

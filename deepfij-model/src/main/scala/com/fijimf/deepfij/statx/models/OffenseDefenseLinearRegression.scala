@@ -1,11 +1,15 @@
 package com.fijimf.deepfij.statx.models
 
-import com.fijimf.deepfij.statx.{ModelContext, TeamModel, StatisticalModel}
+import com.fijimf.deepfij.statx._
 import com.fijimf.deepfij.modelx.{Game, Schedule, MetaStat, Team}
 import org.apache.log4j.Logger
 import java.util.Date
 import com.fijimf.deepfij.util.DateStream
 import com.fijimf.deepfij.statx.models.linreg.LSMRSolver
+import org.apache.commons.lang.time.DateUtils
+import com.fijimf.deepfij.statx.ModelContext
+import com.fijimf.deepfij.util.DateStream
+import scala.Some
 
 class OffenseDefenseLinearRegression extends StatisticalModel[Team] with TeamModel {
   val log = Logger.getLogger(this.getClass)
@@ -53,7 +57,7 @@ class OffenseDefenseLinearRegression extends StatisticalModel[Team] with TeamMod
 
     val b = games.map(g => g.result.homeScore.toDouble) ++ games.map(g => g.result.awayScore.toDouble)
 
-    val x = LSMRSolver.solve(A,games.size*2, teamMap.size*2+1,  b)
+    val x = LSMRSolver.solve(A, games.size * 2, teamMap.size * 2 + 1, b)
     teamMap.foldLeft(ctx)((ctx, pair) => {
       ctx.update(statOff, date, s.teamByKey(pair._1), x(pair._2)).
         update(statDef, date, s.teamByKey(pair._1), x(pair._2 + teamMap.size))

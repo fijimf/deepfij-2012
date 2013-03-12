@@ -17,7 +17,7 @@ object LSMRSolver extends LinearRegressionSolver {
 
   }
 
-  private[this] def createRASparseMatrix(A: Map[(Int, Int), Double], aRows: Int, aCols: Int): SparseMatrix = {
+  def createRASparseMatrix(A: Map[(Int, Int), Double], aRows: Int, aCols: Int): SparseMatrix = {
     val a: java.util.Map[java.lang.Integer, RandomAccessSparseVector] = new java.util.HashMap[java.lang.Integer, RandomAccessSparseVector]()
     A.foreach {
       case (p: (Int, Int), d: Double) => {

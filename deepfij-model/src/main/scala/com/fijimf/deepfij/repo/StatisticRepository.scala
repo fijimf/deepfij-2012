@@ -53,6 +53,6 @@ class StatisticRepository extends Transactional {
       }
     }).flatten.toList
     logger.info("For statistic %s, batch saving %d observations".format(statistic.name, stat.size))
-    spsd.saveAll(parms)
+    //spsd.saveAll(parms)
   }
 }
