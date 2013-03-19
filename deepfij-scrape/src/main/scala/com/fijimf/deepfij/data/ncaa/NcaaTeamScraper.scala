@@ -130,25 +130,10 @@ object NcaaTeamScraper extends HttpScraper {
     val colorsKey = "Colors"
     val urlKey = "Url"
     val detailMap: Map[String, String] = (page \\ "td").map((node: Node) => node match {
-      case <td>
-        <h6>Nickname</h6> <p>
-        {nickname}
-        </p>
-        </td> => Some((nicknameKey -> nickname.text))
-      case <td>
-        <h6>Athletics Website</h6> <p>
-        <a>
-          {url}
-          </a>
-        </p>
-        </td> => Some((urlKey -> url.text))
-      case <td>
-        <h6>Colors</h6> <p>
-        {colors}
-        </p>
-        </td> => Some((colorsKey -> colors.text))
-      case _ => None
-    }).flatten.toMap
+      case <td><h6>Nickname</h6><p>{nickname}</p></td> => Some((nicknameKey -> nickname.text))
+      case <td><h6>Athletics Website</h6><p><a>{url}</a></p></td> => Some((urlKey -> url.text))
+      case <td><h6>Colors</h6><p>{colors}</p></td> => Some((colorsKey -> colors.text))
+      case _ => None }).flatten.toMap
     val optColors = detailMap.get(colorsKey)
     if (optColors.isDefined) {
       val carr: Array[String] = optColors.get.trim.split('&')
