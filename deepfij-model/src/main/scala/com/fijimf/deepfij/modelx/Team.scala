@@ -61,7 +61,10 @@ import com.fijimf.deepfij.util.Validation._
               val homeGames: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]],
 
               @(OneToMany@field)(mappedBy = "awayTeam", fetch = FetchType.LAZY)
-              val awayGames: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]]
+              val awayGames: java.util.Set[Game] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[Game]],
+
+              @(OneToMany@field)(mappedBy = "team",cascade = Array(CascadeType.REMOVE), fetch = FetchType.LAZY)
+              val stat: java.util.Set[TeamStat] = java.util.Collections.EMPTY_SET.asInstanceOf[java.util.Set[TeamStat]]
 
               ) extends KeyedObject {
   def this() = this(0L)
@@ -87,6 +90,7 @@ import com.fijimf.deepfij.util.Validation._
 
   @transient lazy val homeGameList = homeGames.toList
   @transient lazy val awayGameList = awayGames.toList
+  @transient lazy val statHistory: Map[MetaStat, List[TeamStat]] = stat.toList.groupBy(_.metaStat)
 
   def games = homeGameList ::: awayGameList
 
