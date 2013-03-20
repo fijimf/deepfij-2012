@@ -16,7 +16,7 @@ import org.apache.commons.lang.time.DateUtils
 import scala.util.control.Exception._
 import com.codahale.jerkson.Json
 
-class Controller extends ScalatraFilter with ScalateSupport with ConferenceController with StatsController {
+class Controller extends ScalatraFilter with ScalateSupport with StatsController {
   val log = Logger.getLogger(this.getClass)
   val td = new TeamDao()
   val cd = new ConferenceDao()
@@ -157,7 +157,9 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
   }
 
   get("/logout") {
-    logout
+    contentType = "text/html"
+    SecurityUtils.getSubject.logout()
+    redirect("/" + contextPath)
   }
 
   get("/about") {
@@ -182,12 +184,4 @@ class Controller extends ScalatraFilter with ScalateSupport with ConferenceContr
     status(404)
     templateEngine.layout("pages/404.mustache", attributes())
   }
-
-
-  def logout: Any = {
-    contentType = "text/html"
-    SecurityUtils.getSubject.logout()
-    redirect("/" + contextPath)
-  }
-
 }
