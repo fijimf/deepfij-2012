@@ -1,9 +1,7 @@
-package com.fijimf.deepfij.statx
+package com.fijimf.deepfij.statx.predictor
 
-import com.fijimf.deepfij.modelx.{Schedule, Game, Team}
+import com.fijimf.deepfij.modelx.{Schedule, Team, Game}
 import java.util.Date
-import org.apache.commons.lang.time.DateUtils
-
 
 trait WinnerPredictor {
   def winner(g: Game): Option[Team]
@@ -36,42 +34,4 @@ trait WinnerPredictor {
       }
     })
   }
-}
-
-trait SingleStatisticWinnerPredictor extends WinnerPredictor {
-  def statistic: Statistic[Team]
-
-  def winner(g: Game): Option[Team] = {
-    val d: Date = DateUtils.addDays(g.date, -1)
-    val pop: Population[Team] = statistic.population(d)
-    (pop.stat(g.homeTeam), pop.stat(g.awayTeam)) match {
-      case (Some(h), Some(a)) => {
-        if (statistic.higherIsBetter) {
-          if (h > a) Some(g.homeTeam) else if (a > h) Some(g.awayTeam) else None
-        } else {
-          if (h > a) Some(g.awayTeam) else if (a > h) Some(g.homeTeam) else None
-        }
-      }
-      case _ => None
-    }
-  }
-}
-
-trait ProbabilityPredictor extends WinnerPredictor {
-  def winProbability(g: Game): Option[(Double, Double)]
-
-  def winner(g: Game) = winProbability(g) match {
-    case Some((h, a)) if h > a => Some(g.homeTeam)
-    case Some((h, a)) if h < a => Some(g.homeTeam)
-    case _ => None
-  }
-}
-
-trait MarginPredictor {
-
-}
-
-trait ScorePredictor {
-
-
 }

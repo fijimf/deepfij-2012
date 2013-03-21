@@ -1,10 +1,12 @@
 package com.fijimf.deepfij.statx
 
-import com.fijimf.deepfij.modelx.{Team, Schedule, ScheduleDao}
+import com.fijimf.deepfij.modelx.{Game, Team, Schedule, ScheduleDao}
 import com.fijimf.deepfij.statx.models._
 import com.fijimf.deepfij.repo.StatisticRepository
 import org.apache.log4j.Logger
 import java.util.Date
+import org.apache.commons.lang.time.DateUtils
+import predictor.{SingleStatisticLogisticRegression, NaiveSingleStatisticPredictor, ProbabilityPredictor}
 
 
 object ModelRunner {
@@ -33,28 +35,23 @@ object ModelTester {
   def main(args: Array[String]) {
     val sched: Schedule = sd.findByKey("ncaa2013").get
     val repo: StatisticRepository = new StatisticRepository
-    List(new OffenseDefenseLinearRegression).foreach(model => {
+    List(new NaiveLinearRegression).foreach(model => {
       log.info("Start running " + model.name)
       val statistics: Map[String, Statistic[Team]] = model.createStatistics(sched)
       log.info("Done running " + model.name)
-      List("off-point-predictor", "def-point-predictor").foreach {
-        //      List("point-predictor", "win-predictor").foreach {
-        k => {
-          val h: Statistic[Team] = statistics.get(k).get
+      val op: Option[Statistic[Team]] = statistics.get("win-predictor")
 
-          val hp: Population[Team] = h.population(h.endDate)
+      val r: SingleStatisticLogisticRegression = new SingleStatisticLogisticRegression(sched, op.get)
+      val raccuracy: Map[Date, Double] = r.cumulativeAccuracy(sched)
+      raccuracy.keys.toList.sorted.foreach(k => println(k + " --> " + raccuracy(k)))
 
-          sched.teamList.sortBy(t => hp.stat(t).getOrElse(0.0)).foreach(t => println("%-18s %8.4f ".format(t.key, hp.stat(t).getOrElse(Double.NaN))))
+      sched.gameList.sortBy(_.date).foreach(g => {
+        println("%10s %20s %3d %20s %3d %s".format(
+          g.date.toString, g.homeTeam.name, g.resultOpt.map(_.homeScore).getOrElse(0), g.awayTeam.name, g.resultOpt.map(_.awayScore).getOrElse(0), r.winProbability(g).toString
+        )
+        )
+      })
 
-          val p = new SingleStatisticWinnerPredictor {
-            def statistic = h
-          }
-
-          val accuracy: Map[Date, Double] = p.cumulativeAccuracy(sched)
-          accuracy.keys.toList.sorted.foreach(k => println(k + " --> " + accuracy(k)))
-        }
-      }
     })
-
   }
 }
