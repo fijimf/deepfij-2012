@@ -36,17 +36,13 @@ object ModelTester {
     val repo: StatisticRepository = new StatisticRepository
     val wp: Statistic[Team] = repo.tsd.statistic("win-predictor")
     val pp: Statistic[Team] = repo.tsd.statistic("point-predictor")
+    val hp: Statistic[Team] = repo.tsd.statistic("homadj-point-predictor")
+    val sp: Statistic[Team] = repo.tsd.statistic("score-margin-mean")
+    val ss: Statistic[Team] = repo.tsd.statistic("streak")
 
-    val r: GenericLogisticRegression = new GenericLogisticRegression(sched, new SingleStatisticFeatureMapper(pp))
-    val raccuracy: Map[Date, (Double, Double)] = r.cumulativeAccuracy(sched)
+    val r: GenericLogisticRegression = new GenericLogisticRegression(sched, new SingleStatisticPolyFeatureMapper(ss))
+    val raccuracy: Map[Date, Accuracy] = r.cumulativeAccuracy(sched)
     raccuracy.keys.toList.sorted.foreach(k => println(k + " --> " + raccuracy(k)))
-
-    sched.gameList.sortBy(_.date).foreach(g => {
-      println("%10s %20s %3d %20s %3d %s".format(
-        g.date.toString, g.homeTeam.name, g.resultOpt.map(_.homeScore).getOrElse(0), g.awayTeam.name, g.resultOpt.map(_.awayScore).getOrElse(0), r.winProbability(g).toString
-      )
-      )
-    })
 
   }
 }

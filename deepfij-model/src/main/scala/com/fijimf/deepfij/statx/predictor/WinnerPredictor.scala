@@ -3,38 +3,38 @@ package com.fijimf.deepfij.statx.predictor
 import com.fijimf.deepfij.modelx.{Schedule, Team, Game}
 import java.util.Date
 
+case class Accuracy(correct: Int = 0, missed: Int = 0, skipped: Int = 0) {
+  def incCorrect = copy(correct = correct + 1)
+
+  def incMissed = copy(missed = missed + 1)
+
+  def intSkipped = copy(skipped = skipped + 1)
+
+  def +(acc: Accuracy) = Accuracy(correct + acc.correct, missed + acc.missed, skipped + acc.skipped)
+}
+
 trait WinnerPredictor {
   def winner(g: Game): Option[Team]
 
-  def cumulativeAccuracy(s: Schedule): Map[Date, (Double, Double)] = {
-    val gamesByDate: List[(Date, List[Game])] = s.gameList.groupBy(_.date).toList.sortBy(_._1)
-    val results: List[(Date, (Int, Int, Int, Int))] = gamesByDate.foldLeft(List.empty[(Date, (Int, Int, Int, Int))])((lst: List[(Date, (Int, Int, Int, Int))], pair: (Date, List[Game])) => {
-      val (date, games) = pair
+  def gamesByDate(s: Schedule): Map[Date, List[Game]] = s.gameList.groupBy(_.date)
 
-      val (correct, picked) = accuracy(games)
-      accumulateDailyAccuracy(lst, date, correct, picked)
-    })
-    results.filter(_._2._2 != 0).toMap.mapValues(p => if (p._4 != 0)
-      (p._1.toDouble / p._2.toDouble, p._3.toDouble / p._4.toDouble)
-    else
-      (p._1.toDouble / p._2.toDouble, 0)
-    )
+  def dailyAccuracy(s: Schedule): Map[Date, Accuracy] = gamesByDate(s).mapValues(accuracy(_))
+
+  def cumulativeAccuracy(s: Schedule): Map[Date, Accuracy] = {
+    val da: Map[Date, Accuracy] = dailyAccuracy(s)
+    da.keys.toList.sorted.foldLeft((Accuracy(0, 0, 0), Map.empty[Date, Accuracy]))((pair:(Accuracy, Map[Date, Accuracy]), d: Date) =>
+    {
+      val newAcc = pair._1 + da(d)
+      (newAcc, pair._2 + (d -> newAcc))
+    })._2
   }
 
-
-  def accumulateDailyAccuracy(lst: List[(Date, (Int, Int, Int, Int))], date: Date, fn: Int, fd: Int): List[(Date, (Int, Int, Int, Int))] = {
-    lst.headOption match {
-      case Some((_, (num, den, _, _))) => (date, (num + fn, den + fd, num, den)) :: lst
-      case None => (date, (fn, fd, 0, 0)) :: lst
-    }
-  }
-
-  def accuracy(games: List[Game]): (Int, Int) = {
-    games.foldLeft((0, 0))((fract: (Int, Int), game: Game) => {
+  def accuracy(games: List[Game]): Accuracy = {
+    games.foldLeft(Accuracy(0, 0, 0))((acc: Accuracy, game: Game) => {
       (game.winner, winner(game)) match {
-        case (Some(g), Some(h)) if g == h => (fract._1 + 1, fract._2 + 1)
-        case (Some(g), Some(h)) => (fract._1, fract._2 + 1)
-        case _ => fract
+        case (Some(g), Some(h)) if g == h => acc.incCorrect
+        case (Some(g), Some(h)) => acc.incMissed
+        case _ => acc.intSkipped
       }
     })
   }
