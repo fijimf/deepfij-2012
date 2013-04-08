@@ -29,7 +29,7 @@ trait NaiveSingleStatisticPredictor extends ProbabilityPredictor {
 }
 
 class SingleStatisticFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
-  def dim = 1
+  def features = List("Z-Score (" + t.name + ")")
 
   def f(g: Game) = {
     val d: Date = DateUtils.addDays(g.date, -1)
@@ -40,10 +40,17 @@ class SingleStatisticFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
       case _ => None
     }
   }
+
 }
 
 class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
-  def dim = 4
+
+  def features = List(
+    "Difference In Z-Score(" + t.name + ")",
+    "Difference In Rank(" + t.name + ")",
+    "Ratio of Rank(" + t.name + ")",
+    "Inv. Ratio of Rank(" + t.name + ")"
+  )
 
   def f(g: Game) = {
     val d: Date = DateUtils.addDays(g.date, -1)
@@ -53,16 +60,16 @@ class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper
       case (Some(h), Some(a)) =>
         val hr: Double = pop.fractionalRank(g.homeTeam).get
         val ar: Double = pop.fractionalRank(g.awayTeam).get
-        Some(Array( h - a,hr - ar, hr/ar, ar/hr) )
+        Some(Array(h - a, hr - ar, hr / ar, ar / hr))
       case _ => None
     }
   }
 }
 
-class GenericLogisticRegression(s: Schedule, fm: FeatureMapper) extends ProbabilityPredictor {
+class GenericLogisticRegression(s: Schedule, fm: FeatureMapper, lambda: Double = 1) extends ProbabilityPredictor {
 
   val logreg: OnlineLogisticRegression = new OnlineLogisticRegression(2, fm.dim, new L1())
-  logreg.lambda(0.75)
+  logreg.lambda(lambda)
   s.gameList.filter(_.resultOpt.isDefined).foreach(g => {
     fm.f(g) match {
       case Some(featureVec) => {
@@ -72,13 +79,11 @@ class GenericLogisticRegression(s: Schedule, fm: FeatureMapper) extends Probabil
     }
   })
 
-  println(logreg.getBeta.viewRow(0))
-
   def winProbability(g: Game) = {
     fm.f(g) match {
       case Some(featureVec) => {
         val p = logreg.classifyScalar(new DenseVector(featureVec))
-        Some((p,1- p))
+        Some((p, 1 - p))
       }
       case _ => None
     }
@@ -88,9 +93,5 @@ class GenericLogisticRegression(s: Schedule, fm: FeatureMapper) extends Probabil
 
 }
 
-trait FeatureMapper {
-  def dim: Int
 
-  def f(g: Game): Option[Array[Double]]
-}
 
