@@ -43,14 +43,17 @@ class SingleStatisticFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
 }
 
 class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
-  def dim = 3
+  def dim = 4
 
   def f(g: Game) = {
     val d: Date = DateUtils.addDays(g.date, -1)
     val pop: Population[Team] = t.population(d)
 
     (pop.zScore(g.homeTeam), pop.zScore(g.awayTeam)) match {
-      case (Some(h), Some(a)) => Some(Array( h - a,pop.fractionalRank(g.homeTeam).get,pop.fractionalRank(g.awayTeam).get) )
+      case (Some(h), Some(a)) =>
+        val hr: Double = pop.fractionalRank(g.homeTeam).get
+        val ar: Double = pop.fractionalRank(g.awayTeam).get
+        Some(Array( h - a,hr - ar, hr/ar, ar/hr) )
       case _ => None
     }
   }
@@ -59,7 +62,7 @@ class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper
 class GenericLogisticRegression(s: Schedule, fm: FeatureMapper) extends ProbabilityPredictor {
 
   val logreg: OnlineLogisticRegression = new OnlineLogisticRegression(2, fm.dim, new L1())
-  logreg.lambda(0.5)
+  logreg.lambda(0.75)
   s.gameList.filter(_.resultOpt.isDefined).foreach(g => {
     fm.f(g) match {
       case Some(featureVec) => {
@@ -75,7 +78,7 @@ class GenericLogisticRegression(s: Schedule, fm: FeatureMapper) extends Probabil
     fm.f(g) match {
       case Some(featureVec) => {
         val p = logreg.classifyScalar(new DenseVector(featureVec))
-        Some((1 - p, p))
+        Some((p,1- p))
       }
       case _ => None
     }

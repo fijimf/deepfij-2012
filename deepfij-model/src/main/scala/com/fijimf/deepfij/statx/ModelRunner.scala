@@ -42,7 +42,8 @@ object ModelTester {
 
     val r: GenericLogisticRegression = new GenericLogisticRegression(sched, new SingleStatisticPolyFeatureMapper(ss))
     val raccuracy: Map[Date, Accuracy] = r.cumulativeAccuracy(sched)
-    raccuracy.keys.toList.sorted.foreach(k => println(k + " --> " + raccuracy(k)))
+    val laccuracy: Map[Date, Double] = r.cumulativeLogLikelihood(sched)
+    raccuracy.keys.toList.sorted.foreach(k => println(k + " --> " + raccuracy(k)+"       "+laccuracy(k)))
 
   }
 }
