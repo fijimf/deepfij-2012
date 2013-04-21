@@ -40,7 +40,7 @@ object ModelTester {
     val sp: Statistic[Team] = repo.tsd.statistic("score-margin-mean")
     val ss: Statistic[Team] = repo.tsd.statistic("streak")
 
-    val r: GenericLogisticRegression = new GenericLogisticRegression(sched, new SingleStatisticPolyFeatureMapper(ss))
+    val r: GenericLogisticRegression = new GenericLogisticRegression(sched, new SingleStatisticPolyFeatureMapper(pp))
     val raccuracy: Map[Date, Accuracy] = r.cumulativeAccuracy(sched)
     val laccuracy: Map[Date, Double] = r.cumulativeLogLikelihood(sched)
     raccuracy.keys.toList.sorted.foreach(k => println(k + " --> " + raccuracy(k)+"       "+laccuracy(k)))

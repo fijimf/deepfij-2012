@@ -6,14 +6,14 @@ import java.util.Date
 trait ProbabilityPredictor extends WinnerPredictor {
   def winProbability(g: Game): Option[(Double, Double)]
 
-  def likelihood(g: Game): Option[Double] = {
+  def logLikelihood(g: Game): Option[Double] = {
     winProbability(g) match {
       case Some((h, a)) => {
         g.resultOpt match {
           case Some(result) => if (result.homeScore > result.awayScore) {
-            Some(h)
+            Some(math.log(h))
           } else {
-            Some(a)
+            Some(math.log(a))
           }
           case None => None
         }
@@ -38,6 +38,6 @@ trait ProbabilityPredictor extends WinnerPredictor {
     })._2
   }
 
-  def logLikelihood(games: List[Game]): Double = games.flatMap(likelihood(_)).map(math.log(_)).sum
+  def logLikelihood(games: List[Game]): Double = games.flatMap(logLikelihood(_)).sum
 
 }

@@ -4,7 +4,7 @@ import com.fijimf.deepfij.modelx.{Schedule, Game, Team}
 import java.util.Date
 import org.apache.commons.lang.time.DateUtils
 import com.fijimf.deepfij.statx.{Population, Statistic}
-import org.apache.mahout.classifier.sgd.{L1, OnlineLogisticRegression}
+import org.apache.mahout.classifier.sgd.{UniformPrior, L2, L1, OnlineLogisticRegression}
 import org.apache.mahout.math.DenseVector
 
 
@@ -29,7 +29,7 @@ trait NaiveSingleStatisticPredictor extends ProbabilityPredictor {
 }
 
 class SingleStatisticFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
-  def features = List("Z-Score (" + t.name + ")")
+  def features = List("Z-Score Diff(H-A)[" + t.name + "]")
 
   def f(g: Game) = {
     val d: Date = DateUtils.addDays(g.date, -1)
@@ -46,10 +46,9 @@ class SingleStatisticFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
 class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper {
 
   def features = List(
-    "Difference In Z-Score(" + t.name + ")",
-    "Difference In Rank(" + t.name + ")",
-    "Ratio of Rank(" + t.name + ")",
-    "Inv. Ratio of Rank(" + t.name + ")"
+    "Z-Score Diff(H-A)[" + t.name + "]",
+    "Rank Diff(H-A)[" + t.name + "]",
+    "Rank Sq. Diff(H-A)[" + t.name + "]"
   )
 
   def f(g: Game) = {
@@ -60,7 +59,7 @@ class SingleStatisticPolyFeatureMapper(t: Statistic[Team]) extends FeatureMapper
       case (Some(h), Some(a)) =>
         val hr: Double = pop.fractionalRank(g.homeTeam).get
         val ar: Double = pop.fractionalRank(g.awayTeam).get
-        Some(Array(h - a, hr - ar, hr / ar, ar / hr))
+        Some(Array(h - a, hr - ar, (hr*hr) - (ar* ar)))
       case _ => None
     }
   }
@@ -78,6 +77,8 @@ class GenericLogisticRegression(s: Schedule, fm: FeatureMapper, lambda: Double =
       case None =>
     }
   })
+
+  println(logreg.getBeta.viewRow(0))
 
   def winProbability(g: Game) = {
     fm.f(g) match {
