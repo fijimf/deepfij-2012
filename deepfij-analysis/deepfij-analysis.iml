@@ -4,7 +4,7 @@
     <facet type="scala" name="Scala">
       <configuration>
         <option name="compilerLibraryLevel" value="Project" />
-        <option name="compilerLibraryName" value="Maven: org.scala-lang:scala-compiler-bundle:2.9.2" />
+        <option name="compilerLibraryName" value="Maven: org.scala-lang:scala-compiler-bundle:2.10.0" />
         <option name="languageLevel" value="Scala 2.9" />
         <option name="vmOptions" value="" />
       </configuration>
@@ -19,17 +19,9 @@
     </content>
     <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.scalanlp:breeze-learn_2.9.2:0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.scalanlp:breeze-math_2.9.2:0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.2" level="project" />
-    <orderEntry type="library" name="Maven: com.thoughtworks.paranamer:paranamer:2.2" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.netlib-java:netlib-java:0.9.3" level="project" />
-    <orderEntry type="library" name="Maven: net.sourceforge.f2j:arpack_combined_all:0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.scalanlp:jblas:1.2.1" level="project" />
-    <orderEntry type="library" name="Maven: com.codecommit:anti-xml_2.9.1:0.3" level="project" />
-    <orderEntry type="library" name="Maven: de.bwaldvogel:liblinear:1.8" level="project" />
-    <orderEntry type="library" name="Maven: org.scalanlp:breeze-process_2.9.2:0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.scalanlp:breeze-learn_2.10.0:0.1" level="project" />
     <orderEntry type="library" name="Maven: com.fijimf.deepfij:deepfij-model:1.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.2.147" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.15" level="project" />
     <orderEntry type="library" name="Maven: org.apache.mahout:mahout-math:0.8-SNAPSHOT" level="project" />
@@ -131,7 +123,9 @@
     <orderEntry type="library" name="Maven: org.apache.maven.doxia:doxia-module-xdoc:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.doxia:doxia-module-xhtml:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.scalatest:scalatest_2.9.2:1.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scalatest:scalatest_2.10.0:1.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scala-lang:scala-actors:2.10.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.scala-lang:scala-reflect:2.10.0" level="project" />
   </component>
 </module>
 

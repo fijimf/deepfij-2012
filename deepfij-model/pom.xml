@@ -44,6 +44,11 @@
             <version>5.1.15</version>
 
         </dependency>
+            <dependency>
+                <groupId>com.typesafe.slick</groupId>
+                <artifactId>slick_2.10</artifactId>
+                <version>1.0.0</version>
+            </dependency>
         <dependency>
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-math</artifactId>

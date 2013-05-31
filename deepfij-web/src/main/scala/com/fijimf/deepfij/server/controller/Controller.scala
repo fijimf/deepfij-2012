@@ -41,7 +41,7 @@ class Controller extends ScalatraFilter with ScalateSupport with StatsController
 
   //TODO -- Make this better
 
-  def contextPath: String = {
+  override def contextPath: String = {
     request.getContextPath
   }
 

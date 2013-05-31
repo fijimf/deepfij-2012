@@ -4,8 +4,9 @@ import xml.{NodeSeq, Node}
 import collection.immutable.{Map, List}
 import org.apache.log4j.Logger
 import com.fijimf.deepfij.util.HttpScraper
-import collection.parallel.ForkJoinTasks
+import scala.collection.parallel.{ForkJoinTaskSupport, ForkJoinTasks}
 import com.fijimf.deepfij.util.Timing._
+import scala.concurrent.forkjoin.ForkJoinPool
 
 object NcaaTeamScraper extends HttpScraper {
 
@@ -22,7 +23,7 @@ object NcaaTeamScraper extends HttpScraper {
   }
 
   val logger = Logger.getLogger(NcaaTeamScraper.getClass)
-  ForkJoinTasks.defaultForkJoinPool.setParallelism(24)
+
 
   lazy val teamData: List[Map[String, String]] = {
     logger.info("Scraping NCAA.com for teams and conferences.")
@@ -30,6 +31,7 @@ object NcaaTeamScraper extends HttpScraper {
       case (k: String, n: String) => (k.replaceAll("--", "-"), n) // Fix for stupid NCAA.com data
     }
     val parKeys = teamKeys.keys.toSet.par
+    parKeys.tasksupport = new ForkJoinTaskSupport(new ForkJoinPool(24))
     logger.info(shortNames.size + " short names")
     val teamsRaw = parKeys.map(k => {
       teamDetail(k, shortNames.getOrElse(k, teamKeys(k)), teamKeys(k))
