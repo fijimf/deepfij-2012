@@ -1,33 +1,38 @@
 package com.fijimf.deepfij.slick
 
-import scala.slick.driver.H2Driver._
-
 
 case class Team(id: Long, seasonId: Long, key: String, name: String, longName: String, nickname: String, primaryColor: Option[String], secondaryColor: Option[String], logoUrl: Option[String], officialUrl: Option[String], officialTwitter: Option[String])
 
+trait TeamDao {
 
-object Teams extends Table[Team]("teams") {
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  this: Profile =>
 
-  def seasonId = column[Long]("season_id")
+  import profile.simple._
 
-  def key = column[String]("short_name")
+  object Teams extends Table[Team]("teams") {
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-  def name = column[String]("name")
+    def seasonId = column[Long]("season_id")
 
-  def longName = column[String]("long_name")
+    def key = column[String]("short_name")
 
-  def nickname = column[String]("nickname")
+    def name = column[String]("name")
 
-  def primaryColor = column[Option[String]]("primary_color")
+    def longName = column[String]("long_name")
 
-  def secondaryColor = column[Option[String]]("secondary_color")
+    def nickname = column[String]("nickname")
 
-  def logoUrl = column[Option[String]]("logo_url")
+    def primaryColor = column[Option[String]]("primary_color")
 
-  def officialUrl = column[Option[String]]("official_url")
+    def secondaryColor = column[Option[String]]("secondary_color")
 
-  def officialTwitter = column[Option[String]]("official_twitter")
+    def logoUrl = column[Option[String]]("logo_url")
 
-  def * = id ~ seasonId ~ key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter <>(Team.apply _, Team.unapply _)
+    def officialUrl = column[Option[String]]("official_url")
+
+    def officialTwitter = column[Option[String]]("official_twitter")
+
+    def * = id ~ seasonId ~ key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter <>(Team.apply _, Team.unapply _)
+  }
+
 }

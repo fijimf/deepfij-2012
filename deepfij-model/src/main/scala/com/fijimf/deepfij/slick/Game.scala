@@ -1,29 +1,33 @@
 package com.fijimf.deepfij.slick
 
-import java.sql.Date
-import scala.slick.driver.H2Driver._
 import org.joda.time.DateMidnight
 import com.fijimf.deepfij.slick.util.DateMidnightMapper._
 
-case class Game(id:Long, seasonId:Long, homeTeamId:Long, awayTeamId:Long, date:DateMidnight, location:Option[String], isNeutralSite:Boolean)
+case class Game(id: Long, seasonId: Long, homeTeamId: Long, awayTeamId: Long, date: DateMidnight, location: Option[String], isNeutralSite: Boolean)
 
-object Games extends Table[Game]("games") {
-  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+trait GameDao {
+  self: Profile =>
 
-  def seasonId = column[Long]("season_id")
+  import profile.simple._
 
-  def homeTeamId = column[Long]("homeTeamId")
+  object Games extends Table[Game]("games") {
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-  def awayTeamId = column[Long]("awayTeamId")
+    def seasonId = column[Long]("season_id")
 
-  def date = column[DateMidnight]("date")
+    def homeTeamId = column[Long]("homeTeamId")
 
-  def resultId = column[Long]("result_id")
+    def awayTeamId = column[Long]("awayTeamId")
 
-  def location = column[Option[String]]("location")
+    def date = column[DateMidnight]("date")
 
-  def isNeutralSite = column[Boolean]("isNeutralSite")
+    def resultId = column[Long]("result_id")
 
-  def * = id ~ seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite <> (Game.apply _, Game.unapply _)
+    def location = column[Option[String]]("location")
+
+    def isNeutralSite = column[Boolean]("isNeutralSite")
+
+    def * = id ~ seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite <>(Game.apply _, Game.unapply _)
+  }
+
 }
-
