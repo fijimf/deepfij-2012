@@ -7,7 +7,7 @@ case class Conference(id: Option[Long],
                       officialTwitter: Option[String],
                       logoUrl: Option[String])
 
-trait ConferencesDao {
+trait ConferenceDao {
 
   self: Profile =>
 

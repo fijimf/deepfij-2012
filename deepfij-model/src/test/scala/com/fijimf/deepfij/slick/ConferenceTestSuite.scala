@@ -23,7 +23,7 @@ class ConferenceTestSuite extends FunSuite with BeforeAndAfter {
     session.close()
   }
   test("Conference creation") {
-    val dao: ConferencesDao = new ConferencesDao with TestProfile
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
     dao.Conferences.ddl.create
     dao.Conferences.insert(Conference(None, "Big Ten", "Big Ten", None, None, None))
     dao.Conferences.insert(Conference(None, "American Athletic", "American Athletic", None, None, None))
