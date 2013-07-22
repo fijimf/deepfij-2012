@@ -1,9 +1,9 @@
 package com.fijimf.deepfij.slick
 
-case class ConferenceAssociation(id: Option[Long],
-                      seasonId: Long,
-                      conferenceId: Long,
-                      teamId: Long)
+case class ConferenceAssociation(id: Long,
+                                 seasonId: Long,
+                                 conferenceId: Long,
+                                 teamId: Long)
 
 trait ConferencesAssociationDao {
 
@@ -20,7 +20,9 @@ trait ConferencesAssociationDao {
 
     def teamId = column[Long]("team_id")
 
-    def * = id.? ~ seasonId ~ conferenceId ~ teamId  <>(ConferenceAssociation.apply _, ConferenceAssociation.unapply _)
+    def * = id ~ seasonId ~ conferenceId ~ teamId <>(ConferenceAssociation.apply _, ConferenceAssociation.unapply _)
+
+    def autoInc = seasonId ~ conferenceId ~ teamId returning id
 
   }
 

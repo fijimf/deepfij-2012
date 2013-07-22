@@ -1,7 +1,7 @@
 package com.fijimf.deepfij.slick
 
 import org.joda.time.DateMidnight
-import com.fijimf.deepfij.slick.util.DateMidnightMapper._
+import util.DateMidnightMapper._
 
 case class Game(id: Long, seasonId: Long, homeTeamId: Long, awayTeamId: Long, date: DateMidnight, location: Option[String], isNeutralSite: Boolean)
 
@@ -28,6 +28,8 @@ trait GameDao {
     def isNeutralSite = column[Boolean]("isNeutralSite")
 
     def * = id ~ seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite <>(Game.apply _, Game.unapply _)
+
+    def autoInc = seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite returning id
   }
 
 }

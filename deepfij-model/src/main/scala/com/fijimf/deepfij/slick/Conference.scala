@@ -1,6 +1,6 @@
 package com.fijimf.deepfij.slick
 
-case class Conference(id: Option[Long],
+case class Conference(id: Long,
                       name: String,
                       shortName: String,
                       officialUrl: Option[String],
@@ -26,11 +26,9 @@ trait ConferenceDao {
 
     def logoUrl = column[Option[String]]("logoUrl")
 
-    def * = id.? ~ name ~ shortName ~ officialUrl ~ officialTwitter ~ logoUrl <>(Conference.apply _, Conference.unapply _)
+    def * = id ~ name ~ shortName ~ officialUrl ~ officialTwitter ~ logoUrl <>(Conference.apply _, Conference.unapply _)
 
-    val findByName = createFinderBy(_.name)
-
-    val findByShortName = createFinderBy(_.name)
+    def autoInc = name ~ shortName ~ officialUrl ~ officialTwitter ~ logoUrl returning id
 
   }
 

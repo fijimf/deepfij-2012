@@ -2,33 +2,43 @@ package com.fijimf.deepfij.slick
 
 import scala.slick.driver.{H2Driver, ExtendedProfile}
 import scala.slick.lifted.DDL
-import scala.slick.session.{Session, Database}
+import scala.slick.session.{Database, Session}
+import scala.slick.session.Database._
 
-class Repository(p: ExtendedProfile) {
+class Repository(p: ExtendedProfile) extends SeasonDao with ConferenceDao with TeamDao with GameDao with ResultDao with Profile {
 
-  trait LocalProfile extends Profile {
-    val profile = p
-  }
+  val profile = p
 
-
-  val Seasons = (new SeasonDao with LocalProfile).Seasons
-  val Conferences = (new ConferenceDao with LocalProfile).Conferences
-  val Teams = (new TeamDao with LocalProfile).Teams
-  val Games = (new GameDao with LocalProfile).Games
-  val Results = (new ResultDao with LocalProfile).Results
+  import profile.simple._
 
   val ddl: DDL = Seasons.ddl ++ Conferences.ddl ++ Teams.ddl ++ Games.ddl ++ Results.ddl
 
+  def create = ddl.create
+  def drop = ddl.drop
+
+  def newSeason(year:String):Long = {
+     Seasons.autoInc.insert(year)
+  }
+
+  def listSeasons() {
+    val q = for (s <- Seasons) yield (s)
+    q.foreach(println(_))
+  }
 }
 
 object Junk {
   def main(args: Array[String]) {
-    val repository: Repository = new Repository(H2Driver)
+    val driver: H2Driver.type = H2Driver
+    val repository: Repository = new Repository(driver)
+    import driver.simple._
 
-    Database.forURL("jdbc:h2:mem:tests", driver = "org.h2.Driver").withSession({
-      val statements: Iterator[String] = repository.ddl.createStatements
-      statements.foreach(println(_))
-    })
+    val db: Database = forURL("jdbc:h2:mem:tests", driver = "org.h2.Driver")
+    db withSession {
+      (repository.ddl).create
+
+      repository.newSeason("2013")
+      repository.listSeasons()
+    }
 
   }
 }

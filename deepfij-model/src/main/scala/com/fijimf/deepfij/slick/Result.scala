@@ -1,6 +1,5 @@
 package com.fijimf.deepfij.slick
 
-
 case class Result(id: Long, gameId: Long, homeScore: Int, awayScore: Int, numOts: Int)
 
 trait ResultDao {
@@ -19,6 +18,8 @@ trait ResultDao {
     def numOts = column[Int]("num_ots")
 
     def * = id ~ gameId ~ homeScore ~ awayScore ~ numOts <>(Result.apply _, Result.unapply _)
+
+    def autoInc = homeScore ~ awayScore ~ numOts returning id
   }
 
 }

@@ -33,6 +33,8 @@ trait TeamDao {
     def officialTwitter = column[Option[String]]("official_twitter")
 
     def * = id ~ seasonId ~ key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter <>(Team.apply _, Team.unapply _)
+
+    def autoInc = seasonId ~ key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter returning id
   }
 
 }
