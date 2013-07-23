@@ -1,14 +1,16 @@
 package com.fijimf.deepfij.slick
 
-package com.fijimf.deepfij.slick
+import org.apache.commons.lang.StringUtils
 
 case class Alias(id: Long,
                  teamId: Long,
-                 alias: String)
+                 alias: String) {
+  require(StringUtils.isNotBlank(alias))
+}
 
 trait AliasDao {
 
-  self: Profile =>
+  self: Profile with TeamDao =>
 
   import profile.simple._
 
@@ -23,7 +25,7 @@ trait AliasDao {
 
     def autoInc = id ~ teamId ~ alias <>(Alias.apply _, Alias.unapply _)
 
-
+    def teamFk = foreignKey("team_fk", teamId, Teams) (_.id)
   }
 
 }
