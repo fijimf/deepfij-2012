@@ -7,7 +7,7 @@ case class ConferenceAssociation(id: Long,
 
 trait ConferencesAssociationDao {
 
-  self: Profile =>
+  self: Profile with SeasonDao with TeamDao with ConferenceDao =>
 
   import profile.simple._
 
@@ -24,6 +24,11 @@ trait ConferencesAssociationDao {
 
     def autoInc = seasonId ~ conferenceId ~ teamId returning id
 
+    def seasonFk = foreignKey("season_fk", seasonId, Seasons)(_.id)
+
+    def teamFk = foreignKey("team_fk", teamId, Teams)(_.id)
+
+    def conferenceFk = foreignKey("conference_fk", conferenceId, Conferences)(_.id)
   }
 
 

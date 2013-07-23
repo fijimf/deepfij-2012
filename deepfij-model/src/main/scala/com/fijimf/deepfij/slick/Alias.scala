@@ -25,7 +25,7 @@ trait AliasDao {
 
     def autoInc = id ~ teamId ~ alias <>(Alias.apply _, Alias.unapply _)
 
-    def teamFk = foreignKey("team_fk", teamId, Teams) (_.id)
+    def teamFk = foreignKey("team_fk", teamId, Teams)(_.id)
   }
 
 }

@@ -3,7 +3,8 @@ package com.fijimf.deepfij.slick
 case class Result(id: Long, gameId: Long, homeScore: Int, awayScore: Int, numOts: Int)
 
 trait ResultDao {
-  self: Profile =>
+  self: Profile with GameDao =>
+
   import profile.simple._
 
   object Results extends Table[Result]("results") {
@@ -20,6 +21,8 @@ trait ResultDao {
     def * = id ~ gameId ~ homeScore ~ awayScore ~ numOts <>(Result.apply _, Result.unapply _)
 
     def autoInc = homeScore ~ awayScore ~ numOts returning id
+
+    def gameFk = foreignKey("game_fk", gameId, Games)(_.id)
   }
 
 }

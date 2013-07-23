@@ -2,7 +2,6 @@ package com.fijimf.deepfij.slick
 
 import scala.slick.driver.{H2Driver, ExtendedProfile}
 import scala.slick.lifted.DDL
-import scala.slick.session.{Database, Session}
 import scala.slick.session.Database._
 
 class Repository(p: ExtendedProfile) extends SeasonDao with ConferenceDao with TeamDao with GameDao with ResultDao with Profile {
@@ -14,10 +13,11 @@ class Repository(p: ExtendedProfile) extends SeasonDao with ConferenceDao with T
   val ddl: DDL = Seasons.ddl ++ Conferences.ddl ++ Teams.ddl ++ Games.ddl ++ Results.ddl
 
   def create = ddl.create
+
   def drop = ddl.drop
 
-  def newSeason(year:String):Long = {
-     Seasons.autoInc.insert(year)
+  def newSeason(year: String): Long = {
+    Seasons.autoInc.insert(year)
   }
 
   def listSeasons() {

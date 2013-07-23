@@ -3,10 +3,13 @@ package com.fijimf.deepfij.slick
 import org.joda.time.DateMidnight
 import util.DateMidnightMapper._
 
-case class Game(id: Long, seasonId: Long, homeTeamId: Long, awayTeamId: Long, date: DateMidnight, location: Option[String], isNeutralSite: Boolean)
+case class Game(id: Long, seasonId: Long, homeTeamId: Long, awayTeamId: Long, date: DateMidnight, location: Option[String], isNeutralSite: Boolean) {
+  require(homeTeamId != awayTeamId)
+}
+
 
 trait GameDao {
-  self: Profile =>
+  self: Profile with TeamDao with SeasonDao =>
 
   import profile.simple._
 
@@ -15,9 +18,9 @@ trait GameDao {
 
     def seasonId = column[Long]("season_id")
 
-    def homeTeamId = column[Long]("homeTeamId")
+    def homeTeamId = column[Long]("home_team_id")
 
-    def awayTeamId = column[Long]("awayTeamId")
+    def awayTeamId = column[Long]("away_team_id")
 
     def date = column[DateMidnight]("date")
 
@@ -25,11 +28,17 @@ trait GameDao {
 
     def location = column[Option[String]]("location")
 
-    def isNeutralSite = column[Boolean]("isNeutralSite")
+    def isNeutralSite = column[Boolean]("is_neutral_site")
 
     def * = id ~ seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite <>(Game.apply _, Game.unapply _)
 
     def autoInc = seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite returning id
+
+    def homeTeamFk = foreignKey("home_team_fk", homeTeamId, Teams)(_.id)
+
+    def awayTeamFk = foreignKey("away_team_fk", homeTeamId, Teams)(_.id)
+
+    def seasonFk = foreignKey("season_fk", seasonId, Seasons)(_.id)
   }
 
 }
