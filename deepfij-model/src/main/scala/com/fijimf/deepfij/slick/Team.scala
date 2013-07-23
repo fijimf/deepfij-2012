@@ -45,6 +45,10 @@ trait TeamDao {
     def * = id ~ key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter <>(Team.apply _, Team.unapply _)
 
     def autoInc = key ~ name ~ longName ~ nickname ~ primaryColor ~ secondaryColor ~ logoUrl ~ officialUrl ~ officialTwitter returning id
+
+    def keyIndex = index("tea_key", key, unique = true)
+    def nameIndex = index("tea_name", name, unique = true)
+    def longNameIndex = index("tea_long_name", longName, unique = true)
   }
 
 }

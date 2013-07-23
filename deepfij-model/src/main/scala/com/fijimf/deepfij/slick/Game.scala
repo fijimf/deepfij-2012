@@ -34,11 +34,11 @@ trait GameDao {
 
     def autoInc = seasonId ~ homeTeamId ~ awayTeamId ~ date ~ location ~ isNeutralSite returning id
 
-    def homeTeamFk = foreignKey("home_team_fk", homeTeamId, Teams)(_.id)
+    def homeTeamFk = foreignKey("gam_home_team_fk", homeTeamId, Teams)(_.id)
 
-    def awayTeamFk = foreignKey("away_team_fk", homeTeamId, Teams)(_.id)
+    def awayTeamFk = foreignKey("gam_away_team_fk", homeTeamId, Teams)(_.id)
 
-    def seasonFk = foreignKey("season_fk", seasonId, Seasons)(_.id)
+    def seasonFk = foreignKey("gam_season_fk", seasonId, Seasons)(_.id)
   }
 
 }

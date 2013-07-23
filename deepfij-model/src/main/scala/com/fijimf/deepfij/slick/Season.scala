@@ -15,6 +15,8 @@ trait SeasonDao {
     def * = id ~ year <>(Season.apply _, Season.unapply _)
 
     def autoInc = year returning id
+
+    def yearIndex = index("sea_year", year, unique = true)
   }
 
 }

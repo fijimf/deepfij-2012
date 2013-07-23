@@ -24,11 +24,13 @@ trait ConferencesAssociationDao {
 
     def autoInc = seasonId ~ conferenceId ~ teamId returning id
 
-    def seasonFk = foreignKey("season_fk", seasonId, Seasons)(_.id)
+    def seasonFk = foreignKey("cas_season_fk", seasonId, Seasons)(_.id)
 
-    def teamFk = foreignKey("team_fk", teamId, Teams)(_.id)
+    def teamFk = foreignKey("cas_team_fk", teamId, Teams)(_.id)
 
-    def conferenceFk = foreignKey("conference_fk", conferenceId, Conferences)(_.id)
+    def conferenceFk = foreignKey("cas_conference_fk", conferenceId, Conferences)(_.id)
+
+    def teamIndex = index("cas_season_team", (seasonId, teamId), unique = true)
   }
 
 

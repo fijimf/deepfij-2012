@@ -39,6 +39,9 @@ trait ConferenceDao {
 
     def autoInc = name ~ shortName ~ officialUrl ~ officialTwitter ~ logoUrl returning id
 
+    def nameIndex = index("cnf_name", name, unique = true)
+
+    def shortNameIndex = index("conf_short_name", shortName, unique = true)
   }
 
 

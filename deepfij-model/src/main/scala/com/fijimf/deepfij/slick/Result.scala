@@ -22,7 +22,10 @@ trait ResultDao {
 
     def autoInc = homeScore ~ awayScore ~ numOts returning id
 
-    def gameFk = foreignKey("game_fk", gameId, Games)(_.id)
+    def gameFk = foreignKey("res_game_fk", gameId, Games)(_.id)
+
+    def indexGame= index("res_game", gameId, unique = true)
+
   }
 
 }
