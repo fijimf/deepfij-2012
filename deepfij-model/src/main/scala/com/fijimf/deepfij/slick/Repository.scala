@@ -38,6 +38,8 @@ object Junk {
 
       repository.newSeason("2013")
       repository.listSeasons()
+
+      (repository.ddl.createStatements.foreach(println(_)))
     }
 
   }
