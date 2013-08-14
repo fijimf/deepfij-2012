@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.slick
 
 import org.apache.commons.lang.StringUtils
+import scala.slick.lifted.DDL
 
 case class Conference(id: Long,
                       name: String,
@@ -42,6 +43,22 @@ trait ConferenceDao {
     def nameIndex = index("cnf_name", name, unique = true)
 
     def shortNameIndex = index("conf_short_name", shortName, unique = true)
+
+    override def ddl: DDL = {
+      var constraints: DDL = DDL(
+        Nil,
+        List(
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkName\" CHECK (\"name\"<>'')",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkShortName\" CHECK (\"short_name\"<>'')"
+        ),
+        List(
+          "DROP CONSTRAINT \"checkName\"",
+          "DROP CONSTRAINT \"checkShortName\""
+        ),
+        Nil)
+      super.ddl ++ constraints
+    }
+
   }
 
 
