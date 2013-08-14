@@ -49,11 +49,17 @@ trait ConferenceDao {
         Nil,
         List(
           "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkName\" CHECK (\"name\"<>'')",
-          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkShortName\" CHECK (\"short_name\"<>'')"
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkShortName\" CHECK (\"short_name\"<>'')",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkUrl\" CHECK (\"official_url\"<>'' or \"official_url\" is null)",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkTwitter\" CHECK (\"official_twitter\"<>'' or \"official_url\" is null)",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkLogo\" CHECK (\"logo_url\"<>'' or \"official_url\" is null)"
         ),
         List(
           "DROP CONSTRAINT \"checkName\"",
-          "DROP CONSTRAINT \"checkShortName\""
+          "DROP CONSTRAINT \"checkShortName\"" ,
+          "DROP CONSTRAINT \"checkUrl\"",
+          "DROP CONSTRAINT \"checkTwitter\"",
+          "DROP CONSTRAINT \"checkLogo\""
         ),
         Nil)
       super.ddl ++ constraints
