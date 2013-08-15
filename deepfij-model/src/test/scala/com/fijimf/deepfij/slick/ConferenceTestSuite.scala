@@ -81,4 +81,66 @@ class ConferenceTestSuite extends FunSuite with BeforeAndAfter {
     assert(ex.isInstanceOf[SQLException])
   }
 
+  test("Conference name is unique") {
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
+    dao.Conferences.ddl.create
+
+    val ex = intercept[Exception] {
+      dao.Conferences.autoInc.insert("big-east", "Big East", None, None, None)
+      dao.Conferences.autoInc.insert("big-east", "Big Eastx", None, None, None)
+      fail("Expected exception not thrown")
+    }
+    assert(ex.isInstanceOf[SQLException])
+
+  }
+
+  test("Conference shortName is unique") {
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
+    dao.Conferences.ddl.create
+
+    val ex = intercept[Exception] {
+      dao.Conferences.autoInc.insert("big-east", "Big East", None, None, None)
+      dao.Conferences.autoInc.insert("big-eastx", "Big East", None, None, None)
+      fail("Expected exception not thrown")
+    }
+    assert(ex.isInstanceOf[SQLException])
+
+  }
+  test("Conference logoUrl can't be blank") {
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
+    dao.Conferences.ddl.create
+    dao.Conferences.autoInc.insert("big-east", "Big East", None, None, None)
+
+    val ex = intercept[Exception] {
+      dao.Conferences.autoInc.insert("ACC", "Atlantic Coast Conference", None, None, Some(""))
+      fail("Expected exception not thrown")
+    }
+    assert(ex.isInstanceOf[SQLException])
+
+  }
+  test("Conference officialUrl can't be blank") {
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
+    dao.Conferences.ddl.create
+    dao.Conferences.autoInc.insert("big-east", "Big East", None, None, None)
+
+    val ex = intercept[Exception] {
+      dao.Conferences.autoInc.insert("ACC", "Atlantic Coast Conference", Some(""), None, None)
+      fail("Expected exception not thrown")
+    }
+    assert(ex.isInstanceOf[SQLException])
+
+  }
+  test("Conference officialTwitter can't be blank") {
+    val dao: ConferenceDao = new ConferenceDao with TestProfile
+    dao.Conferences.ddl.create
+    dao.Conferences.autoInc.insert("big-east", "Big East", None, None, None)
+
+    val ex = intercept[Exception] {
+      dao.Conferences.autoInc.insert("ACC", "Atlantic Coast Conference", None, Some(""), None)
+      fail("Expected exception not thrown")
+    }
+    assert(ex.isInstanceOf[SQLException])
+
+  }
+
 }

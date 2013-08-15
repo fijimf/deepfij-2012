@@ -50,9 +50,9 @@ trait ConferenceDao {
         List(
           "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkName\" CHECK (\"name\"<>'')",
           "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkShortName\" CHECK (\"short_name\"<>'')",
-          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkUrl\" CHECK (\"official_url\"<>'' or \"official_url\" is null)",
-          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkTwitter\" CHECK (\"official_twitter\"<>'' or \"official_url\" is null)",
-          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkLogo\" CHECK (\"logo_url\"<>'' or \"official_url\" is null)"
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkUrl\" CHECK (\"official_url\"<>'')",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkTwitter\" CHECK (\"official_twitter\"<>'')",
+          "ALTER TABLE \"conferences\" ADD CONSTRAINT \"checkLogo\" CHECK (\"logo_url\"<>'')"
         ),
         List(
           "DROP CONSTRAINT \"checkName\"",

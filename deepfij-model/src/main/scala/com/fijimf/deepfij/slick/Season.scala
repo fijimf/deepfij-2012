@@ -10,7 +10,7 @@ trait SeasonDao {
   object Seasons extends Table[Season]("seasons") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-    def year = column[String]("name")
+    def year = column[String]("year")
 
     def * = id ~ year <>(Season.apply _, Season.unapply _)
 
