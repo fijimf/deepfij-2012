@@ -6,9 +6,6 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 import scala.slick.session.Database
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.driver.H2Driver
-import javax.persistence.PersistenceException
-import org.hibernate.JDBCException
-import org.h2.jdbc.JdbcSQLException
 import java.sql.SQLException
 
 @RunWith(classOf[JUnitRunner])
@@ -128,8 +125,8 @@ class ConferenceTestSuite extends FunSuite with BeforeAndAfter {
       fail("Expected exception not thrown")
     }
     assert(ex.isInstanceOf[SQLException])
-
   }
+
   test("Conference officialTwitter can't be blank") {
     val dao: ConferenceDao = new ConferenceDao with TestProfile
     dao.Conferences.ddl.create
@@ -140,7 +137,6 @@ class ConferenceTestSuite extends FunSuite with BeforeAndAfter {
       fail("Expected exception not thrown")
     }
     assert(ex.isInstanceOf[SQLException])
-
   }
 
 }
