@@ -1,6 +1,7 @@
 package com.fijimf.deepfij.slick
 
 import org.apache.commons.lang.StringUtils
+import scala.slick.lifted.DDL
 
 
 case class Team(id: Long, key: String, name: String, longName: String, nickname: String, primaryColor: Option[String], secondaryColor: Option[String], logoUrl: Option[String], officialUrl: Option[String], officialTwitter: Option[String]) {
@@ -24,7 +25,7 @@ trait TeamDao {
   object Teams extends Table[Team]("teams") {
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-    def key = column[String]("short_name")
+    def key = column[String]("team_key")
 
     def name = column[String]("name")
 
@@ -49,6 +50,34 @@ trait TeamDao {
     def keyIndex = index("tea_key", key, unique = true)
     def nameIndex = index("tea_name", name, unique = true)
     def longNameIndex = index("tea_long_name", longName, unique = true)
+
+    override def ddl: DDL = {
+      var constraints: DDL = DDL(
+        Nil,
+        List(
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkKey\" CHECK (\"team_key\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkName\" CHECK (\"name\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkLongName\" CHECK (\"long_name\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkUrl\" CHECK (\"official_url\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkTwitter\" CHECK (\"official_twitter\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkPColor\" CHECK (\"primary_color\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkSColor\" CHECK (\"secondary_color\"<>'')",
+          "ALTER TABLE \"teams\" ADD CONSTRAINT \"checkLogo\" CHECK (\"logo_url\"<>'')"
+        ),
+        List(
+          "DROP CONSTRAINT \"checkKey\"",
+          "DROP CONSTRAINT \"checkName\"",
+          "DROP CONSTRAINT \"checkLongName\"",
+          "DROP CONSTRAINT \"checkUrl\"",
+          "DROP CONSTRAINT \"checkTwitter\"",
+          "DROP CONSTRAINT \"checkPColor\"",
+          "DROP CONSTRAINT \"checkSColor\"",
+          "DROP CONSTRAINT \"checkLogo\""
+        ),
+        Nil)
+      super.ddl ++ constraints
+    }
+
   }
 
 }
