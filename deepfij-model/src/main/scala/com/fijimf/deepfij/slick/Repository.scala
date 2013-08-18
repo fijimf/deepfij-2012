@@ -8,22 +8,26 @@ class Repository(p: ExtendedProfile) extends SeasonDao with ConferenceDao with T
 
   val profile = p
 
-  import profile.simple._
 
   val ddl: DDL = Seasons.ddl ++ Conferences.ddl ++ Teams.ddl ++ Games.ddl ++ Results.ddl
 
-  def create = ddl.create
-
-  def drop = ddl.drop
-
-  def newSeason(year: String): Long = {
+  def createSeason(year: String): Long = {
     Seasons.autoInc.insert(year)
   }
 
-  def listSeasons() {
-    val q = for (s <- Seasons) yield (s)
-    q.foreach(println(_))
+  def createTeam(team: Team) {
+    Teams.autoInc.insert(team.key, team.name, team.longName, team.nickname, team.primaryColor, team.secondaryColor, team.officialUrl, team.officialTwitter, team.logoUrl)
   }
+
+  def createConference(conference: Conference) {
+    Conferences.autoInc.insert(conference.key, conference.name, conference.shortName, conference.officialUrl, conference.officialTwitter, conference.logoUrl)
+  }
+
+
+  def loadSchedule(key:String):Schedule = {
+
+  }
+
 }
 
 object Junk {
